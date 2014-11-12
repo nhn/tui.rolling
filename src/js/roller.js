@@ -1,116 +1,114 @@
 /**
  * @fileoverview 움직임 좌표, 움직이는 방식 위치등을 정하여 액션을 수행함
  * @author Jein Yi
+ * @dependency common.js[type, object, collection, function, CustomEvents, defineClass]
  *
  * */
-if (!ne) {
-    ne = window.ne = {};
-}
-if (!ne.component) {
-    ne.component = {};
-}
+
 /**
  * 롤링의 움직임을 수행하는 롤러
  *
- * @param {Object} option 롤링컴포넌트의 옵션
+ * @param {Object} option 롤링컴포넌트(ne.component.Rolling)의 옵션
+ * @namespace ne.component.Rolling.Roller
  * @constructor
  */
-ne.component.Roller = function(option) {
-    /**
-     * 옵션을 저장한다
-     * @type {Object}
-     */
-    this._option = option;
-    /**
-     * 루트 엘리먼트를 저장한다
-     * @type {element|*}
-     * @private
-     */
-    this._element = ne.isString(option.element) ? document.getElementById(option.element) : option.element;
-    /**
-     * 롤링컴포넌트의 방향 저장(수직, 수평)
-     * @type {String}
-     * @private
-     */
-    this._direction = option.direction || 'horizontal';
-    /**
-     * 이동에 사용되는 함수
-     * @type {Function}
-     */
-    this._motion = ne.component.Roller.motion[option.motion || 'noeffect'];
-    /**
-     * 한페이지에 들어있는 롤링 아이템 수
-     * @type {Number}
-     * @private
-     */
-    this._itemcount = option.itemcount || 1;
-    /**
-     * 롤링을 할 단위
-     * @type {Number}
-     * @private
-     */
-    this._rollunit = option.unit || 'page';
-    /**
-     * 자동롤링 여부
-     * @type {Boolean}
-     * @private
-     */
-    this._auto = option.auto || false;
-    /**
-     * 롤링의 방향을 결정한다(전, 후)
-     * @type {String|string}
-     * @private
-     */
-    this._flow = option._flow || 'next';
-    /**
-     * 애니메이션의 duration
-     *
-     * @type {*|number}
-     * @private
-     */
-    this._duration = option.duration || 1000;
-    /**
-     * 롤러 상태
-     * @type {String}
-     */
-    this.status = 'idle';
-    /**
-     * 좌표를 움직일 컨테이너
-     * @type {HTMLElement}
-     * @private
-     */
-    this._container = this._getContainer();
-    /**
-     * 롤러 패널들, 3가지 패널만 갖는다
-     * @type {Object}
-     */
-    this.pannel = { prev: null, center: null, next: null };
-    /**
-     * 루트 엘리먼트의 너비, 이동단위가 페이지이면 이게 곧 이동 단위가 된다
-     * @type {number}
-     * @private
-     */
-    this._distance = 0;
-    /**
-     * 움직일 패널 타겟들
-     *
-     * @type {Array}
-     * @private
-     */
-    this._targets = [];
-    /**
-     * 무브 상태일때 들어오는 명령 저장
-     *
-     * @type {Array}
-     * @private
-     */
-    this._queue = [];
-};
-ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototype */{
-    init: function(initData) {
+ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Roller.prototype */{
+    init: function(option, initData) {
+        /**
+         * 옵션을 저장한다
+         * @type {Object}
+         */
+        this._option = option;
+        /**
+         * 루트 엘리먼트를 저장한다
+         * @type {element|*}
+         * @private
+         */
+        this._element = ne.isString(option.element) ? document.getElementById(option.element) : option.element;
+        /**
+         * 롤링컴포넌트의 방향 저장(수직, 수평)
+         * @type {String}
+         * @private
+         */
+        this._direction = option.direction || 'horizontal';
+        /**
+         * 이동할 스타일 속성 ('left | top')
+         *
+         * @type {string}
+         * @private
+         */
+        this._range = this._direction === 'horizontal' ? 'left' : 'top';
+        /**
+         * 이동에 사용되는 함수
+         * @type {Function}
+         */
+        this._motion = ne.component.Rolling.Roller.motion[option.motion || 'noeffect'];
+        /**
+         * 롤링을 할 단위
+         * @type {Number}
+         * @private
+         */
+        this._rollunit = option.unit || 'page';
+        /**
+         * 롤링의 방향을 결정한다(전, 후)
+         *
+         * @type {String|string}
+         * @private
+         */
+        this._flow = option._flow || 'next';
+        /**
+         * 애니메이션의 duration
+         *
+         * @type {*|number}
+         * @private
+         */
+        this._duration = option.duration || 1000;
+        /**
+         * 롤러 상태
+         * @type {String}
+         */
+        this.status = 'idle';
+        /**
+         * 좌표를 움직일 컨테이너
+         * @type {HTMLElement}
+         * @private
+         */
+        this._container = this._getContainer();
+        /**
+         * 롤러 패널들, 3가지 패널만 갖는다
+         * @type {Object}
+         */
+        this.panel = { prev: null, center: null, next: null };
+        /**
+         * 루트 엘리먼트의 너비, 이동단위가 페이지이면 이게 곧 이동 단위가 된다
+         * @type {number}
+         * @private
+         */
+        this._distance = 0;
+        /**
+         * 움직일 패널 타겟들
+         *
+         * @type {Array}
+         * @private
+         */
+        this._targets = [];
+        /**
+         * 무브 상태일때 들어오는 명령 저장
+         *
+         * @type {Array}
+         * @private
+         */
+        this._queue = [];
+        /**
+         * 커스텀이벤트
+         * @type {Object}
+         * @private
+         */
+        this._events = {};
+
         this._masking();
         this._setUnitDistance();
-        this._setPannel(initData);
+        this._setPanel(initData);
     },
     /**
      * 롤링을 위해, 루트앨리먼트를 마스크화 한다
@@ -155,35 +153,39 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
      *
      * @private
      */
-    _setPannel: function(initData) {
+    _setPanel: function(initData) {
         // 데이터 입력
-        var pannel = this._container.firstChild,
-            pannelSet = this.pannel,
+        var panel = this._container.firstChild,
+            panelSet = this.panel,
             option = this._option,
             tag,
             className,
             key;
 
         // 옵션으로 패널 태그가 있으면 옵션사용
-        if (ne.isString(option.pannelTag)) {
-            tag = (option.pannelTag).split('.')[0];
-            className = (option.pannelTag).split('.')[1];
+        if (ne.isString(option.panelTag)) {
+            tag = (option.panelTag).split('.')[0];
+            className = (option.panelTag).split('.')[1];
         } else {
-            // 옵션으로 설정되어 있지 않을 경우 컨테이너 내부에 존재하는 패널 엘리먼트 검색, 없으면 'li'
-            tag = ne.isHTMLTag(pannel) ? pannel.tagName : 'li';
-            className = (pannel && pannel.className) || '';
+            // 옵션으로 설정되어 있지 않을 경우 컨테이너 내부에 존재하는 패널 엘리먼트 검색
+            // 첫번째가 텍스트 일수 있으므로 다음요소까지 확인한다. 없으면 'li'
+            if (!ne.isHTMLTag(panel)) {
+                panel = panel && panel.nextSibling;
+            }
+            tag = ne.isHTMLTag(panel) ? panel.tagName : 'li';
+            className = (panel && panel.className) || '';
         }
 
         this._container.innerHTML = '';
 
         // 패널 생성
-        for (key in pannelSet) {
-            pannelSet[key] = this._makeElement(tag, className, key);
+        for (key in panelSet) {
+            panelSet[key] = this._makeElement(tag, className, key);
         }
 
         // 중앙 패널만 붙임
-        pannelSet.center.innerHTML = initData;
-        this._container.appendChild(pannelSet.center);
+        panelSet.center.innerHTML = initData;
+        this._container.appendChild(panelSet.center);
 
     },
     /**
@@ -211,25 +213,22 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
      * @param {String} data 패널을 갱신할 데이터
      * @private
      */
-    _updatePannel: function(data) {
-        this.pannel[this._flow || 'center'].innerHTML = data;
+    _updatePanel: function(data) {
+        this.panel[this._flow || 'center'].innerHTML = data;
     },
     /**
      * 이동할 패널을 붙인다
      */
     _appendMoveData: function() {
         var flow = this._flow,
-            movePannel = this.pannel[flow],
-            style = movePannel.style,
+            movePanel = this.panel[flow],
+            style = movePanel.style,
             dest = (flow === 'prev' ? -this._distance : this._distance) + 'px';
 
-        if (this._direction === 'horizontal') {
-            style.left = dest;
-        } else {
-            style.top = dest;
-        }
-        this.movePannel = movePannel;
-        this._container.appendChild(movePannel);
+        style[this._range] = dest;
+
+        this.movePanel = movePanel;
+        this._container.appendChild(movePanel);
     },
     /**
      * 롤링될 컨테이너를 생성 or 구함
@@ -238,22 +237,39 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
      * @private
      */
     _getContainer: function() {
-        var element = this._element,
+        var option = this._option,
+            element = this._element,
             firstChild = element.firstChild,
             wrap,
-            next;
-        if (ne.isHTMLTag(firstChild)) {
-            return firstChild;
+            next,
+            tag,
+            className;
+        // 옵션으로 넘겨받은 태그가 있으면 새로 생성
+        if (option.wrapperTag) {
+            tag = option.wrapperTag && option.wrapperTag.split('.')[0];
+            className = option.wrapperTag && option.wrapperTag.split('.')[1] || '';
+            wrap = document.createElement(tag);
+            if (className) {
+                wrap.className = className;
+            }
+            this._element.innerHTML = '';
+            this._element.appendChild(wrap);
         } else {
+            // 만약 천번째 엘리먼트가 존재하면 컨테이너로 인식
+            if (ne.isHTMLTag(firstChild)) {
+                return firstChild;
+            }
+            // 아닐경우 그 다음앨리먼트를 찾는다
             next = firstChild && firstChild.nextSibling;
             if (ne.isHTMLTag(next)) {
                 wrap = next;
             } else {
+                // 엘리먼트가 존재하지 않을경우 기본값인 ul을 만들어 컨테이너로 리턴
                 wrap = document.createElement('ul');
                 this._element.appendChild(wrap);
             }
-            return wrap;
         }
+        return wrap;
     },
     /**
      * 각 패널들이 움직일 값을 구한다
@@ -276,19 +292,19 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
      * @private
      */
     _getStartSet: function() {
-        var pannel = this.pannel,
+        var panel = this.panel,
             flow = this._flow,
-            range = this._direction === 'horizontal' ? 'left' : 'top';
-        if (flow === 'prev') {
-            return [parseInt(pannel['prev'].style[range]), parseInt(pannel['center'].style[range])];
-        } else {
-            return [parseInt(pannel['center'].style[range]), parseInt(pannel['next'].style[range])];
-        }
+            range = this._range,
+            isPrev = flow === 'prev',
+            first = isPrev ? panel['prev'] : panel['center'],
+            second = isPrev ? panel['center'] : panel['next'];
+        return [parseInt(first.style[range], 10), parseInt(second.style[range], 10)];
     },
-    _queueing: function(data, duration) {
+    _queueing: function(data, duration, flow) {
         this._queue.push({
             data: data,
-            duration: duration
+            duration: duration,
+            flow: flow
         });
     },
     /**
@@ -296,27 +312,37 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
      *
      * @param {Object} data 이동할 패널의 갱신데이터
      */
-    move: function(data, duration) {
+    move: function(data, duration, flow) {
         // 상태 체크, idle상태가 아니면 큐잉
         var flow = this._flow;
         if (this.status === 'idle') {
             this.status = 'run';
         } else {
-            console.log(data, duration);
-            this._queueing(data, duration);
+            this._queueing(data, duration, flow);
             return;
         }
 
+        /**
+         * 무브 시작전에 이벤트 수행
+         *
+         * @fires beforeMove
+         * @param {String} data 내부에 위치한 HTML
+         * @example
+         * ne.component.RollingInstance.attach('beforeMove', function(data) {
+         *    // ..... run code
+         * });
+         */
+        this.fire('beforeMove', { data: data });
         // 다음에 중앙에 올 패널 설정
-        this._updatePannel(data);
+        this._updatePanel(data);
         this._appendMoveData();
 
         // 움직일 타겟 선
-        this.targets = [this.pannel['center']];
+        this.targets = [this.panel['center']];
         if (flow === 'prev') {
-            this.targets.unshift(this.pannel[flow]);
+            this.targets.unshift(this.panel[flow]);
         } else {
-            this.targets.push(this.pannel[flow]);
+            this.targets.push(this.panel[flow]);
         }
 
         // 모션이 없으면 기본 좌표 움직임
@@ -334,9 +360,8 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
     _moveWithoutMotion: function() {
         var flow = this._flow,
             pos = this._getMoveSet(flow),
-            direction = this._direction;
+            range = this._range;
         ne.forEach(this.targets, function(element, index) {
-            var range = (direction === 'horizontal') ? 'left' : 'top';
             element.style[range] = pos[index] + 'px';
         });
         this.fix();
@@ -351,8 +376,8 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
         var flow = this._flow,
             start = this._getStartSet(flow),
             distance = this._distance,
-            direction = this._direction,
-            duration = duration || this._duration;
+            duration = duration || this._duration,
+            range = this._range;
 
         this._animate({
             delay: 10,
@@ -361,9 +386,9 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
             step: ne.bind(function(delta) {
                 ne.forEach(this.targets, function(element, index) {
 
-                    var range = (direction === 'horizontal') ? 'left' : 'top',
-                        dest = (flow === 'prev') ? dest = distance * delta : dest = -(distance * delta);
+                    var dest = (flow === 'prev') ? dest = distance * delta : dest = -(distance * delta);
                     element.style[range] = start[index] + dest + 'px';
+
                 });
             }, this),
             complate: ne.bind(this.fix, this)
@@ -374,21 +399,32 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
      * 센터를 재설정 한다.
      */
     fix: function() {
-        var pannel = this.pannel,
-            tempPannel,
+        var panel = this.panel,
+            tempPanel,
             flow = this._flow;
 
-        tempPannel = pannel['center'];
-        pannel['center'] = pannel[flow];
-        pannel[flow] = tempPannel;
+        tempPanel = panel['center'];
+        panel['center'] = panel[flow];
+        panel[flow] = tempPanel;
 
         this.targets = null;
-        this._container.removeChild(tempPannel);
+        this._container.removeChild(tempPanel);
         this.status = 'idle';
 
+        // 큐에 데이터가 있으면 무브를 다시 호출하고 없으면 move의 완료로 간주하고 afterMove를 호출한다
         if (ne.isNotEmpty(this._queue)) {
             var first = this._queue.splice(0, 1)[0];
-            this.move(first.data, first.duration);
+            this.move(first.data, first.duration, first.flow);
+        } else {
+            /**
+             * 이동이 끝나면 이벤트 수행
+             * @fires afterMove
+             * @example
+             * ne.component.RollingInstance.attach('afterMove', function() {
+             *    // ..... run code
+             * });
+             */
+            this.fire('afterMove');
         }
     },
     /**
@@ -396,7 +432,7 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
      * @param {String} type 바꿀 모션이름
      */
     changeMotion: function(type) {
-        this._motion = ne.component.Roller.motion[type];
+        this._motion = ne.component.Rolling.Roller.motion[type];
     },
     /**
      * 애니메이션 수행
@@ -422,34 +458,145 @@ ne.extend(ne.component.Roller.prototype, /** @lends ne.component.Roller.prototyp
                 }
             }, option.delay || 10);
     },
+    /**
+     * 기본 방향값 설정
+     *
+     * @param {String} flow 아무값도 넘어오지 않을시, 기본으로 사용될 방향값
+     */
     setFlow: function(flow) {
         this._flow = flow || this._flow || 'next';
     }
 });
+// 커스텀이벤트 믹스인
+ne.CustomEvents.mixin(ne.component.Rolling.Roller);
+
 /**
- * @todo 효과정리(현재 라파엘 함수들 사용)
  * 롤링에 필요한 모션 함수 컬렉션
  *
- * @type {Object}
+ * @namespace ne.component.Rolling.Roller.motion
  */
-ne.component.Roller.motion = {
-    linear: function (n) {
-        return n;
-    },
-    easeIn: function (n) {
-        return Math.pow(n, 1.7);
-    },
-    easeOut: function (n) {
-        return Math.pow(n, .48);
-    },
-    easeInOut: function (n) {
-        var q = .48 - n / 1.04,
-            Q = Math.sqrt(.1734 + q * q),
-            x = Q - q,
-            X = Math.pow(Math.abs(x), 1 / 3) * (x < 0 ? -1 : 1),
-            y = -Q - q,
-            Y = Math.pow(Math.abs(y), 1 / 3) * (y < 0 ? -1 : 1),
-            t = X + Y + .5;
-        return (1 - t) * 3 * t * t + t * t * t;
+ne.component.Rolling.Roller.motion = (function() {
+    var quadEaseIn,
+        circEaseIn,
+        quadEaseOut,
+        circEaseOut,
+        quadEaseInOut,
+        circEaseInOut;
+
+    /**
+     * easeIn
+     *
+     * @param delta
+     * @returns {Function}
+     */
+    function makeEaseIn(delta) {
+        return function(progress) {
+            return delta(progress);
+        }
     }
-};
+    /**
+     * easeOut
+     *
+     * @param delta
+     * @returns {Function}
+     */
+    function makeEaseOut(delta) {
+        return function(progress) {
+            return 1 - delta(1 - progress);
+        }
+    }
+
+    /**
+     * easeInOut
+     *
+     * @param delta
+     * @returns {Function}
+     */
+    function makeEaseInOut(delta) {
+        return function(progress) {
+            if (progress < 0.5) {
+                return delta(2 * progress) / 2;
+            } else {
+                return (2 - delta(2 * (1 - progress))) / 2;
+            }
+        }
+    }
+    /**
+     * 선형
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method linear
+     * @static
+     */
+    function linear(progress) {
+        return progress;
+    }
+    function quad(progress) {
+        return Math.pow(progress, 2);
+    }
+    function circ(progress) {
+        return 1 - Math.sin(Math.acos(progress));
+    }
+
+    /**
+     * qued + easeIn
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method quadEaseIn
+     * @static
+     */
+    quadEaseIn = makeEaseIn(quad),
+    /**
+     * circ + easeIn
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method circEaseIn
+     * @static
+     */
+    circEaseIn = makeEaseIn(circ),
+    /**
+     * quad + easeOut
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method quadEaseOut
+     * @static
+     */
+    quadEaseOut = makeEaseOut(quad),
+    /**
+     * circ + easeOut
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method circEaseOut
+     * @static
+     */
+    circEaseOut = makeEaseOut(circ),
+    /**
+     * quad + easeInOut
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method quadEaseInOut
+     * @static
+     */
+    quadEaseInOut = makeEaseInOut(quad),
+    /**
+     * circ + easeInOut
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method circEaseInOut
+     * @static
+     */
+    circEaseInOut = makeEaseInOut(circ);
+
+    return {
+        linear: linear,
+        easeIn: quadEaseIn,
+        easeOut: quadEaseOut,
+        easeInOut: quadEaseInOut,
+        quadEaseIn: quadEaseIn,
+        quadEaseOut: quadEaseOut,
+        quadEaseInOut: quadEaseInOut,
+        circEaseIn: circEaseIn,
+        circEaseOut: circEaseOut,
+        circEaseInOut: circEaseInOut
+    };
+})();

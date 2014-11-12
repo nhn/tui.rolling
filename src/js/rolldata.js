@@ -1,90 +1,67 @@
 /**
  * @fileoverview 움직임 좌표, 움직이는 방식 위치등을 정하여 액션을 수행함
  * @author Jein Yi
+ * @dependency common.js[type, object, collection, function, CustomEvents, defineClass]
+ */
+/** 롤링 데이터를 조작
  *
- * */
-
-if (!ne) {
-    ne = window.ne = {};
-}
-if (!ne.component) {
-    ne.component = {};
-}
-/**
- * 롤링 데이터를 조작
- *
- * @param {Object} option 모델에 사용되는 옵션, 롤링의 옵션과 같다
- * @param {Array|Object} data
+ * @param {Object} option 롤링컴포넌트(ne.component.Rolling)의 옵션
+ * @param {Array|Object} data 롤링 데이터
+ * @namespace ne.component.Rolling.Data
  * @constructor
  */
-ne.component.RollData = function(option, data) {
-    /**
-     * 가변성 데이터인지?
-     * @type {Boolean}
-     */
-    this.isVariable = option.isVariable || false;
-    /**
-     * 상호간 연결된 데이터리스트를 갖는다
-     * @type {Array}
-     */
-    this._datalist = null;
-    /**
-     * 가변데이터 일경우 노드데이터 리스트가 아닌, 데이터를 사용
-     * @type {Node}
-     * @private
-     */
-    this._data = null;
-    /**
-     * 초기 페이지 번호
-     * @type {Number}
-     */
-    this._current = option.initNum || 0;
-    /**
-     * 순환형인가 여부
-     *
-     * @type {Boolean}
-     * @private
-     */
-    this._isCircle = ne.isBoolean(option.isCircle) ? option.isCircle : true;
-
-    this._init(data);
-};
-
-ne.extend(ne.component.RollData.prototype,  /** @lends ne.component.RollData.prototype */{
-    /**
-     * 가변데이터인지, 아닌지에 따른 사용 메서드 믹스인
-     *
-     * @param {Array<String>|String} data
-     * @private
-     */
-    _init: function(data) {
+ne.component.Rolling.Data = ne.defineClass(/** @lends ne.component.Rolling.Data.prototype */{
+    init: function(option, data) {
+        /**
+         * 가변성 데이터인지?
+         * @type {Boolean}
+         */
+        this.isVariable = option.isVariable || false;
+        /**
+         * 상호간 연결된 데이터리스트를 갖는다
+         * @type {Array}
+         */
+        this._datalist = null;
+        /**
+         * 가변데이터 일경우 노드데이터 리스트가 아닌, 데이터를 사용
+         * @type {Node}
+         * @private
+         */
+        this._data = null;
+        /**
+         * 초기 페이지 번호
+         * @type {Number}
+         */
+        this._current = option.initNum || 1;
+        /**
+         * 순환형인가 여부
+         *
+         * @type {Boolean}
+         * @private
+         */
+        this._isCircular = ne.isBoolean(option.isCircular) ? option.isCircular : true;
         if (this.isVariable) {
-            this.mixin(remoteDataMethods);
+            this.mixin(ne.component.Rolling.Data.remoteDataMethods);
         } else {
-            this.mixin(staticDataMethods);
+            this.mixin(ne.component.Rolling.Data.staticDataMethods);
         }
-        this._makeData(data);
+
+        this._initData(data);
     },
     /**
      * 사용하는 메서드들을 붙인다
      *
-     * @param {Object} methods
+     * @param {Object} methods 사용할 메서드셋 [ne.component.Rolling.Data.staticDataMethods|ne.component.Rolling.Data.remoteDataMethods]
      */
     mixin: function(methods) {
         ne.extend(this, methods);
     }
 });
-
-var staticDataMethods = {
-    /**
-     * 현재 데이터 또는, 특정인덱스의 데이터를 받아온다.
-     *
-     * @param {Number} index 받아올 데이터 인덱스값
-     * @returns {String}
-     */
-    getData: function(index) {
-        return this._datalist[index || this._current].data;
-    },
+/**
+ * 정적인 데이터일 경우 사용되는 메서드 셋
+ * @namespace ne.component.Rolling.Data.staticDataMethods
+ */
+ne.component.Rolling.Data.staticDataMethods = {
     /**
      * 서로 연결되지 않은 데이터리스트를 서로 연결한다.
      *
@@ -92,14 +69,14 @@ var staticDataMethods = {
      * @returns {Array} _datalist
      * @private
      */
-    _makeData: function(datalist) {
+    _initData: function(datalist) {
         var before = null,
             first,
             nodelist;
 
         nodelist = ne.map(datalist, function(data, index) {
 
-            var node = new ne.component.RollData.Node(data);
+            var node = new ne.component.Rolling.Data.Node(data);
             node.prev = before;
 
             // 첫번째 요소일 경우, 마지막 요소와 연결을위해 first에 저장, 아니면 이전요소에 노드를 링크
@@ -121,8 +98,25 @@ var staticDataMethods = {
             return node;
 
         }, this);
-
+        nodelist.unshift(null);
         this._datalist = nodelist;
+    },
+    /**
+     * 현재 데이터 또는, 특정인덱스의 데이터를 받아온다.
+     *
+     * @param {Number} index 받아올 데이터 인덱스값
+     * @returns {String}
+     */
+    getData: function(index) {
+        return this._datalist[index || this._current].data;
+    },
+    /**
+     * 데이터 리스트 길이를 반환한다.
+     *
+     * @returns {Array}
+     */
+    getDataListLength: function() {
+        return this._datalist.length - 1;
     },
     /**
      * 다음데이터를 받아온다.
@@ -147,17 +141,18 @@ var staticDataMethods = {
     /**
      * 현재 페이지를 변경한다.
      *
-     * @param {Number} num
+     * @param {String} flow 방향값
      * @private
      */
     changeCurrent: function(flow) {
-        if (flow === 'next') {
-            if ((++this._current) > (this._datalist.length - 1)) {
-                this._current = this._isCircle ? 0 : this._datalist.length - 1;
+        var length = this.getDataListLength();
+        if (flow === 'prev') {
+            if ((--this._current) < 1) {
+                this._current = this._isCircular ? length : 1;
             }
         } else {
-            if ((--this._current) < 0) {
-                this._current = this._isCircle ? this._datalist.length - 1 : 0;
+            if ((++this._current) > length) {
+                this._current = this._isCircular ? 1 : length;
             }
         }
     },
@@ -170,8 +165,21 @@ var staticDataMethods = {
         return this._current;
     }
 };
-
-var remoteDataMethods = {
+/**
+ * 동적인 데이터일 경우 사용되는 메서드 셋.
+ * @namespace ne.component.Rolling.Data.remoteDataMethods
+ * @static
+ */
+ne.component.Rolling.Data.remoteDataMethods = {
+    /**
+     * 가변데이터 일때 데이터 세팅
+     *
+     * @param {String} data 화면에 그려질 데이터
+     * @private
+     */
+    _initData: function(data) {
+        this._data = new ne.component.Rolling.Data.Node(data);
+    },
     /**
      * 현재 데이터 또는, 특정인덱스의 데이터를 받아온다.
      *
@@ -182,24 +190,16 @@ var remoteDataMethods = {
         return this._data.data;
     },
     /**
-     * 가변데이터 일때 데이터 세팅(최초 데이터는 화면에 보여질 데이터이다)
-     *
-     * @param {String} data
-     * @private
-     */
-    _makeData: function(data) {
-        this._data = new ne.component.RollData.Node(data);
-    },
-    /**
      * 데이터 세팅
      *
      * @param {String} type ['prev|next'] 선택된 데이터 인덱스
      * @param {String} data 롤링 컴퍼넌트 내부에 사용될 데이터
      */
     setData: function(type, data) {
-        this._data[type] = new ne.component.RollData.Node(data);
+        this._data[type] = new ne.component.Rolling.Data.Node(data);
     },
     /**
+     * 데이터 연결을 끊는다.
      *
      * @param {String} type ['prev|next'] 선택된 데이터로, 현재데이터를 덮는다
      */
@@ -231,10 +231,11 @@ var remoteDataMethods = {
 /**
  * 데이터끼리 연결하기 위한 노드데이터 형
  *
+ * @namespace ne.component.Rolling.Data.Node
  * @param {Object} data 노드데이터/각패널에 들어갈 html값
  * @constructor
  */
-ne.component.RollData.Node = function(data) {
+ne.component.Rolling.Data.Node = function(data) {
 
     this.prev = null;
     this.next = null;
@@ -242,4 +243,4 @@ ne.component.RollData.Node = function(data) {
     this.first = false;
     this.data = data;
 
-}
+};
