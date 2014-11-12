@@ -199,7 +199,6 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
     auto: function() {
         this.stop();
         this._timer = window.setInterval(ne.bind(function() {
-
             this._model.changeCurrent(this._flow);
             this._roller.move(this._model.getData());
 

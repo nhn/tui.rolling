@@ -55,7 +55,7 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
          * @type {String|string}
          * @private
          */
-        this._flow = option._flow || 'next';
+        this._flow = option.flow || 'next';
         /**
          * 애니메이션의 duration
          *
