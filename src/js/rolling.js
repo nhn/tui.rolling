@@ -24,7 +24,6 @@ if (!ne.component) {
  *      @param {Number} [option.duration='1000|...] 패널의 이동속도
  *      @param {String} [option.motion='linear|[quad]easeIn|[quad]easeOut|[quad]easeInOut|circEaseIn|circEaseOut|circEaseInOut] 패널 이동효과(기본값은 noeffect)
  *      @param {String} [option.unit='item|page'] 롤링을 하는 단위를 설정한다
- *      @param {String} [option.template='<li class="rollitem {{rollclass}}'>{{rollingItem}}</li>'] 롤러에 쓰일 템플릿, 이부분을 사용하지 않을 시 data에 템플릿을 포함해야한다.
  *      @param {String} [option.flow='prev|next'] 롤링의 방향을 결정한다. (좌에서 우로, 우에서 좌로이 이동중에 선택, 기본값 next)
  *      @param {String} [option.wrapperTag='ul.className|div.className'] 패널의 래퍼에 사용되는 태그, .으로 클래스 연결(기본값 ul)
  *      @param {String} [option.panelTag='li.className'] 패널에 사용되는 태그, .으로 클래스를 연결(기본값 li)

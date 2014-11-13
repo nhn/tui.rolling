@@ -6,7 +6,7 @@
 /** 롤링 데이터를 조작
  *
  * @param {Object} option 롤링컴포넌트(ne.component.Rolling)의 옵션
- * @param {Array|Object} data 롤링 데이터
+ * @param {{Array|Object}} data 롤링 데이터
  * @namespace ne.component.Rolling.Data
  * @constructor
  */
@@ -16,7 +16,7 @@ ne.component.Rolling.Data = ne.defineClass(/** @lends ne.component.Rolling.Data.
          * 가변성 데이터인지?
          * @type {Boolean}
          */
-        this.isVariable = option.isVariable || false;
+        this.isVariable = !!option.isVariable;
         /**
          * 상호간 연결된 데이터리스트를 갖는다
          * @type {Array}
