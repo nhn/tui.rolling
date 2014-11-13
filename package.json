@@ -8,7 +8,6 @@
         "grunt-contrib-requirejs": "^0.4.4",
         "jasmine-jquery": "^2.0.5",
         "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
-        "fedoc-template": "git+http://github.nhnent.com/FE/Share-FEDocTemplate.git",
         "karma": "^0.12.22",
         "karma-chrome-launcher": "^0.1.5",
         "karma-coverage": "^0.2.6",
