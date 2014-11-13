@@ -43,7 +43,11 @@ ne.component.Rolling.Data = ne.defineClass(/** @lends ne.component.Rolling.Data.
         if (this.isVariable) {
             this.mixin(ne.component.Rolling.Data.remoteDataMethods);
         } else {
-            this.mixin(ne.component.Rolling.Data.staticDataMethods);
+            if(option.isDrawn) {
+                this.mixin(ne.component.Rolling.Data.htmlDataMethods);
+            } else {
+                this.mixin(ne.component.Rolling.Data.staticDataMethods);
+            }
         }
 
         this._initData(data);
@@ -87,7 +91,7 @@ ne.component.Rolling.Data.staticDataMethods = {
                 first = node;
             }
             // 마지막 요소일 경우 처음앨리먼트와 연결한다
-            if (index === datalist.length - 1) {
+            if (index === (datalist.length - 1)) {
                 node.last = true;
                 node.next = first;
                 first.prev = node;
@@ -226,6 +230,16 @@ ne.component.Rolling.Data.remoteDataMethods = {
     getNextData: function() {
         return this._data.next && this._data.next.data;
     }
+};
+
+ne.component.Rolling.Data.htmlDataMethods = {
+    _initData: function(nodeList) {
+        this._datalist = nodeList;
+    }
+    // v1 노드 리스트 처음과 끝 연결. (이중연결링크드 리스트로)
+    // v1 모델의 넥스트와 비포 기능은 그대로
+    // v1 롤러에서 뷰패널의 갯수에 따른처리
+
 };
 
 /**

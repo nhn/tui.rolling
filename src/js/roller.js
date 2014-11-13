@@ -50,6 +50,20 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
          */
         this._rollunit = option.unit || 'page';
         /**
+         * 그려진 html을 돌리는 것인지 확인
+         *
+         * @type {boolean}
+         * @private
+         */
+        this._isDrawn = !!option.isDrawn;
+        /**
+         * 페이지당 패널 수
+         *
+         * @type {boolean}
+         * @private
+         */
+        this._itemcount = option.itemcount;
+        /**
          * 롤링의 방향을 결정한다(전, 후)
          *
          * @type {String|string}
@@ -107,8 +121,62 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
         this._events = {};
 
         this._masking();
+
+        if (!this._itemcount && this._isDrawn) {
+            this._setItemCount();
+        }
+
         this._setUnitDistance();
-        this._setPanel(initData);
+
+        if (!this._isDrawn) {
+            this._setPanel(initData);
+        }
+    },
+    /**
+     * 롤링될 컨테이너를 생성 or 구함
+     *
+     * @returns {*}
+     * @private
+     */
+    _getContainer: function() {
+        var option = this._option,
+            element = this._element,
+            firstChild = element.firstChild,
+            wrap,
+            next,
+            tag,
+            className;
+        // 이미 그려진 데이터면, 컨테이너 지정해서 넘김
+        if (this._isDrawn) {
+            wrap = ne.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
+            return wrap;
+        }
+        // 옵션으로 넘겨받은 태그가 있으면 새로 생성
+        if (option.wrapperTag) {
+            tag = option.wrapperTag && option.wrapperTag.split('.')[0];
+            className = option.wrapperTag && option.wrapperTag.split('.')[1] || '';
+            wrap = document.createElement(tag);
+            if (className) {
+                wrap.className = className;
+            }
+            this._element.innerHTML = '';
+            this._element.appendChild(wrap);
+        } else {
+            // 만약 천번째 엘리먼트가 존재하면 컨테이너로 인식
+            if (ne.isHTMLTag(firstChild)) {
+                return firstChild;
+            }
+            // 아닐경우 그 다음앨리먼트를 찾는다
+            next = firstChild && firstChild.nextSibling;
+            if (ne.isHTMLTag(next)) {
+                wrap = next;
+            } else {
+                // 엘리먼트가 존재하지 않을경우 기본값인 ul을 만들어 컨테이너로 리턴
+                wrap = document.createElement('ul');
+                this._element.appendChild(wrap);
+            }
+        }
+        return wrap;
     },
     /**
      * 롤링을 위해, 루트앨리먼트를 마스크화 한다
@@ -127,6 +195,26 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
 
     },
     /**
+     * 한 화면에 보이는 패널 갯수를 구한다.
+     *
+     * @private
+     */
+    _setItemCount: function() {
+        var elementStyle = this._element.style,
+            elementWidth = parseInt(elementStyle.width, 10),
+            elementHeight = parseInt(elementStyle.height, 10),
+            item = this._element.getElementsByTagName('li')[0], // 마크업은 li로 픽스
+            itemStyle = item.style,
+            itemWidth = parseInt(itemStyle.width, 10),
+            itemHeight = parseInt(itemStyle.height, 10);
+
+        if (this._range === 'left') {
+            this._itemcount = Math.ceil(elementWidth / itemWidth);
+        } else {
+            this._itemcount = Math.ceil(elementHeight / itemHeight);
+        }
+    },
+    /**
      * 유닛의 이동거리를 구한다
      *
      * @private
@@ -143,8 +231,8 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
         }
 
         // 이동단위가 페이지가 아닐경우
-        if (this._rollunit !== 'page') {
-            dist = Math.ceil(dist / this._itemcount);
+        if (this._rollunit !== 'page' && this._isDrawn) {
+            dist = Math.ceil(dist / itemcount);
         }
         this._distance = dist;
     },
@@ -231,47 +319,6 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
         this._container.appendChild(movePanel);
     },
     /**
-     * 롤링될 컨테이너를 생성 or 구함
-     *
-     * @returns {*}
-     * @private
-     */
-    _getContainer: function() {
-        var option = this._option,
-            element = this._element,
-            firstChild = element.firstChild,
-            wrap,
-            next,
-            tag,
-            className;
-        // 옵션으로 넘겨받은 태그가 있으면 새로 생성
-        if (option.wrapperTag) {
-            tag = option.wrapperTag && option.wrapperTag.split('.')[0];
-            className = option.wrapperTag && option.wrapperTag.split('.')[1] || '';
-            wrap = document.createElement(tag);
-            if (className) {
-                wrap.className = className;
-            }
-            this._element.innerHTML = '';
-            this._element.appendChild(wrap);
-        } else {
-            // 만약 천번째 엘리먼트가 존재하면 컨테이너로 인식
-            if (ne.isHTMLTag(firstChild)) {
-                return firstChild;
-            }
-            // 아닐경우 그 다음앨리먼트를 찾는다
-            next = firstChild && firstChild.nextSibling;
-            if (ne.isHTMLTag(next)) {
-                wrap = next;
-            } else {
-                // 엘리먼트가 존재하지 않을경우 기본값인 ul을 만들어 컨테이너로 리턴
-                wrap = document.createElement('ul');
-                this._element.appendChild(wrap);
-            }
-        }
-        return wrap;
-    },
-    /**
      * 각 패널들이 움직일 값을 구한다
      * @returns {*}
      * @private
@@ -300,6 +347,29 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
             second = isPrev ? panel['center'] : panel['next'];
         return [parseInt(first.style[range], 10), parseInt(second.style[range], 10)];
     },
+    /**
+     * 움직일 타겟을 선택한다.
+     * @param {String} flow 방향
+     * @private
+     */
+    _setTarget: function(flow) {
+        // 움직일 타겟 선
+        this._targets = [this.panel['center']];
+        if (flow === 'prev') {
+            this._targets.unshift(this.panel[flow]);
+        } else {
+            this._targets.push(this.panel[flow]);
+        }
+
+    },
+    /**
+     * 이동 명령 큐잉한다.
+     *
+     * @param {String} data 페이지 데이터
+     * @param {Number} duration 이동속도
+     * @param {String} flow 진행방향
+     * @private
+     */
     _queueing: function(data, duration, flow) {
         this._queue.push({
             data: data,
@@ -307,6 +377,10 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
             flow: flow
         });
     },
+
+    // v1 이동방법을 바꾼다. 현재 패널을 갱신하고 움직일 패널을 붙인 뒤, 타겟을 지정한다.
+    // v1 타겟을 지정하고 모션과 비모션 후, fix에서 최후 패널을 이동시킨다. (앞, 뒤 전환)
+    // v1 fix 에서 네개의 패널이 동시에 이동하면, 제일 앞 네개의 패널을 동시에 이동시킨다.
     /**
      * 패널 이동
      *
@@ -334,16 +408,10 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
          */
         this.fire('beforeMove', { data: data });
         // 다음에 중앙에 올 패널 설정
+
         this._updatePanel(data);
         this._appendMoveData();
-
-        // 움직일 타겟 선
-        this.targets = [this.panel['center']];
-        if (flow === 'prev') {
-            this.targets.unshift(this.panel[flow]);
-        } else {
-            this.targets.push(this.panel[flow]);
-        }
+        this._setTarget(flow);
 
         // 모션이 없으면 기본 좌표 움직임
         if (!this._motion) {
@@ -361,7 +429,7 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
         var flow = this._flow,
             pos = this._getMoveSet(flow),
             range = this._range;
-        ne.forEach(this.targets, function(element, index) {
+        ne.forEach(this._targets, function(element, index) {
             element.style[range] = pos[index] + 'px';
         });
         this.fix();
@@ -384,7 +452,7 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
             duration: duration || 1000,
             delta: this._motion,
             step: ne.bind(function(delta) {
-                ne.forEach(this.targets, function(element, index) {
+                ne.forEach(this._targets, function(element, index) {
 
                     var dest = (flow === 'prev') ? dest = distance * delta : dest = -(distance * delta);
                     element.style[range] = start[index] + dest + 'px';
@@ -407,7 +475,7 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
         panel['center'] = panel[flow];
         panel[flow] = tempPanel;
 
-        this.targets = null;
+        this._targets = null;
         this._container.removeChild(tempPanel);
         this.status = 'idle';
 

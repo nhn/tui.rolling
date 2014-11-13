@@ -67,6 +67,13 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
          */
         this._flow = option.flow || 'next';
         /**
+         * 그려진 html을 돌리는 것인지 확인
+         *
+         * @type {boolean}
+         * @private
+         */
+        this._isDrawn = !!option.isDrawn;
+        /**
          * 자동롤링 타이머
          *
          * @type {null}
@@ -92,7 +99,8 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
          */
         this._roller = new ne.component.Rolling.Roller(option, this._model.getData());
 
-        if (option.isAuto) {
+
+        if (!!option.isAuto) {
             this.auto();
         }
     },
