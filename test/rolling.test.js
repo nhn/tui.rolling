@@ -1,56 +1,44 @@
-//describe('rolling 객체 테스트', function() {
-//
-//    var roll = new ne.component.Rolling(),
-//        optionRoll = new ne.component.Rolling();
-//
-//    it('is roll created?', function() {
-//        expect(roll).toBeDefined();
-//        expect(optionRoll).toBeDefined();
-//    });
-//
-//    it('after init(), is roller of rolling created well?', function() {
-//
-//        // 루트 앨리먼트를 생성한다.
-//        var div1 = document.createElement('div');
-//        var div2 = document.createElement('div');
-//        var div3 = document.createElement('div');
-//        div3.setAttribute('id', 'div3');
-//        div3.style.width = '300px';
-//        div3.style.height = '100px';
-//        document.body.appendChild(div1);
-//        document.body.appendChild(div2);
-//        document.body.appendChild(div3);
-//
-//        var rollData = ['<li>item1</li>', '<li>item2</li>', '<li>item3</li>', '<li>item4</li>', '<li>item5</li>'];
-//        // initialize
-//        roll.init({
-//            element: div1
-//        }, rollData);
-//        optionRoll.init({
-//            element: div2,
-//            initNum: 1,
-//            direction: 'horizontal', // 'vertical | horizontal'
-//            motion: 'easeIn'
-//        }, rollData);
-//
-//        // rolling의 roller가 제대로 생성되었는가?
-//        var roller = roll._roller,
-//            optionRoller = optionRoll._roller;
-//        expect(roller).toBeDefined();
-//        expect(roller.constructor).toBe(ne.component.Roller);
-//        expect(optionRoller).toBeDefined();
-//        expect(optionRoller.constructor).toBe(ne.component.Roller);
-//
-//        // roller의 container가 제대로 생성/참조 되었는가?
-//        var container1 = roller._container;
-//        var container2 = optionRoller._container;
-//        expect(container1).toBeDefined();
-//        expect(container2).toBeDefined();
-//        expect(ne.isHTMLElement(container1)).toBeTruthy();
-//        expect(ne.isHTMLElement(container2)).toBeTruthy();
-//
-//        // 컨테이너 내부에 제대로 초기화 아이템이 뿌려졌는지
-//        expect(container1.innerHTML).toBe(rollData[0]);
-//        expect(container2.innerHTML).toBe(rollData[1]);
-//    });
-//});
+describe('rolling 객체 테스트', function() {
+    var div1 = document.createElement('div'),
+        div2 = document.createElement('div');
+    // 시뮬레이션에서 width, height를 client로 잡으면 0으로 나오기 때문에, 스타일로 지정
+    div1.style.width = '300px';
+    div1.style.height = '100px';
+    div2.style.width = '300px';
+    div2.style.height = '100px';
+
+    var rolling1 = new ne.component.Rolling({
+        element: div1
+    }, ['a1', 'a2', 'a3']),
+        rolling2 = new ne.component.Rolling({
+            element: div2,
+            direction: 'vertical',
+            isVariable: true
+        }, 'initData');
+
+    it('define', function() {
+        expect(rolling1).toBeDefined();
+        expect(rolling2).toBeDefined();
+    });
+
+    it('roll , 롤링 작동확인', function() {
+        var rollNum1, rollNum2,
+        rollNum1 = rolling1._model.getCurrent();
+        rolling1.roll();
+        rollNum2 = rolling1._model.getCurrent();
+        expect(rollNum1).not.toBe(rollNum2);
+    });
+
+    it('beforeMove, afterMove 동작 확인', function() {
+        var num = 1;
+        rolling1.attach('beforeMove', function() {
+            num++;
+        });
+        rolling1.attach('afterMove', function() {
+            num++;
+        });
+        // 이동하면 beforeMove, afterMove가 실행되어야한다
+        rolling1.roll();
+        expect(num).toBe(3);
+    });
+});

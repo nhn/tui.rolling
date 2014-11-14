@@ -3,17 +3,17 @@ describe('RollData Test', function() {
         rollData2 = ['a', 'b', 'c', 'd', 'e', 'f'],
         rollData3 = [100, 200, 300, 400, 500];
 
-    var model1 = new ne.component.RollData({
+    var model1 = new ne.component.Rolling.Data({
             initNum: 1,
             isVariable: true
         }, rollData1),
-        model2 = new ne.component.RollData({
+        model2 = new ne.component.Rolling.Data({
             isVariable: false,
-            isCircle: false
+            isCircular: false
         }, rollData2),
-        model3 = new ne.component.RollData({
+        model3 = new ne.component.Rolling.Data({
             isVariable: false,
-            isCircle: true
+            isCircular: true
         }, rollData3);
 
 
@@ -25,19 +25,19 @@ describe('RollData Test', function() {
 
     });
 
-    it('_makeData', function() {
+    it('_initData 데이터 초기화', function() {
 
-        var list1 = model1._makeData(rollData1),
-            list2 = model2._makeData(rollData2),
-            list3 = model3._makeData(rollData3);
+        var list1 = model1._initData(rollData1),
+            list2 = model2._initData(rollData2),
+            list3 = model3._initData(rollData3);
 
         list1 = model1._data;
         list2 = model2._datalist;
         list3 = model3._datalist;
 
         expect(list1.data).toBe('data1');
-        expect(list2[1].data).toBe(rollData2[1]);
-        expect(list3[2].data).toBe(rollData3[2]);
+        expect(list2[1].data).toBe(rollData2[0]);
+        expect(list3[2].data).toBe(rollData3[1]);
     });
 
     it('setData, getData 가변데이터', function() {
@@ -83,9 +83,9 @@ describe('RollData Test', function() {
         expect(value2).toBe(/*rollData2[1]*/'b');
         expect(value3).toBe(/*rollData2[rollData2.length - 1]*/'f');
 
-        value1 = model3.getData(3);
-        value2 = model3.getNextData(3);
-        value3 = model3.getPrevData(3);
+        value1 = model3.getData(4);
+        value2 = model3.getNextData(4);
+        value3 = model3.getPrevData(4);
 
         expect(value1).toBe(/*rollData3[3]*/400);
         expect(value2).toBe(/*rollData3[4]*/500);
