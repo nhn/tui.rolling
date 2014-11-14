@@ -11,7 +11,7 @@
         "karma": "^0.12.22",
         "karma-chrome-launcher": "^0.1.5",
         "karma-coverage": "^0.2.6",
-        "karma-ievms": "git+https://github.com/everedifice/karma-ievms.git",
+        "karma-webdriver-launcher": "git+https://github.com/everedifice/karma-webdriver-launcher.git",
         "karma-jasmine": "~0.2.0",
         "karma-junit-reporter": "^0.2.2",
         "karma-nunit-reporter": "git+https://github.com/jlogar/karma-nunit-reporter.git",
