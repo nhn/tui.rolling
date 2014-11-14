@@ -87,12 +87,23 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
          * @type {HTMLElement}
          * @private
          */
-        this._container = this._getContainer();
+        this._container = null;
         /**
-         * 롤러 패널들, 3가지 패널만 갖는다
+         * 가변 데이터의 롤러 패널들, 3가지 패널만 갖는다
          * @type {Object}
          */
         this.panel = { prev: null, center: null, next: null };
+        /**
+         * html 고정의 롤러 패널들, 노드리스트를 배열로 갖는다
+         * @type {Array}
+         */
+        this._panels = [];
+        /**
+         * 기준 엘리먼트 설정, 롤링 시마다 변경된다.
+         *
+         * @type {HTMLElement}
+         */
+        this._basis = null;
         /**
          * 루트 엘리먼트의 너비, 이동단위가 페이지이면 이게 곧 이동 단위가 된다
          * @type {number}
@@ -120,25 +131,96 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
          */
         this._events = {};
 
-        this._masking();
-
-        if (!this._itemcount && this._isDrawn) {
-            this._setItemCount();
-        }
-
-        this._setUnitDistance();
-
         if (!this._isDrawn) {
-            this._setPanel(initData);
+            this.mixin(ne.component.Rolling.Roller.movePanelSet);
+        } else {
+            this.mixin(ne.component.Rolling.Roller.moveContainerSet);
         }
+        this._setContainer();
+        this._masking();
+        this._setUnitDistance();
+        this._setPanel(initData);
     },
+    /**
+     * 사용하는 메서드들을 붙인다
+     *
+     * @param {Object} methods 사용할 메서드셋 [ne.component.Rolling.Data.staticDataMethods|ne.component.Rolling.Data.remoteDataMethods]
+     */
+    mixin: function(methods) {
+        ne.extend(this, methods);
+    },
+    /**
+     * 롤링을 위해, 루트앨리먼트를 마스크화 한다
+     *
+     * @method
+     * @private
+     */
+    _masking: function() {
+
+        var element = this._element,
+            elementStyle = element.style;
+        elementStyle.position = 'relative';
+        elementStyle.overflow = 'hidden';
+        elementStyle.width = elementStyle.width || (element.clientWidth + 'px');
+        elementStyle.height = elementStyle.height || (element.clientHeight + 'px');
+
+    },
+    /**
+     * 유닛의 이동거리를 구한다
+     *
+     * @private
+     */
+    _setUnitDistance: function() {
+
+        var dist,
+            elementStyle = this._element.style;
+
+        if (this._direction === 'horizontal') {
+            dist = elementStyle.width.replace('px', '');
+        } else {
+            dist = elementStyle.height.replace('px', '');
+        }
+
+        // 이동단위가 페이지가 아닐경우
+        if (this._rollunit !== 'page' && this._isDrawn) {
+            dist = Math.ceil(dist / itemcount);
+        }
+        this._distance = dist;
+    },
+    /**
+     * 이동 명령 큐잉한다.
+     *
+     * @param {String} data 페이지 데이터
+     * @param {Number} duration 이동속도
+     * @param {String} flow 진행방향
+     * @private
+     */
+    _queueing: function(data, duration, flow) {
+        this._queue.push({
+            data: data,
+            duration: duration,
+            flow: flow
+        });
+    },
+    /**
+     * 기본 방향값 설정
+     *
+     * @param {String} flow 아무값도 넘어오지 않을시, 기본으로 사용될 방향값
+     */
+    setFlow: function(flow) {
+        this._flow = flow || this._flow || 'next';
+    }
+});
+
+ne.component.Rolling.Roller.movePanelSet = {
+
     /**
      * 롤링될 컨테이너를 생성 or 구함
      *
      * @returns {*}
      * @private
      */
-    _getContainer: function() {
+    _setContainer: function() {
         var option = this._option,
             element = this._element,
             firstChild = element.firstChild,
@@ -146,11 +228,7 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
             next,
             tag,
             className;
-        // 이미 그려진 데이터면, 컨테이너 지정해서 넘김
-        if (this._isDrawn) {
-            wrap = ne.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
-            return wrap;
-        }
+
         // 옵션으로 넘겨받은 태그가 있으면 새로 생성
         if (option.wrapperTag) {
             tag = option.wrapperTag && option.wrapperTag.split('.')[0];
@@ -176,65 +254,7 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
                 this._element.appendChild(wrap);
             }
         }
-        return wrap;
-    },
-    /**
-     * 롤링을 위해, 루트앨리먼트를 마스크화 한다
-     *
-     * @method
-     * @private
-     */
-    _masking: function() {
-
-        var element = this._element,
-            elementStyle = element.style;
-        elementStyle.position = 'relative';
-        elementStyle.overflow = 'hidden';
-        elementStyle.width = elementStyle.width || (element.clientWidth + 'px');
-        elementStyle.height = elementStyle.height || (element.clientHeight + 'px');
-
-    },
-    /**
-     * 한 화면에 보이는 패널 갯수를 구한다.
-     *
-     * @private
-     */
-    _setItemCount: function() {
-        var elementStyle = this._element.style,
-            elementWidth = parseInt(elementStyle.width, 10),
-            elementHeight = parseInt(elementStyle.height, 10),
-            item = this._element.getElementsByTagName('li')[0], // 마크업은 li로 픽스
-            itemStyle = item.style,
-            itemWidth = parseInt(itemStyle.width, 10),
-            itemHeight = parseInt(itemStyle.height, 10);
-
-        if (this._range === 'left') {
-            this._itemcount = Math.ceil(elementWidth / itemWidth);
-        } else {
-            this._itemcount = Math.ceil(elementHeight / itemHeight);
-        }
-    },
-    /**
-     * 유닛의 이동거리를 구한다
-     *
-     * @private
-     */
-    _setUnitDistance: function() {
-
-        var dist,
-            elementStyle = this._element.style;
-
-        if (this._direction === 'horizontal') {
-            dist = elementStyle.width.replace('px', '');
-        } else {
-            dist = elementStyle.height.replace('px', '');
-        }
-
-        // 이동단위가 페이지가 아닐경우
-        if (this._rollunit !== 'page' && this._isDrawn) {
-            dist = Math.ceil(dist / itemcount);
-        }
-        this._distance = dist;
+        this._container = wrap;
     },
     /**
      * 롤링될 패널들을 만든다
@@ -361,21 +381,6 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
             this._targets.push(this.panel[flow]);
         }
 
-    },
-    /**
-     * 이동 명령 큐잉한다.
-     *
-     * @param {String} data 페이지 데이터
-     * @param {Number} duration 이동속도
-     * @param {String} flow 진행방향
-     * @private
-     */
-    _queueing: function(data, duration, flow) {
-        this._queue.push({
-            data: data,
-            duration: duration,
-            flow: flow
-        });
     },
 
     // v1 이동방법을 바꾼다. 현재 패널을 갱신하고 움직일 패널을 붙인 뒤, 타겟을 지정한다.
@@ -525,15 +530,229 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
                     option.complate();
                 }
             }, option.delay || 10);
+    }
+};
+ne.component.Rolling.Roller.moveContainerSet = {
+    _setContainer: function() {
+        var element = this._element,
+            firstChild = element.firstChild,
+            wrap;
+        // 이미 그려진 데이터면, 컨테이너 지정해서 넘김
+        if (this._isDrawn) {
+            wrap = ne.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
+            this._container = wrap;
+            this._container.style[this._range] = 0;
+        }
+        this._setItemCount();
+    },
+    // v1 이동방법을 바꾼다. 현재 패널을 갱신하고 움직일 패널을 붙인 뒤, 타겟을 지정한다.
+    // v1 타겟을 지정하고 모션과 비모션 후, fix에서 최후 패널을 이동시킨다. (앞, 뒤 전환)
+    // v1 fix 에서 네개의 패널이 동시에 이동하면, 제일 앞 네개의 패널을 동시에 이동시킨다.
+    /**
+     * 패널 이동
+     *
+     * @param {Object} data 이동할 패널의 갱신데이터
+     */
+    move: function(data, duration, flow) {
+        // 상태 체크, idle상태가 아니면 큐잉
+        var flow = this._flow;
+        if (this.status === 'idle') {
+            this.status = 'run';
+        } else {
+            this._queueing(data, duration, flow);
+            return;
+        }
+
+        /**
+         * 무브 시작전에 이벤트 수행
+         *
+         * @fires beforeMove
+         * @param {String} data 내부에 위치한 HTML
+         * @example
+         * ne.component.RollingInstance.attach('beforeMove', function(data) {
+         *    // ..... run code
+         * });
+         */
+        this.fire('beforeMove', { data: data });
+        // 다음에 중앙에 올 패널 설정
+
+        this._rotatePanel(flow);
+        this._setTarget(flow);
+
+        // 모션이 없으면 기본 좌표 움직임
+        if (!this._motion) {
+            this._moveWithoutMotion();
+        } else {
+            this._moveWithMotion(duration);
+        }
+    },
+    fix: function() {
+        // this._panels 업데이트 this._basis 업데이트
+        this._setPanel();
+        this.status = 'idle';
+    },
+    _getMoveDistance: function(flow) {
+        if (flow === 'prev') {
+            return 300;
+        } else {
+            return -300;
+        }
     },
     /**
-     * 기본 방향값 설정
+     * 모션이 없을 경우, 바로 좌표설정을 한다
      *
-     * @param {String} flow 아무값도 넘어오지 않을시, 기본으로 사용될 방향값
+     * @private
      */
-    setFlow: function(flow) {
-        this._flow = flow || this._flow || 'next';
+    _moveWithoutMotion: function() {
+        var flow = this._flow,
+            pos = this._getMoveDistance(flow),
+            range = this._range,
+            start = parseInt(this._container.style[range], 10);
+        this._container.style[range] = start + pos + 'px';
+        this.fix();
+    },
+    _moveWithMotion: function() {
+
+    },
+    /**
+     * 패널을 돌린다.
+     *
+     * @param {String} flow 방향
+     * @private
+     */
+    _rotatePanel: function(flow) {
+        var standard,
+            moveset,
+            movesetLength,
+            range = this._range,
+            containerMoveDist,
+            isPrev = flow === 'prev',
+            basis = this._basis;
+
+        this._setPartOfPanels(flow);
+        moveset = this._movePanelSet;
+        movesetLength = moveset.length;
+        containerMoveDist = this._panels[0].clientWidth * movesetLength;
+
+        if (this._isInclude(this._panels[this._basis], moveset)) {
+            // 다음요소를 어떻게 찾을 것인가.
+            this._basis = isPrev ? basis - movesetLength : basis + movesetLength;
+            return;
+        }
+
+        if (isPrev) {
+            standard = this._panels[0];
+            ne.forEach(moveset, ne.bind(function(element) {
+                this._container.insertBefore(element, standard);
+            }, this));
+            this._container.style[range] = parseInt(this._container.style[range], 10) - containerMoveDist + 'px';
+        } else {
+            ne.forEach(moveset, ne.bind(function(element) {
+                this._container.appendChild(element);
+            }, this));
+            this._container.style[range] = parseInt(this._container.style[range], 10) + containerMoveDist + 'px';
+        }
+    },
+    /**
+     * 현재 화면에 보여지는 요소가 로테이트 요소에 포함되어 있는지 확인한다.
+     *
+     * @param {HTMLElement} item 포함되어 있는지 확인하기위한 엘리먼트
+     * @param {Array} colleciton 노드배열
+     * @returns {boolean}
+     * @private
+     */
+    _isInclude: function(item, colleciton) {
+        var i;
+        for(i = 0, len = colleciton.length; i < len; i++) {
+            if (colleciton[i] === item) {
+                return true;
+            }
+        }
+    },
+    /**
+     * 방향에 따른, 로테이션 될 세트후보를 결정한다.
+     *
+     * @param {String} flow 방향
+     * @private
+     */
+    _setPartOfPanels: function(flow) {
+        var itemcount = this._itemcount,
+            isPrev = (flow === 'prev'),
+            count = (this._rollunit !== 'page') ? 1 : itemcount,
+            dist = isPrev ? -count : count,
+            point = isPrev ? [dist] : [0, dist];
+
+        this._movePanelSet = this._panels.slice.apply(this._panels, point);
+    },
+    /**
+     * 움직일 패널 선택
+     * @private
+     */
+    _setTarget: function() {
+        // 아이템 카운트에 따른 선택
+        return this._container;
+    },
+
+    /**
+     * 한 화면에 보이는 패널 갯수를 구한다.
+     *
+     * @private
+     */
+    _setItemCount: function() {
+        var element = this._element,
+            elementStyle = element.style,
+            elementWidth = parseInt(elementStyle.width || element.clientWidth, 10),
+            elementHeight = parseInt(elementStyle.height || element.clientHeight, 10),
+            item = this._element.getElementsByTagName('li')[0], // 마크업은 li로 픽스
+            itemStyle = item.style,
+            itemWidth = parseInt(itemStyle.width || item.clientWidth, 10),
+            itemHeight = parseInt(itemStyle.height || item.clientHeight, 10);
+
+        if (this._range === 'left') {
+            this._itemcount = Math.round(elementWidth / itemWidth);
+        } else {
+            this._itemcount = Math.round(elementHeight / itemHeight);
+        }
+    },
+    /**
+     * 패널리스트를 만든다.
+     *
+     * @private
+     */
+    _setPanel: function() {
+        var container = this._container,
+            panels = this._container.childNodes,
+            option = this._option;
+        this._panels = Array.prototype.slice.call(panels);
+        this._panels = this._filter(this._panels);
+        this._basis = this._basis || 0;
+    },
+    /**
+     * 패널들만 추출한다.
+     *
+     * @param {Array} data 컨테이너의 차일드노드
+     * @returns {Array} 텍스트 노드 제외된 노드의 배열
+     * @private
+     */
+    _filter: function(data) {
+        var i,
+            arr = [];
+        if (Array.filter) {
+            return Array.filter.call(this, data, function(element) {
+                if(ne.isHTMLTag(element)) {
+                    return element;
+                };
+            });
+        } else {
+            for (i = 0, len = data.length; i < len; i++) {
+                if (ne.isHTMLTag(data[i])) {
+                    arr.push(data[i]);
+                }
+            }
+            return arr;
+        }
     }
-});
+};
+
 // 커스텀이벤트 믹스인
 ne.CustomEvents.mixin(ne.component.Rolling.Roller);

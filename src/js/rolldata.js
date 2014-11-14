@@ -233,8 +233,26 @@ ne.component.Rolling.Data.remoteDataMethods = {
 };
 
 ne.component.Rolling.Data.htmlDataMethods = {
-    _initData: function(nodeList) {
-        this._datalist = nodeList;
+    _initData: function(nodelist) {
+        this._datalist = nodelist;
+    },
+    /**
+     * 노드를 찾아온다.
+     * @param {Number} index 찾아올 노드의 인덱스
+     */
+    getData: function(index) {
+        this._datalist[index || this._current];
+    },
+    getFirstSet: function() {
+        // this._current - 현재칸량만큼 가져와서 붙임
+        this._datalist
+    },
+    getLastSet: function() {
+
+    },
+    changeCurrent: function() {
+        // 현재 좌표 계산
+        this._current = '';
     }
     // v1 노드 리스트 처음과 끝 연결. (이중연결링크드 리스트로)
     // v1 모델의 넥스트와 비포 기능은 그대로
