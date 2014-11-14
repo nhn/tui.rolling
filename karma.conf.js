@@ -29,19 +29,6 @@ module.exports = function(config) {
           'test/**/*.test.js'
       ],
 
-      plugins: [
-          'karma-jasmine',
-          'karma-coverage',
-          'karma-ievms',
-          'karma-chrome-launcher',
-          'karma-firefox-launcher',
-          'karma-safari-launcher',
-          'karma-slimerjs-launcher',
-          'karma-phantomjs-launcher',
-          'karma-junit-reporter',
-          'karma-ajax'
-      ],
-
     // list of files to exclude
     exclude: [
     ],
