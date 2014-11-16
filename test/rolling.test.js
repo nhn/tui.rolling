@@ -1,9 +1,9 @@
 describe('rolling 객체 테스트', function() {
 
-    jasmine.getFixtures().fixturesPath = "base/test/fixture";
+    jasmine.getFixtures().fixturesPath = "base";
 
     beforeEach(function() {
-        loadFixtures("rolling.html");
+        loadFixtures("test/fixture/rolling.html");
     });
 
     var rolling1,

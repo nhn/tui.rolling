@@ -1,11 +1,11 @@
 describe('roller', function() {
 
-    jasmine.getFixtures().fixturesPath = "base/test/fixture";
-    jasmine.getStyleFixtures().fixturesPath = "base/test/fixture";
+    jasmine.getFixtures().fixturesPath = "base/";
+    jasmine.getStyleFixtures().fixturesPath = "base/";
 
     beforeEach(function() {
-        loadFixtures("roller.html");
-        loadStyleFixtures('fixedhtml.css');
+        loadFixtures("test/fixture/roller.html");
+        loadStyleFixtures('test/fixture/fixedhtml.css');
     });
 
     var roller1,
