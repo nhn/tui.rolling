@@ -11,7 +11,7 @@ module.exports = function(config) {
     config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: './',
 
 
     // frameworks to use
@@ -26,7 +26,15 @@ module.exports = function(config) {
           'src/js/rolling.js',
           'src/js/roller.js',
           'src/**/*.js',
-          'test/**/*.test.js'
+          'test/**/*.test.js',
+          {
+              pattern: 'test/fixture/**/*.html',
+              included: false
+          },
+          {
+              pattern: 'test/fixture/**/*.css',
+              included: false
+          }
       ],
 
     // list of files to exclude
@@ -61,7 +69,7 @@ module.exports = function(config) {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: false,
+    autoWatch: true,
 
 
     // start these browsers
