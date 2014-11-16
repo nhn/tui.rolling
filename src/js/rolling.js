@@ -54,12 +54,6 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
          */
         this._option = option;
         /**
-         * 커스텀 이벤트 저장소
-         * @type {Object}
-         * @private
-         */
-        this._customEvent = {};
-        /**
          * 패널의 이동방향 정보
          *
          * @type {String|string}
@@ -90,14 +84,14 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
          * @type {ne.component.Rolling.Data}
          * @private
          */
-        this._model = new ne.component.Rolling.Data(option, data);
+        this._model = !option.isDrawn ? new ne.component.Rolling.Data(option, data) : null;
         /**
          * 롤링 액션 객체
          *
          * @type {ne.component.Rolling.Roller}
          * @private
          */
-        this._roller = new ne.component.Rolling.Roller(option, this._model.getData());
+        this._roller = new ne.component.Rolling.Roller(option, this._model && this._model.getData());
 
 
         if (!!option.isAuto) {
@@ -112,6 +106,8 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
      * @param {String} [flow] 롤링 방향
      */
     roll: function(data, flow) {
+        flow = flow || this._flow;
+
         // 롤러가 idle상태가 아니면 외부에서의 입력은 모두 튕겨낸다.
         if (this._roller.status !== 'idle') {
             return;
@@ -131,8 +127,12 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
             this._roller.move(data);
         } else {
             this.setFlow(flow);
-            this._model.changeCurrent(this._flow);
-            this._roller.move(this._model.getData());
+            // 모델이 없을 경우는 데이터를 넘기지 않는다.
+            if (this._model) {
+                this._model.changeCurrent(flow);
+                data = this._model.getData();
+            }
+            this._roller.move(data);
         }
 
     },

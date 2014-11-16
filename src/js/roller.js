@@ -183,9 +183,9 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
 
         // 이동단위가 페이지가 아닐경우
         if (this._rollunit !== 'page' && this._isDrawn) {
-            dist = Math.ceil(dist / itemcount);
+            dist = Math.ceil(dist / this._itemcount);
         }
-        this._distance = dist;
+        this._distance = parseInt(dist, 10);
     },
     /**
      * 이동 명령 큐잉한다.
@@ -209,11 +209,46 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
      */
     setFlow: function(flow) {
         this._flow = flow || this._flow || 'next';
+    },
+    /**
+     * 애니메이션 효과를 변경한다.
+     * @param {String} type 바꿀 모션이름
+     */
+    changeMotion: function(type) {
+        this._motion = ne.component.Rolling.Roller.motion[type];
+    },
+    /**
+     * 애니메이션 수행
+     *
+     * @param {Object} option 애니메이션 옵션
+     */
+    _animate: function(option) {
+        var start = new Date(),
+            id = window.setInterval(function() {
+                var timePassed = new Date() - start,
+                    progress = timePassed / option.duration,
+                    delta;
+                if (progress > 1) {
+                    progress = 1;
+                }
+                delta = option.delta(progress);
+
+                option.step(delta);
+
+                if (progress === 1) {
+                    window.clearInterval(id);
+                    option.complate();
+                }
+            }, option.delay || 10);
     }
 });
-
+/**
+ * 3개의 패널을 돌리는 비정형 롤러 메서드 모음
+ *
+ * @namespace ne.component.Rolling.Roller.movePanelSet
+ * @static
+ */
 ne.component.Rolling.Roller.movePanelSet = {
-
     /**
      * 롤링될 컨테이너를 생성 or 구함
      *
@@ -340,6 +375,7 @@ ne.component.Rolling.Roller.movePanelSet = {
     },
     /**
      * 각 패널들이 움직일 값을 구한다
+     *
      * @returns {*}
      * @private
      */
@@ -382,10 +418,6 @@ ne.component.Rolling.Roller.movePanelSet = {
         }
 
     },
-
-    // v1 이동방법을 바꾼다. 현재 패널을 갱신하고 움직일 패널을 붙인 뒤, 타겟을 지정한다.
-    // v1 타겟을 지정하고 모션과 비모션 후, fix에서 최후 패널을 이동시킨다. (앞, 뒤 전환)
-    // v1 fix 에서 네개의 패널이 동시에 이동하면, 제일 앞 네개의 패널을 동시에 이동시킨다.
     /**
      * 패널 이동
      *
@@ -459,7 +491,7 @@ ne.component.Rolling.Roller.movePanelSet = {
             step: ne.bind(function(delta) {
                 ne.forEach(this._targets, function(element, index) {
 
-                    var dest = (flow === 'prev') ? dest = distance * delta : dest = -(distance * delta);
+                    var dest = (flow === 'prev') ? distance * delta : -(distance * delta);
                     element.style[range] = start[index] + dest + 'px';
 
                 });
@@ -499,39 +531,14 @@ ne.component.Rolling.Roller.movePanelSet = {
              */
             this.fire('afterMove');
         }
-    },
-    /**
-     * 애니메이션 효과를 변경한다.
-     * @param {String} type 바꿀 모션이름
-     */
-    changeMotion: function(type) {
-        this._motion = ne.component.Rolling.Roller.motion[type];
-    },
-    /**
-     * 애니메이션 수행
-     *
-     * @param {Object} option 애니메이션 옵션
-     */
-    _animate: function(option) {
-        var start = new Date(),
-            id = window.setInterval(function() {
-                var timePassed = new Date() - start,
-                    progress = timePassed / option.duration,
-                    delta;
-                if (progress > 1) {
-                    progress = 1;
-                }
-                delta = option.delta(progress);
-
-                option.step(delta);
-
-                if (progress === 1) {
-                    window.clearInterval(id);
-                    option.complate();
-                }
-            }, option.delay || 10);
     }
 };
+/**
+ * 컨테이너를 움직이는 롤러의 메서드 모음
+ *
+ * @namespace ne.component.Rolling.Roller.moveContainerSet
+ * @static
+ */
 ne.component.Rolling.Roller.moveContainerSet = {
     _setContainer: function() {
         var element = this._element,
@@ -545,9 +552,6 @@ ne.component.Rolling.Roller.moveContainerSet = {
         }
         this._setItemCount();
     },
-    // v1 이동방법을 바꾼다. 현재 패널을 갱신하고 움직일 패널을 붙인 뒤, 타겟을 지정한다.
-    // v1 타겟을 지정하고 모션과 비모션 후, fix에서 최후 패널을 이동시킨다. (앞, 뒤 전환)
-    // v1 fix 에서 네개의 패널이 동시에 이동하면, 제일 앞 네개의 패널을 동시에 이동시킨다.
     /**
      * 패널 이동
      *
@@ -577,8 +581,6 @@ ne.component.Rolling.Roller.moveContainerSet = {
         // 다음에 중앙에 올 패널 설정
 
         this._rotatePanel(flow);
-        this._setTarget(flow);
-
         // 모션이 없으면 기본 좌표 움직임
         if (!this._motion) {
             this._moveWithoutMotion();
@@ -591,11 +593,18 @@ ne.component.Rolling.Roller.moveContainerSet = {
         this._setPanel();
         this.status = 'idle';
     },
+    /**
+     * 이동거리를 구한다.
+     *
+     * @param {String} flow 방향
+     * @returns {number}
+     * @private
+     */
     _getMoveDistance: function(flow) {
         if (flow === 'prev') {
-            return 300;
+            return this._distance;
         } else {
-            return -300;
+            return -this._distance;
         }
     },
     /**
@@ -611,8 +620,30 @@ ne.component.Rolling.Roller.moveContainerSet = {
         this._container.style[range] = start + pos + 'px';
         this.fix();
     },
-    _moveWithMotion: function() {
+    /**
+     * 모션이 있을 경우, 모션을 수행한다.
+     *
+     * @private
+     */
+    _moveWithMotion: function(duration) {
+        // 일시적 duration의 변경이 있을땐 인자로 넘어온다.(ex 페이지 한꺼번에 건너 뛸때)
+        var flow = this._flow,
+            container = this._container,
+            range = this._range,
+            start = parseInt(container.style[range], 10),
+            distance = this._getMoveDistance(flow),
+            duration = duration || this._duration;
 
+        this._animate({
+            delay: 10,
+            duration: duration || 1000,
+            delta: this._motion,
+            step: ne.bind(function(delta) {
+                var dest = distance * delta;
+                container.style[range] = start + dest + 'px';
+            }, this),
+            complate: ne.bind(this.fix, this)
+        });
     },
     /**
      * 패널을 돌린다.
@@ -625,33 +656,37 @@ ne.component.Rolling.Roller.moveContainerSet = {
             moveset,
             movesetLength,
             range = this._range,
+            flow = flow || this._flow,
             containerMoveDist,
             isPrev = flow === 'prev',
             basis = this._basis;
 
+        // 로테이션 될 패널을 설정한다.
         this._setPartOfPanels(flow);
+
         moveset = this._movePanelSet;
         movesetLength = moveset.length;
-        containerMoveDist = this._panels[0].clientWidth * movesetLength;
+        containerMoveDist = this._getMoveDistance(flow);
 
+        // 현재 페이지에 보이는 패널이, 로테이션 패널로 정해지면, 로테이션을 수행하지 않는다.
         if (this._isInclude(this._panels[this._basis], moveset)) {
-            // 다음요소를 어떻게 찾을 것인가.
             this._basis = isPrev ? basis - movesetLength : basis + movesetLength;
             return;
         }
-
+        // 방향에 따른 동작수행
         if (isPrev) {
             standard = this._panels[0];
             ne.forEach(moveset, ne.bind(function(element) {
                 this._container.insertBefore(element, standard);
             }, this));
-            this._container.style[range] = parseInt(this._container.style[range], 10) - containerMoveDist + 'px';
         } else {
             ne.forEach(moveset, ne.bind(function(element) {
                 this._container.appendChild(element);
             }, this));
-            this._container.style[range] = parseInt(this._container.style[range], 10) + containerMoveDist + 'px';
         }
+        console.log(this._container.childNodes);
+        // 로테이션 후, 컨테이너의 위치 재정렬
+        this._container.style[range] = parseInt(this._container.style[range], 10) - containerMoveDist + 'px';
     },
     /**
      * 현재 화면에 보여지는 요소가 로테이트 요소에 포함되어 있는지 확인한다.
@@ -670,7 +705,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
         }
     },
     /**
-     * 방향에 따른, 로테이션 될 세트후보를 결정한다.
+     * 방향에 따른, move발생 전 로테이션 될 패널들을 찾는다.
      *
      * @param {String} flow 방향
      * @private
@@ -683,14 +718,6 @@ ne.component.Rolling.Roller.moveContainerSet = {
             point = isPrev ? [dist] : [0, dist];
 
         this._movePanelSet = this._panels.slice.apply(this._panels, point);
-    },
-    /**
-     * 움직일 패널 선택
-     * @private
-     */
-    _setTarget: function() {
-        // 아이템 카운트에 따른 선택
-        return this._container;
     },
 
     /**
@@ -721,10 +748,9 @@ ne.component.Rolling.Roller.moveContainerSet = {
      */
     _setPanel: function() {
         var container = this._container,
-            panels = this._container.childNodes,
-            option = this._option;
-        this._panels = Array.prototype.slice.call(panels);
-        this._panels = this._filter(this._panels);
+            panels = container.childNodes;
+
+        this._panels = this._filter(panels);
         this._basis = this._basis || 0;
     },
     /**
@@ -741,7 +767,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
             return Array.filter.call(this, data, function(element) {
                 if(ne.isHTMLTag(element)) {
                     return element;
-                };
+                }
             });
         } else {
             for (i = 0, len = data.length; i < len; i++) {

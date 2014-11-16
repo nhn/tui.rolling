@@ -1,64 +1,136 @@
 describe('roller', function() {
-    var div1 = document.createElement('div'),
-        div2 = document.createElement('div');
-    // 시뮬레이션에서 width, height를 client로 잡으면 0으로 나오기 때문에, 스타일로 지정
-        div1.style.width = '300px';
-        div1.style.height = '100px';
-        div2.style.width = '300px';
-        div2.style.height = '100px';
-        var roller = new ne.component.Rolling.Roller({
+
+    jasmine.getFixtures().fixturesPath = "base/test/fixture";
+    jasmine.getStyleFixtures().fixturesPath = "base/test/fixture";
+
+    beforeEach(function() {
+        loadFixtures("roller.html");
+        loadStyleFixtures('fixedhtml.css');
+    });
+
+    var roller1,
+        roller2,
+        roller3,
+        roller4;
+
+    it('defined roller', function() {
+
+        var div1 = document.getElementById('roller1'),
+            div2 = document.getElementById('roller2'),
+            div3 = document.getElementById('roller3'),
+            div4 = document.getElementById('roller4');
+
+        roller1 = new ne.component.Rolling.Roller({
             element: div1
         }, 'data1'),
+
         roller2 = new ne.component.Rolling.Roller({
             element: div2,
             direction: 'vertical'
         }, 'data2');
 
-    it('defined roller', function() {
-        expect(roller).toBeDefined();
+        // width 300px; height:150px;
+        roller3 = new ne.component.Rolling.Roller({
+            element: div3,
+            direction: 'horizontal',
+            isVariable: false,
+            isAuto: false,
+            duration: 400,
+            isCircle: true,
+            isDrawn: true,
+            unit: 'page'
+        });
+        // width 150px, height: 300px;
+        roller4 = new ne.component.Rolling.Roller({
+            element: div4,
+            direction: 'vertical',
+            isVariable: false,
+            isAuto: false,
+            duration: 400,
+            isCircle: true,
+            isDrawn: true,
+            unit: 'item'
+        });
+
+        expect(roller1).toBeDefined();
         expect(roller2).toBeDefined();
+        expect(roller3).toBeDefined();
+        expect(roller4).toBeDefined();
     });
+
+    it('option.isDrawn : check itemcount', function() {
+        var itemcount3 = roller3._itemcount,
+            itemcount4 = roller4._itemcount;
+        expect(itemcount3).toBe(3);
+        expect(itemcount4).toBe(3);
+    });
+
     it('_setUnitDistance called?', function() {
-        var distance1 = roller._distance,
-            distance2 = roller2._distance;
-        expect(distance1).toBe('300');
-        expect(distance2).toBe('100');
+        var distance1 = roller1._distance,
+            distance2 = roller2._distance,
+            distance3 = roller3._distance,
+            distance4 = roller4._distance;
+        expect(distance1).toBe(300);
+        expect(distance2).toBe(100);
+        expect(distance3).toBe(300);
+        expect(distance4).toBe(100);
     });
 
     var data = 'JsonCompare Nightmare',
-        // default
         type = 'next',
         moveElement,
         beforeCenter,
         moveSet,
         beforePos1, beforePos2,
-        afterPos1, afterPos2,
-        panel = roller.panel;
+        afterPos1, afterPos2;
 
-    it('test move flow', function() {
-        // roller._getMoveSet
-        moveSet = roller._getMoveSet();
-        expect(moveSet[0]).toBe(-roller._distance);
+    it('test move flow (not isDrawn)', function() {
+        var panel = roller1.panel;
+        // roller1._getMoveSet
+        moveSet = roller1._getMoveSet();
+        expect(moveSet[0]).toBe(-roller1._distance);
         expect(moveSet[1]).toBe(0);
 
-        // roller._updatePanel(data, type);
-        roller._updatePanel(data);
+        // roller1._updatePanel(data, type);
+        roller1._updatePanel(data);
         expect(panel[type].innerHTML).toBe(data);
 
-        // roller._appendMoveData(type);
-        roller._appendMoveData(type);
-        moveElement = roller.movePanel;
+        // roller1._appendMoveData(type);
+        roller1._appendMoveData(type);
+        moveElement = roller1.movePanel;
         beforeCenter = panel['center'].nextSibling;
         expect(moveElement).toBe(panel[type]);
         expect(moveElement).toBe(beforeCenter);
 
         // 상태 초기화 후 무브 수행
-        //roller.fix();
-        roller.move(data, type);
+        //roller1.fix();
+        roller1.move(data, type);
         beforePos1 = parseInt(panel['center'].style.left);
     });
 
+    it('test move flow (isDrawn)', function() {
+        var panels,
+            moveset;
+
+        // roller1._rotatePanel(type);
+        roller3._rotatePanel('next');
+        roller3._setPanel();
+
+        panels = roller3._panels
+        moveset = roller3._movePanelSet;
+        expect(moveset.length).toBe(3);
+        expect(panels[0]).toBe(moveset[0]);
+
+    });
+
+    it('filter test', function() {
+        var array = [document.createTextNode('1'), document.createElement('div'), document.createElement('div'), document.createTextNode('a')],
+        arr = roller3._filter(array);
+        expect(arr.length).toBe(2);
+    });
+
     it('check move result', function(done) {
+        var panel = roller1.panel;
         setTimeout(function() {
             afterPos1 = parseInt(panel['center'].style.left);
             expect(beforePos1).toBe(beforePos1);
@@ -67,17 +139,17 @@ describe('roller', function() {
     });
 
     it('Custom Event mixin', function() {
-        expect(roller.on).toBeDefined();
+        expect(roller1.on).toBeDefined();
         expect(roller2.on).toBeDefined();
     });
 
     it('Custom Event test', function() {
         var a = 0;
-        roller.on('move', function() {
+        roller1.on('move', function() {
             a++;
             checkCustom();
         });
-        roller.fire('move');
+        roller1.fire('move');
         function checkCustom() {
             expect(a).toBe(1);
         }

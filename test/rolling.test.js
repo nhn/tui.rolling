@@ -1,27 +1,77 @@
 describe('rolling 객체 테스트', function() {
-    var div1 = document.createElement('div'),
-        div2 = document.createElement('div');
-    // 시뮬레이션에서 width, height를 client로 잡으면 0으로 나오기 때문에, 스타일로 지정
-    div1.style.width = '300px';
-    div1.style.height = '100px';
-    div2.style.width = '300px';
-    div2.style.height = '100px';
 
-    var rolling1 = new ne.component.Rolling({
-        element: div1
-    }, ['a1', 'a2', 'a3']),
+    jasmine.getFixtures().fixturesPath = "base/test/fixture";
+
+    beforeEach(function() {
+        loadFixtures("rolling.html");
+    });
+
+    var rolling1,
+        rolling2,
+        rolling3,
+        rolling4;
+
+    it('롤링 생성', function() {
+        var div1 = document.getElementById('rolling1'),
+            div2 = document.getElementById('rolling2'),
+            div3 = document.getElementById('rolling3'),
+            div4 = document.getElementById('rolling4');
+
+        rolling1 = new ne.component.Rolling({
+            element: div1
+        }, ['a1', 'a2', 'a3']),
         rolling2 = new ne.component.Rolling({
             element: div2,
             direction: 'vertical',
             isVariable: true
         }, 'initData');
+        // width 300px; height:150px;
+        rolling3 = new ne.component.Rolling({
+            element: div3,
+            direction: 'horizontal',
+            isVariable: false,
+            isAuto: false,
+            duration: 400,
+            isCircle: true,
+            isDrawn: true,
+            unit: 'page'
+        });
+        // width 150px, height: 300px;
+        rolling4 = new ne.component.Rolling({
+            element: div4,
+            direction: 'vertical',
+            isVariable: false,
+            isAuto: false,
+            duration: 400,
+            isCircle: true,
+            isDrawn: true,
+            unit: 'item'
+        });
 
-    it('define', function() {
         expect(rolling1).toBeDefined();
         expect(rolling2).toBeDefined();
+        expect(rolling3).toBeDefined();
+        expect(rolling4).toBeDefined();
+
     });
 
-    it('roll , 롤링 작동확인', function() {
+    it('isDrawn 에 따른 모델 존재', function() {
+        // !isDrawn
+        expect(rolling1._model).toBeDefined();
+        expect(rolling2._model).toBeDefined();
+        // isDrawn
+        expect(rolling3._model).toBe(null);
+        expect(rolling4._model).toBe(null);
+    });
+
+    it('is Defined roller', function() {
+        expect(rolling1._roller).toBeDefined();
+        expect(rolling2._roller).toBeDefined();
+        expect(rolling3._roller).toBeDefined();
+        expect(rolling4._roller).toBeDefined();
+    });
+
+    it('roll , 롤링 작동확인 (!isDrwan)', function() {
         var rollNum1, rollNum2,
         rollNum1 = rolling1._model.getCurrent();
         rolling1.roll();
