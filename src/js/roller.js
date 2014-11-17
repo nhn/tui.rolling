@@ -21,7 +21,7 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
         this._option = option;
         /**
          * 루트 엘리먼트를 저장한다
-         * @type {{HTMLelement|String}}
+         * @type {(HTMLelement|String)}
          * @private
          */
         this._element = ne.isString(option.element) ? document.getElementById(option.element) : option.element;
@@ -252,7 +252,6 @@ ne.component.Rolling.Roller.movePanelSet = {
     /**
      * 롤링될 컨테이너를 생성 or 구함
      *
-     * @returns {*}
      * @private
      */
     _setContainer: function() {
@@ -275,9 +274,9 @@ ne.component.Rolling.Roller.movePanelSet = {
             this._element.innerHTML = '';
             this._element.appendChild(wrap);
         } else {
-            // 만약 천번째 엘리먼트가 존재하면 컨테이너로 인식
+            // 만약 번째 엘리먼트가 존재하면 컨테이너로 인식
             if (ne.isHTMLTag(firstChild)) {
-                return firstChild;
+                wrap = firstChild;
             }
             // 아닐경우 그 다음앨리먼트를 찾는다
             next = firstChild && firstChild.nextSibling;
@@ -308,7 +307,7 @@ ne.component.Rolling.Roller.movePanelSet = {
         // 옵션으로 패널 태그가 있으면 옵션사용
         if (ne.isString(option.panelTag)) {
             tag = (option.panelTag).split('.')[0];
-            className = (option.panelTag).split('.')[1];
+            className = (option.panelTag).split('.')[1] || '';
         } else {
             // 옵션으로 설정되어 있지 않을 경우 컨테이너 내부에 존재하는 패널 엘리먼트 검색
             // 첫번째가 텍스트 일수 있으므로 다음요소까지 확인한다. 없으면 'li'
@@ -425,7 +424,7 @@ ne.component.Rolling.Roller.movePanelSet = {
      */
     move: function(data, duration, flow) {
         // 상태 체크, idle상태가 아니면 큐잉
-        var flow = this._flow;
+        flow = flow || this._flow;
         if (this.status === 'idle') {
             this.status = 'run';
         } else {
@@ -469,7 +468,7 @@ ne.component.Rolling.Roller.movePanelSet = {
         ne.forEach(this._targets, function(element, index) {
             element.style[range] = pos[index] + 'px';
         });
-        this.fix();
+        this.complate();
     },
     /**
      * 모션이 있을 경우, 모션을 수행한다
@@ -481,8 +480,9 @@ ne.component.Rolling.Roller.movePanelSet = {
         var flow = this._flow,
             start = this._getStartSet(flow),
             distance = this._distance,
-            duration = duration || this._duration,
             range = this._range;
+
+        duration = duration || this._duration;
 
         this._animate({
             delay: 10,
@@ -496,14 +496,14 @@ ne.component.Rolling.Roller.movePanelSet = {
 
                 });
             }, this),
-            complate: ne.bind(this.fix, this)
+            complate: ne.bind(this.complate, this)
         });
     },
     /**
      * 러닝상태를 해제한다.
      * 센터를 재설정 한다.
      */
-    fix: function() {
+    complate: function() {
         var panel = this.panel,
             tempPanel,
             flow = this._flow;
@@ -540,6 +540,11 @@ ne.component.Rolling.Roller.movePanelSet = {
  * @static
  */
 ne.component.Rolling.Roller.moveContainerSet = {
+    /**
+     * 컨테이너를 설정한다.
+     *
+     * @private
+     */
     _setContainer: function() {
         var element = this._element,
             firstChild = element.firstChild,
@@ -559,7 +564,8 @@ ne.component.Rolling.Roller.moveContainerSet = {
      */
     move: function(data, duration, flow) {
         // 상태 체크, idle상태가 아니면 큐잉
-        var flow = this._flow;
+        flow = flow || this._flow;
+
         if (this.status === 'idle') {
             this.status = 'run';
         } else {
@@ -588,7 +594,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
             this._moveWithMotion(duration);
         }
     },
-    fix: function() {
+    complate: function() {
         // this._panels 업데이트 this._basis 업데이트
         this._setPanel();
         this.status = 'idle';
@@ -618,7 +624,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
             range = this._range,
             start = parseInt(this._container.style[range], 10);
         this._container.style[range] = start + pos + 'px';
-        this.fix();
+        this.complate();
     },
     /**
      * 모션이 있을 경우, 모션을 수행한다.
@@ -631,8 +637,9 @@ ne.component.Rolling.Roller.moveContainerSet = {
             container = this._container,
             range = this._range,
             start = parseInt(container.style[range], 10),
-            distance = this._getMoveDistance(flow),
-            duration = duration || this._duration;
+            distance = this._getMoveDistance(flow);
+
+        duration = duration || this._duration;
 
         this._animate({
             delay: 10,
@@ -642,7 +649,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
                 var dest = distance * delta;
                 container.style[range] = start + dest + 'px';
             }, this),
-            complate: ne.bind(this.fix, this)
+            complate: ne.bind(this.complate, this)
         });
     },
     /**
@@ -684,7 +691,6 @@ ne.component.Rolling.Roller.moveContainerSet = {
                 this._container.appendChild(element);
             }, this));
         }
-        console.log(this._container.childNodes);
         // 로테이션 후, 컨테이너의 위치 재정렬
         this._container.style[range] = parseInt(this._container.style[range], 10) - containerMoveDist + 'px';
     },
@@ -697,7 +703,8 @@ ne.component.Rolling.Roller.moveContainerSet = {
      * @private
      */
     _isInclude: function(item, colleciton) {
-        var i;
+        var i,
+            len;
         for(i = 0, len = colleciton.length; i < len; i++) {
             if (colleciton[i] === item) {
                 return true;
@@ -762,6 +769,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
      */
     _filter: function(data) {
         var i,
+            len,
             arr = [];
         if (Array.filter) {
             return Array.filter.call(this, data, function(element) {
