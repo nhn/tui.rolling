@@ -20,7 +20,7 @@ ne.component.Rolling.Roller.motion = (function() {
     function makeEaseIn(delta) {
         return function(progress) {
             return delta(progress);
-        }
+        };
     }
     /**
      * easeOut
@@ -31,7 +31,7 @@ ne.component.Rolling.Roller.motion = (function() {
     function makeEaseOut(delta) {
         return function(progress) {
             return 1 - delta(1 - progress);
-        }
+        };
     }
 
     /**
@@ -47,7 +47,7 @@ ne.component.Rolling.Roller.motion = (function() {
             } else {
                 return (2 - delta(2 * (1 - progress))) / 2;
             }
-        }
+        };
     }
     /**
      * 선형
@@ -73,7 +73,7 @@ ne.component.Rolling.Roller.motion = (function() {
      * @method quadEaseIn
      * @static
      */
-    quadEaseIn = makeEaseIn(quad),
+    quadEaseIn = makeEaseIn(quad);
     /**
      * circ + easeIn
      *
@@ -81,7 +81,7 @@ ne.component.Rolling.Roller.motion = (function() {
      * @method circEaseIn
      * @static
      */
-        circEaseIn = makeEaseIn(circ),
+    circEaseIn = makeEaseIn(circ);
     /**
      * quad + easeOut
      *
@@ -89,7 +89,7 @@ ne.component.Rolling.Roller.motion = (function() {
      * @method quadEaseOut
      * @static
      */
-        quadEaseOut = makeEaseOut(quad),
+    quadEaseOut = makeEaseOut(quad);
     /**
      * circ + easeOut
      *
@@ -97,7 +97,7 @@ ne.component.Rolling.Roller.motion = (function() {
      * @method circEaseOut
      * @static
      */
-        circEaseOut = makeEaseOut(circ),
+    circEaseOut = makeEaseOut(circ);
     /**
      * quad + easeInOut
      *
@@ -105,7 +105,7 @@ ne.component.Rolling.Roller.motion = (function() {
      * @method quadEaseInOut
      * @static
      */
-        quadEaseInOut = makeEaseInOut(quad),
+    quadEaseInOut = makeEaseInOut(quad);
     /**
      * circ + easeInOut
      *
@@ -113,7 +113,7 @@ ne.component.Rolling.Roller.motion = (function() {
      * @method circEaseInOut
      * @static
      */
-        circEaseInOut = makeEaseInOut(circ);
+    circEaseInOut = makeEaseInOut(circ);
 
     return {
         linear: linear,
