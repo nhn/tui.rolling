@@ -21,13 +21,16 @@ describe('roller', function() {
             div4 = document.getElementById('roller4');
 
         roller1 = new ne.component.Rolling.Roller({
-            element: div1
+            element: div1,
+            isVariable: true,
+            wrapperTag: 'div.wrap'
         }, 'data1'),
 
         roller2 = new ne.component.Rolling.Roller({
             element: div2,
-            direction: 'vertical'
-        }, 'data2');
+            direction: 'vertical',
+            panelTag: 'li'
+        }, 'dd');
 
         // width 300px; height:150px;
         roller3 = new ne.component.Rolling.Roller({
@@ -49,6 +52,8 @@ describe('roller', function() {
             duration: 400,
             isCircle: true,
             isDrawn: true,
+            flow: 'prev',
+            motion: 'linear',
             unit: 'item'
         });
 
@@ -123,21 +128,6 @@ describe('roller', function() {
 
     });
 
-    it('filter test', function() {
-        var array = [document.createTextNode('1'), document.createElement('div'), document.createElement('div'), document.createTextNode('a')],
-        arr = roller3._filter(array);
-        expect(arr.length).toBe(2);
-    });
-
-    it('check move result', function(done) {
-        var panel = roller1.panel;
-        setTimeout(function() {
-            afterPos1 = parseInt(panel['center'].style.left);
-            expect(beforePos1).toBe(beforePos1);
-            done();
-        }, 3000);
-    });
-
     it('Custom Event mixin', function() {
         expect(roller1.on).toBeDefined();
         expect(roller2.on).toBeDefined();
@@ -155,5 +145,161 @@ describe('roller', function() {
         }
     });
 
+    it('changeMotion', function() {
+        var motion = roller4._motion;
+        roller4.changeMotion('easeIn');
+        expect(motion).not.toBe(roller4._motion);
+    });
 
+    it('ne.component.Rolling.Roller.movePanelSet move', function() {
+        var beforePanel = roller2.panel[roller2._flow],
+            nextPanel;
+
+        beforePanel = roller2.panel['center'];
+        nextPanel = roller2.panel[roller2._flow];
+        roller2.move('eee');
+        expect(beforePanel).not.toBe(roller2.panel['center']);
+
+
+        beforePanel = roller2.panel['center'];
+        roller2.move('eee', 0, 'prev');
+        expect(beforePanel).not.toBe(roller2.panel['center']);
+
+    });
+
+    it('ne.component.Rolling.Roller.moveContainerSet move', function(done) {
+        var first = roller4._panels[0].innerHTML,
+            last = roller4._panels[roller4._panels.length - 1].innerHTML;
+        roller4.move();
+        setTimeout(function() {
+            expect(last).toBe(roller4._panels[0].innerHTML);
+            done();
+        }, 3500);
+    });
+
+    it('ne.component.Rolling.Roller motion linear', function(done) {
+        var finalDelta;
+        roller1._animate({
+            delay: 10,
+            duration: 1000,
+            delta: ne.component.Rolling.Roller.motion.linear,
+            step: ne.bind(function(delta) {
+                finalDelta = delta;
+            }, roller1),
+            complate: function() {
+
+            }
+        });
+
+        setTimeout(function() {
+            expect(finalDelta).toBe(1);
+            done();
+        }, 1500);
+    });
+
+    it('ne.component.Rolling.Roller motion quad', function(done) {
+        var finalDelta, finalDelta2, finalDelta3;
+        roller1._animate({
+            delay: 10,
+            duration: 1000,
+            delta: ne.component.Rolling.Roller.motion.quadEaseIn,
+            step: ne.bind(function(delta) {
+                finalDelta = delta;
+            }, roller1),
+            complate: function() {
+
+            }
+        });
+
+        setTimeout(function() {
+            expect(finalDelta).toBe(1);
+            //done();
+        }, 1500);
+
+        roller1._animate({
+            delay: 10,
+            duration: 1000,
+            delta: ne.component.Rolling.Roller.motion.quadEaseOut,
+            step: ne.bind(function(delta) {
+                finalDelta2 = delta;
+            }, roller1),
+            complate: function() {
+
+            }
+        });
+
+        setTimeout(function() {
+            expect(finalDelta2).toBe(1);
+        }, 3000);
+
+        roller1._animate({
+            delay: 10,
+            duration: 1000,
+            delta: ne.component.Rolling.Roller.motion.quadEaseInOut,
+            step: ne.bind(function(delta) {
+                finalDelta3 = delta;
+            }, roller1),
+            complate: function() {
+
+            }
+        });
+
+        setTimeout(function() {
+            expect(finalDelta3).toBe(1);
+            done();
+        }, 4500);
+    });
+
+    it('ne.component.Rolling.Roller motion circ', function(done) {
+        var finalDelta, finalDelta2, finalDelta3;
+        roller1._animate({
+            delay: 10,
+            duration: 1000,
+            delta: ne.component.Rolling.Roller.motion.circEaseIn,
+            step: ne.bind(function(delta) {
+                finalDelta = delta;
+            }, roller1),
+            complate: function() {
+
+            }
+        });
+
+        setTimeout(function() {
+            expect(finalDelta).toBe(1);
+            //done();
+        }, 1500);
+
+        roller1._animate({
+            delay: 10,
+            duration: 1000,
+            delta: ne.component.Rolling.Roller.motion.circEaseOut,
+            step: ne.bind(function(delta) {
+                finalDelta2 = delta;
+            }, roller1),
+            complate: function() {
+
+            }
+        });
+
+        setTimeout(function() {
+            expect(finalDelta2).toBe(1);
+        }, 3000);
+
+        roller1._animate({
+            delay: 10,
+            duration: 1000,
+            delta: ne.component.Rolling.Roller.motion.circEaseInOut,
+            step: ne.bind(function(delta) {
+                finalDelta3 = delta;
+            }, roller1),
+            complate: function() {
+
+            }
+        });
+
+        setTimeout(function() {
+            expect(finalDelta3).toBe(1);
+            done();
+        }, 4500);
+    });
 });

@@ -81,7 +81,7 @@ ne.component.Rolling.Roller.motion = (function() {
      * @method circEaseIn
      * @static
      */
-    circEaseIn = makeEaseIn(circ);
+        circEaseIn = makeEaseIn(circ);
     /**
      * quad + easeOut
      *
@@ -89,7 +89,7 @@ ne.component.Rolling.Roller.motion = (function() {
      * @method quadEaseOut
      * @static
      */
-    quadEaseOut = makeEaseOut(quad);
+        quadEaseOut = makeEaseOut(quad);
     /**
      * circ + easeOut
      *

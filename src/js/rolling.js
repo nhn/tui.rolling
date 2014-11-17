@@ -4,9 +4,11 @@
  * @dependency common.js[type, object, collection, function, CustomEvents, defineClass]
  *
  * */
+/* istanbul ignore if */
 if (!ne) {
     ne = window.ne = {};
 }
+/* istanbul ignore if */
 if (!ne.component) {
     ne.component = {};
 }
@@ -119,10 +121,6 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
                 throw new Error('roll must run with data');
             }
 
-            if (!flow) {
-                console.warn('If flow dosen\'t exist motion run with default[next] flow.');
-            }
-
             this.setFlow(flow);
             this._roller.move(data);
         } else {
@@ -162,7 +160,7 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
             i;
 
         // 번호가 입력되지 않았거나, 데이터설정에 문제가 있을 시 에러발생
-        if (!ne.isNumber(Number(page))) {
+        if (isNaN(Number(page))) {
             throw new Error('moveTo method have to run with page');
         }
         if (this._option.isVariable) {
@@ -192,7 +190,7 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
      * @returns {Boolean}
      */
     isNegative: function(number) {
-        return ne.isNumber(number) && number < 0;
+        return !isNaN(number) && number < 0;
     },
     /**
      * 자동롤링 멈춤

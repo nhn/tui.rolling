@@ -111,4 +111,9 @@ describe('RollData Test', function() {
         // 순환되어 값이 달라진다
         expect(r2).not.toBe(b2);
     });
+
+    it('getDataListLength', function() {
+        var length = model2.getDataListLength();
+        expect(length).toEqual(6);
+    });
 });

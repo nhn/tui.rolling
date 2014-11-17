@@ -18,7 +18,8 @@ describe('rolling 객체 테스트', function() {
             div4 = document.getElementById('rolling4');
 
         rolling1 = new ne.component.Rolling({
-            element: div1
+            element: div1,
+            isAuto: true
         }, ['a1', 'a2', 'a3']),
         rolling2 = new ne.component.Rolling({
             element: div2,
@@ -91,4 +92,70 @@ describe('rolling 객체 테스트', function() {
         rolling1.roll();
         expect(num).toBe(3);
     });
+
+    it('attach, fire 커스텀 등록/발생 테스트', function() {
+        var num = 1;
+        rolling1.attach('testEvent', function(data) {
+            num = data.dist;
+        });
+        rolling1.fire('testEvent', {dist : 10});
+
+        expect(num).toEqual(10);
+    });
+
+    it('isNegative 양수 음수?', function() {
+        var num1 = 1,
+            num2 = -1;
+
+        expect(rolling1.isNegative(num1)).toBeFalsy();
+        expect(rolling1.isNegative(num2)).toBeTruthy();
+    });
+
+    it('moveTo test', function() {
+        var error = false;
+        rolling1.moveTo(3);
+        expect(rolling1._model.getCurrent()).toBe(3);
+        try {
+            rolling1.moveTo();
+        } catch(e) {
+            error = e.toString();
+        }
+        expect(error).not.toBeFalsy();
+        error = false;
+        try {
+            rolling1._option.isVariable = true;
+            rolling1.moveTo(3);
+        } catch(e) {
+            rolling1._option.isVariable = false;
+            error = e.toString();
+        }
+        expect(error).not.toBeFalsy();
+    });
+
+    it('auto And Stop', function() {
+        rolling1.auto();
+        expect(rolling1._timer).toBeDefined();
+    });
+
+    it('roll - not idle', function() {
+        var move = false,
+            error = false;
+        rolling1.attach('beforeMove', function() {
+            move = true;
+        });
+        rolling1._roller.status = 'run';
+        rolling1.roll();
+        expect(move).toBeFalsy();
+
+        rolling1._roller.status = 'idle';
+        rolling1._option.isVariable = true;
+        try {
+            rolling1.roll();
+        } catch(e) {
+            error = e.toString();
+        }
+        expect(error).not.toBeFalsy();
+
+        rolling1.roll('data');
+    })
 });

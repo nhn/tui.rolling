@@ -755,36 +755,25 @@ ne.component.Rolling.Roller.moveContainerSet = {
      */
     _setPanel: function() {
         var container = this._container,
-            panels = container.childNodes;
+            panels = container.childNodes,
+            i,
+            arr;
 
-        this._panels = this._filter(panels);
-        this._basis = this._basis || 0;
-    },
-    /**
-     * 패널들만 추출한다.
-     *
-     * @param {Array} data 컨테이너의 차일드노드
-     * @returns {Array} 텍스트 노드 제외된 노드의 배열
-     * @private
-     */
-    _filter: function(data) {
-        var i,
-            len,
+        // toArray에 NodeList케이스가 추가되면 코드 변경 예정
+        try {
+            panels = Array.prototype.slice.call(panels);
+        } catch(e) {
             arr = [];
-        if (Array.filter) {
-            return Array.filter.call(this, data, function(element) {
-                if(ne.isHTMLTag(element)) {
-                    return element;
-                }
-            });
-        } else {
-            for (i = 0, len = data.length; i < len; i++) {
-                if (ne.isHTMLTag(data[i])) {
-                    arr.push(data[i]);
-                }
+            for (i = 0, len = panels.length; i < len; i++) {
+                arr.push(panels[i]);
             }
-            return arr;
+            panels = arr;
         }
+
+        this._panels = ne.filter(panels, function(element) {
+            return ne.isHTMLTag(element);
+        });
+        this._basis = this._basis || 0;
     }
 };
 
