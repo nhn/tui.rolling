@@ -15,9 +15,6 @@ FE 개발팀 이제인 <jein.yi@nhnent.com>
 - 이동시 애니메이션 효과 (정속, 가감속)
 - 커스텀이벤트(페이지 이동 전, 페이지 이동 후)
 
-## 주의
-- 한 행의 높이는 고정값이어야 한다.
-
 ## 샘플 페이지
 http://fetech.nhnent.com/svnrun/fetech/components/Rolling/sample/
 
