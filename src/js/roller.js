@@ -518,7 +518,7 @@ ne.component.Rolling.Roller.movePanelSet = {
 
         // 큐에 데이터가 있으면 무브를 다시 호출하고 없으면 move의 완료로 간주하고 afterMove를 호출한다
         if (ne.isNotEmpty(this._queue)) {
-            var first = this._queue.splice(0, 1)[0];
+            var first = this._queue.shift();
             this.move(first.data, first.duration, first.flow);
         } else {
             /**
