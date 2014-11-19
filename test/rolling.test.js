@@ -138,25 +138,25 @@ describe('rolling 객체 테스트', function() {
         expect(rolling1._timer).toBeDefined();
     });
 
-    //it('roll - not idle', function() {
-    //    var move = false,
-    //        error = false;
-    //    rolling1.attach('beforeMove', function() {
-    //        move = true;
-    //    });
-    //    rolling1._roller.status = 'run';
-    //    rolling1.roll();
-    //    expect(move).toBeFalsy();
-    //
-    //    rolling1._roller.status = 'idle';
-    //    rolling1._option.isVariable = true;
-    //    try {
-    //        rolling1.roll();
-    //    } catch(e) {
-    //        error = e.toString();
-    //    }
-    //    expect(error).not.toBeFalsy();
-    //
-    //    rolling1.roll('data');
-    //})
+    it('roll - not idle', function() {
+        var move = false,
+            error = false;
+        rolling1.attach('beforeMove', function() {
+            move = true;
+        });
+        rolling1._roller.status = 'run';
+        rolling1.roll();
+        expect(move).toBeFalsy();
+
+        rolling1._roller.status = 'idle';
+        rolling1._option.isVariable = true;
+        try {
+            rolling1.roll();
+        } catch(e) {
+            error = e.toString();
+        }
+        expect(error).not.toBeFalsy();
+
+        rolling1.roll('data');
+    })
 });
