@@ -113,10 +113,6 @@
         return Object.prototype.toString.call(obj) === '[object Function]';
     }
 
-    function isNumber(obj) {
-        return !isNaN(obj) && Object.prototype.toString.call(obj) === '[object Number]';
-    }
-
     function isString(obj) {
         return Object.prototype.toString.call(obj) === '[object String]';
     }
@@ -179,7 +175,6 @@
     ne.isArray = Array.isArray || isArray;
     ne.isObject = isObject;
     ne.isFunction = isFunction;
-    ne.isNumber = isNumber;
     ne.isString = isString;
     ne.isBoolean = isBoolean;
     ne.isEmpty = isEmpty;

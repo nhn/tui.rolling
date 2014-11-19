@@ -442,9 +442,13 @@ ne.component.Rolling.Roller.movePanelSet = {
          *    // ..... run code
          * });
          */
-        this.fire('beforeMove', { data: data });
-        // 다음에 중앙에 올 패널 설정
+        var res = this.fire('beforeMove', { data: data });
 
+        if (this._option.isVariable && ne.isString(res)) {
+            data = res;
+        }
+
+        // 다음에 중앙에 올 패널 설정
         this._updatePanel(data);
         this._appendMoveData();
         this._setTarget(flow);
