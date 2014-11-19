@@ -43,11 +43,7 @@ ne.component.Rolling.Data = ne.defineClass(/** @lends ne.component.Rolling.Data.
         if (this.isVariable) {
             this.mixin(ne.component.Rolling.Data.remoteDataMethods);
         } else {
-            if(option.isDrawn) {
-                this.mixin(ne.component.Rolling.Data.htmlDataMethods);
-            } else {
-                this.mixin(ne.component.Rolling.Data.staticDataMethods);
-            }
+            this.mixin(ne.component.Rolling.Data.staticDataMethods);
         }
 
         this._initData(data);
