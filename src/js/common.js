@@ -88,12 +88,46 @@
         ne = window.ne = {};
     }
 
+    /**
+     * 인자가 null 또는 undefined가 아닌지 확인하는 메서드
+     * @param {*} obj
+     * @return {boolean}
+     */
     function isDefined(obj) {
         return obj !== null && obj !== undefined;
     }
 
+    /**
+     * 인자가 null, undefined, false가 아닌지 확인하는 메서드
+     * @param {*} obj
+     * @return {boolean}
+     */
     function isTruthy(obj) {
         return isDefined(obj) && obj !== false;
+    }
+
+    /**
+     * 인자가 null, undefined, false인지 확인하는 메서드
+     * @param {*} obj
+     * @return {boolean}
+     */
+    function isFalsy(obj) {
+        return !isTruthy(obj);
+    }
+
+
+    var toString = Object.prototype.toString;
+
+    /**
+     * 인자가 arguments 객체인지 확인
+     * @param {*} obj
+     * @return {boolean}
+     */
+    function isArguments(obj) {
+        var result = isDefined(obj) &&
+            ((toString.call(obj) === '[object Arguments]') || 'callee' in obj);
+
+        return result;
     }
 
     /**
@@ -102,86 +136,143 @@
      * @return {boolean}
      */
     function isArray(obj) {
-        return Object.prototype.toString.call(obj) === '[object Array]';
+        return toString.call(obj) === '[object Array]';
     }
 
+    /**
+     * 인자가 객체인지 확인하는 메서드
+     * @param {*} obj
+     * @return {boolean}
+     */
     function isObject(obj) {
         return obj === Object(obj);
     }
 
+    /**
+     * 인자가 함수인지 확인하는 메서드
+     * @param {*} obj
+     * @return {boolean}
+     */
     function isFunction(obj) {
-        return Object.prototype.toString.call(obj) === '[object Function]';
-    }
-
-    function isString(obj) {
-        return Object.prototype.toString.call(obj) === '[object String]';
-    }
-
-    function isBoolean(obj) {
-        return Object.prototype.toString.call(obj) === '[object Boolean]';
-    }
-    function isHTMLTag(html)	{
-        if(typeof(HTMLElement) === 'object') {
-            return(html && (html instanceof HTMLElement));
-        }
-        return !!(html && html.nodeType === 1);
+        return toString.call(obj) === '[object Function]';
     }
 
     /**
-     * 값이 비어있는지 확인 한다.
-     * - type 이 Object 의 경우 : 값이 하나라도 있으면 false 로 간주
-     * - 그 외의 경우 : boolean 으로 변경하여 평가함.
+     * 인자가 음수인지 확인하는 메서드
+     * @param {*} obj
+     * @return {boolean}
+     */
+    function isNegative(obj) {
+        return !isNaN(obj) && obj < 0;
+    }
+
+    /**
+     * 인자가 양수인지 확인하는 메서드
+     * @param {*} obj
+     * @return {boolean}
+     */
+    function isPositive(obj) {
+        return !isNaN(obj) && obj > 0;
+    }
+
+    /**
+     * 인자가 문자열인지 확인하는 메서드
+     * @param obj
+     * @return {boolean}
+     */
+    function isString(obj) {
+        return toString.call(obj) === '[object String]';
+    }
+
+    /**
+     * 인자가 불리언 타입인지 확인하는 메서드
+     * @param {*} obj
+     * @return {boolean}
+     */
+    function isBoolean(obj) {
+        return toString.call(obj) === '[object Boolean]';
+    }
+
+    /**
+     * 인자가 HTML Node 인지 검사한다. (Text Node 도 포함)
+     * @param {HTMLElement} html
+     * @return {Boolean} HTMLElement 인지 여부
+     */
+    function isHTMLNode(html) {
+        if (typeof(HTMLElement) === 'object') {
+            return (html && (html instanceof HTMLElement || !!html.nodeType));
+        }
+        return !!(html && html.nodeType);
+    }
+    /**
+     * 인자가 HTML Tag 인지 검사한다. (Text Node 제외)
+     * @param {HTMLElement} html
+     * @return {Boolean} HTMLElement 인지 여부
+     */
+    function isHTMLTag(html) {
+        if (typeof(HTMLElement) === 'object') {
+            return (html && (html instanceof HTMLElement));
+        }
+        return !!(html && html.nodeType && html.nodeType === 1);
+    }
+    /**
+     * null, undefined 여부와 순회 가능한 객체의 순회가능 갯수가 0인지 체크한다.
      * @param {*} obj 평가할 대상
-     * @returns {boolean}
+     * @return {boolean}
      */
     function isEmpty(obj) {
-        var empty = true,
-            name;
-        if (typeof obj === 'object') {
-            for (name in obj) {
-                empty = false;
-                break;
-            }
-        } else {
-            empty = !obj;
+        var key,
+            hasKey = false;
+
+        if (!isDefined(obj)) {
+            return true;
         }
-        return empty;
-    }
-    /**
-     * 값이 비어있는지 확인 한다.
-     * - type 이 Object 의 경우 : 값이 하나라도 있으면 true 로 간주
-     * - 그 외의 경우 : boolean 으로 변경하여 평가함.
-     * @param {*} obj 평가할 대상
-     * @returns {boolean}
-     */
-    function isNotEmpty(obj) {
-        var empty = true,
-            name;
-        if (typeof obj === 'object') {
-            for (name in obj) {
-                empty = false;
-                break;
-            }
-        } else {
-            empty = !obj;
+
+        if (isArray(obj) || isArguments(obj)) {
+            return obj.length === 0;
         }
-        return !empty;
+
+        if (isObject(obj) && !isFunction(obj)) {
+            ne.forEachOwnProperties(obj, function() {
+                hasKey = true;
+                return false;
+            });
+
+            return !hasKey;
+        }
+
+        return true;
+
     }
 
+    /**
+     * isEmpty 메서드와 반대로 동작한다.
+     * @param {*} obj 평가할 대상
+     * @return {boolean}
+     */
+    function isNotEmpty(obj) {
+        return !isEmpty(obj);
+    }
 
 
     ne.isDefined = isDefined;
     ne.isTruthy = isTruthy;
+    ne.isFalsy = isFalsy;
+    ne.isArguments = isArguments;
     ne.isArray = Array.isArray || isArray;
     ne.isObject = isObject;
     ne.isFunction = isFunction;
+    ne.isNegative = isNegative;
+    ne.isPositive = isPositive;
     ne.isString = isString;
     ne.isBoolean = isBoolean;
+    ne.isHTMLNode = isHTMLNode;
+    ne.isHTMLTag = isHTMLTag;
     ne.isEmpty = isEmpty;
     ne.isNotEmpty = isNotEmpty;
-    ne.isHTMLTag = isHTMLTag;
 
 })(window.ne);
+
 /**
  * @fileoverview
  * @author FE개발팀
@@ -260,6 +351,7 @@
     ne.keys = Object.keys || keys;
 
 })(window.ne);
+
 /**
  * @fileoverview 객체나 배열을 다루기위한 펑션들이 정의 되어있는 모듈
  * @author FE개발팀
@@ -273,35 +365,70 @@
     }
 
     /**
+     * 배열나 유사배열를 순회하며 콜백함수에 전달한다.
+     * 콜백함수가 false를 리턴하면 순회를 종료한다.
+     * @param {Array} arr
+     * @param {Function} iteratee  값이 전달될 콜백함수
+     * @param {*} [context] 콜백함수의 컨텍스트
+     * @example
+     *
+     * var sum = 0;
+     *
+     * forEachArray([1,2,3], function(value){
+     *     sum += value;
+     * });
+     *
+     * => sum == 6
+     */
+    function forEachArray(arr, iteratee, context) {
+        var index = 0,
+            len = arr.length;
+
+        for (; index < len; index++) {
+            if (iteratee.call(context || null, arr[index], index, arr) === false) {
+                break;
+            }
+        }
+    }
+
+
+    /**
      * obj에 상속된 프로퍼티를 제외한 obj의 고유의 프로퍼티만 순회하며 콜백함수에 전달한다.
+     * 콜백함수가 false를 리턴하면 순회를 중료한다.
      * @param {object} obj
      * @param {Function} iteratee  프로퍼티가 전달될 콜백함수
      * @param {*} [context] 콜백함수의 컨텍스트
      * @example
      * var sum = 0;
      *
-     * forEach({a:1,b:2,c:3}, function(value){
+     * forEachOwnProperties({a:1,b:2,c:3}, function(value){
      *     sum += value;
      * });
      *
      * => sum == 6
      **/
-    var forEachOwnProperties = function(obj, iteratee, context) {
+    function forEachOwnProperties(obj, iteratee, context) {
         var key;
 
-        for(key in obj) {
+        for (key in obj) {
             if (obj.hasOwnProperty(key)) {
-                iteratee.call(context || null, obj[key], key, obj);
+                if (iteratee.call(context || null, obj[key], key, obj) === false) {
+                    break;
+                }
             }
         }
-    };
+    }
 
     /**
-     * 파라메터로 전달된 객체나 어레이를 순회하며 데이터를 콜백함수에 전달한다.
+     * 파라메터로 전달된 객체나 배열를 순회하며 데이터를 콜백함수에 전달한다.
+     * 유사배열의 경우 배열로 전환후 사용해야함.(ex2 참고)
+     * 콜백함수가 false를 리턴하면 순회를 종료한다.
      * @param {*} obj 순회할 객체
      * @param {Function} iteratee 데이터가 전달될 콜백함수
      * @param {*} [context] 콜백함수의 컨텍스트
      * @example
+     *
+     * //ex1)
      * var sum = 0;
      *
      * forEach([1,2,3], function(value){
@@ -309,8 +436,18 @@
      * });
      *
      * => sum == 6
+     *
+     * //ex2) 유사 배열사용
+     * function sum(){
+     *     var factors = Array.prototype.slice.call(arguments); //arguments를 배열로 변환, arguments와 같은정보를 가진 새 배열 리턴
+     *
+     *     forEach(factors, function(value){
+     *          ......
+     *     });
+     * }
+     *
      **/
-    var forEach = function(obj, iteratee, context) {
+    function forEach(obj, iteratee, context) {
         var key,
             len;
 
@@ -321,10 +458,11 @@
         } else {
             ne.forEachOwnProperties(obj, iteratee, context);
         }
-    };
+    }
 
     /**
-     * 파라메터로 전달된 객체나 어레이를 순회하며 콜백을 실행한 리턴값을 배열로 만들어 리턴한다.
+     * 파라메터로 전달된 객체나 배열를 순회하며 콜백을 실행한 리턴값을 배열로 만들어 리턴한다.
+     * 유사배열의 경우 배열로 전환후 사용해야함.(forEach example참고)
      * @param {*} obj 순회할 객체
      * @param {Function} iteratee 데이터가 전달될 콜백함수
      * @param {*} [context] 콜백함수의 컨텍스트
@@ -336,7 +474,7 @@
      *
      * => [1,2,3,4];
      */
-    var map = function(obj, iteratee, context) {
+    function map(obj, iteratee, context) {
         var resultArray = [];
 
         ne.forEach(obj, function() {
@@ -344,10 +482,11 @@
         });
 
         return resultArray;
-    };
+    }
 
     /**
-     * 파라메터로 전달된 객체나 어레이를 순회하며 콜백을 실행한 리턴값을 다음 콜백의 첫번째 인자로 넘겨준다.
+     * 파라메터로 전달된 객체나 배열를 순회하며 콜백을 실행한 리턴값을 다음 콜백의 첫번째 인자로 넘겨준다.
+     * 유사배열의 경우 배열로 전환후 사용해야함.(forEach example참고)
      * @param {*} obj 순회할 객체
      * @param {Function} iteratee 데이터가 전달될 콜백함수
      * @param {*} [context] 콜백함수의 컨텍스트
@@ -359,7 +498,7 @@
      *
      * => 6;
      */
-    var reduce = function(obj, iteratee, context) {
+    function reduce(obj, iteratee, context) {
         var keys,
             index = 0,
             length,
@@ -379,7 +518,39 @@
         }
 
         return store;
+    }
+    /**
+     * 유사배열을 배열 형태로 변환한다.
+     * - IE 8 이하 버전에서 Array.prototype.slice.call 이 오류가 나는 경우가 있어 try-catch 로 예외 처리를 한다.
+     * @param {*} arrayLike 유사배열
+     * @return {Array}
+     * @example
+
+
+     var arrayLike = {
+        0: 'one',
+        1: 'two',
+        2: 'three',
+        3: 'four',
+        length: 4
     };
+     var result = toArray(arrayLike);
+
+     => ['one', 'two', 'three', 'four'];
+     */
+    function toArray(arrayLike) {
+        var arr;
+        try {
+            arr = Array.prototype.slice.call(arrayLike);
+        } catch (e) {
+            arr = [];
+            forEachArray(arrayLike, function(value) {
+                arr.push(value);
+            });
+        }
+        return arr;
+    }
+
 
     /**
      * 파라메터로 전달된 객체나 어레이를 순회하며 콜백을 실행한 리턴값이 참일 경우의 모음을 만들어서 리턴한다.
@@ -400,7 +571,7 @@
      *
      * => {a: 1, c: 3};
      */
-    var filter = function(obj, iteratee, context) {
+    function filter(obj, iteratee, context) {
         var result = ne.isArray(obj) ? [] : {},
             value,
             key;
@@ -422,10 +593,12 @@
         }, context);
 
         return result;
-    };
+    }
 
     ne.forEachOwnProperties = forEachOwnProperties;
+    ne.forEachArray = forEachArray;
     ne.forEach = forEach;
+    ne.toArray = toArray;
     ne.map = map;
     ne.reduce = reduce;
     ne.filter = filter;
@@ -682,8 +855,12 @@
          * });
          */
         fire: function(type, data) {
+            var isCanceled,
+                resultData,
+                cached;
+
             if (!this.hasListener(type)) {
-                return this;
+                return;
             }
 
             var event = ne.extend({}, data, {type: type, target: this}),
@@ -700,15 +877,23 @@
                 listeners = events[type].slice();
 
                 ne.forEach(listeners, function(listener) {
-                    listener.fn.call(this, event);
+                    resultData = listener.fn.call(this, event);
+                    if (ne.isDefined(resultData)) {
+                        isCanceled = ne.isFalsy(resultData) ? true : isCanceled;
+                        cached = resultData;
+                    }
                 }, this);
             }
 
             ne.forEachOwnProperties(typeIndex, function(eventItem) {
-                eventItem.fn.call(eventItem.ctx, event);
+                resultData = listener.fn.call(this, event);
+                if (ne.isDefined(resultData)) {
+                    isCanceled = ne.isFalsy(resultData) ? true : isCanceled;
+                    cached = resultData;
+                }
             });
 
-            return this;
+            return { isCanceled : isCanceled , data : cached };
         },
 
         /**

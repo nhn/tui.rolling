@@ -442,10 +442,15 @@ ne.component.Rolling.Roller.movePanelSet = {
          *    // ..... run code
          * });
          */
-        var res = this.fire('beforeMove', { data: data });
+        var result = this.fire('beforeMove', { data: data });
 
-        if (this._option.isVariable && ne.isString(res)) {
-            data = res;
+        if (result && result.isCanceled) {
+            this.status = 'idle';
+            return;
+        }
+
+        if (this._option.isVariable && ne.isString(result && result.data)) {
+            data = result.data;
         }
 
         // 다음에 중앙에 올 패널 설정
@@ -687,13 +692,13 @@ ne.component.Rolling.Roller.moveContainerSet = {
         // 방향에 따른 동작수행
         if (isPrev) {
             standard = this._panels[0];
-            ne.forEach(moveset, ne.bind(function(element) {
+            ne.forEach(moveset, function(element) {
                 this._container.insertBefore(element, standard);
-            }, this));
+            }, this);
         } else {
-            ne.forEach(moveset, ne.bind(function(element) {
+            ne.forEach(moveset, function(element) {
                 this._container.appendChild(element);
-            }, this));
+            }, this);
         }
         // 로테이션 후, 컨테이너의 위치 재정렬
         this._container.style[range] = parseInt(this._container.style[range], 10) - containerMoveDist + 'px';
@@ -764,15 +769,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
             arr;
 
         // toArray에 NodeList케이스가 추가되면 코드 변경 예정
-        try {
-            panels = Array.prototype.slice.call(panels);
-        } catch(e) {
-            arr = [];
-            for (i = 0, len = panels.length; i < len; i++) {
-                arr.push(panels[i]);
-            }
-            panels = arr;
-        }
+        panels = ne.toArray(panels);
 
         this._panels = ne.filter(panels, function(element) {
             return ne.isHTMLTag(element);

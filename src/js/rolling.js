@@ -168,7 +168,7 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
         }
 
         // 좌우에 따른 최대/최소값 설정
-        isPrev = this.isNegative(page - current);
+        isPrev = ne.isNegative(page - current);
         page = isPrev ? min : max;
         flow = isPrev ? 'prev' : 'next';
         absInterval = Math.abs(page - current);
@@ -182,15 +182,6 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
             this._roller.move(this._model.getData(), duration);
         }
 
-    },
-    /**
-     * 음수인지 확인
-     *
-     * @param {Number} number 판별 할 정수
-     * @returns {Boolean}
-     */
-    isNegative: function(number) {
-        return !isNaN(number) && number < 0;
     },
     /**
      * 자동롤링 멈춤
