@@ -44,7 +44,7 @@ if (!ne.component) {
  * }, ['<div>data1</div>','<div>data2</div>', '<div>data3</div>']);
  * @constructor
  * */
-ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype */{
+ne.component.Rolling = ne.util.defineClass(/** @lends ne.component.Rolling.prototype */{
     /**
      * 초기화
      * */
@@ -168,7 +168,7 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
         }
 
         // 좌우에 따른 최대/최소값 설정
-        isPrev = ne.isNegative(page - current);
+        isPrev = this.isNegative(page - current);
         page = isPrev ? min : max;
         flow = isPrev ? 'prev' : 'next';
         absInterval = Math.abs(page - current);
@@ -183,6 +183,9 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
         }
 
     },
+    isNegative: function(number) {
+        return !isNaN(number) && number < 0;
+    },
     /**
      * 자동롤링 멈춤
      */
@@ -194,7 +197,7 @@ ne.component.Rolling = ne.defineClass(/** @lends ne.component.Rolling.prototype 
      */
     auto: function() {
         this.stop();
-        this._timer = window.setInterval(ne.bind(function() {
+        this._timer = window.setInterval(ne.util.bind(function() {
             this._model.changeCurrent(this._flow);
             this._roller.move(this._model.getData());
 

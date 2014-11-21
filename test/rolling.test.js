@@ -84,31 +84,17 @@ describe('rolling 테스트', function() {
             expect(rollNum1).not.toBe(rollNum2);
         });
 
-        it('beforeMove, afterMove 정상동작 확인', function() {
-            var num = 1;
-            rolling1.attach('beforeMove', function(data) {
-                num++;
-            });
-            rolling1.attach('afterMove', function(data) {
-                num++;
-            });
-            // 이동하면 beforeMove, afterMove가 실행되어야한다
-            rolling1.roll();
-            expect(num).toBe(3);
-        });
-
         it('beforeMove, afterMove 이상 확인', function() {
-            var num = 1;
+            var expire = true;
             rolling2.attach('beforeMove', function(data) {
-                num++;
                 return false;
             });
             rolling2.attach('afterMove', function(data) {
-                num++;
+                expire = false;
             });
             // 이동하면 beforeMove햐만 실행되어야한다
             rolling2.roll('data1');
-            expect(num).toBe(2);
+            expect(expire).toBeFalsy();
         });
 
         it('attach, fire 커스텀 등록/발생 테스트', function() {

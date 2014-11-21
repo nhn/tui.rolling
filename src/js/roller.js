@@ -12,7 +12,7 @@
  * @namespace ne.component.Rolling.Roller
  * @constructor
  */
-ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Roller.prototype */{
+ne.component.Rolling.Roller = ne.util.defineClass(/** @lends ne.component.Rolling.Roller.prototype */{
     init: function(option, initData) {
         /**
          * 옵션을 저장한다
@@ -24,7 +24,7 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
          * @type {(HTMLelement|String)}
          * @private
          */
-        this._element = ne.isString(option.element) ? document.getElementById(option.element) : option.element;
+        this._element = ne.util.isString(option.element) ? document.getElementById(option.element) : option.element;
         /**
          * 롤링컴포넌트의 방향 저장(수직, 수평)
          * @type {String}
@@ -147,7 +147,7 @@ ne.component.Rolling.Roller = ne.defineClass(/** @lends ne.component.Rolling.Rol
      * @param {Object} methods 사용할 메서드셋 [ne.component.Rolling.Data.staticDataMethods|ne.component.Rolling.Data.remoteDataMethods]
      */
     mixin: function(methods) {
-        ne.extend(this, methods);
+        ne.util.extend(this, methods);
     },
     /**
      * 롤링을 위해, 루트앨리먼트를 마스크화 한다
@@ -275,12 +275,12 @@ ne.component.Rolling.Roller.movePanelSet = {
             this._element.appendChild(wrap);
         } else {
             // 만약 번째 엘리먼트가 존재하면 컨테이너로 인식
-            if (ne.isHTMLTag(firstChild)) {
+            if (ne.util.isHTMLTag(firstChild)) {
                 wrap = firstChild;
             }
             // 아닐경우 그 다음앨리먼트를 찾는다
             next = firstChild && firstChild.nextSibling;
-            if (ne.isHTMLTag(next)) {
+            if (ne.util.isHTMLTag(next)) {
                 wrap = next;
             } else {
                 // 엘리먼트가 존재하지 않을경우 기본값인 ul을 만들어 컨테이너로 리턴
@@ -305,16 +305,16 @@ ne.component.Rolling.Roller.movePanelSet = {
             key;
 
         // 옵션으로 패널 태그가 있으면 옵션사용
-        if (ne.isString(option.panelTag)) {
+        if (ne.util.isString(option.panelTag)) {
             tag = (option.panelTag).split('.')[0];
             className = (option.panelTag).split('.')[1] || '';
         } else {
             // 옵션으로 설정되어 있지 않을 경우 컨테이너 내부에 존재하는 패널 엘리먼트 검색
             // 첫번째가 텍스트 일수 있으므로 다음요소까지 확인한다. 없으면 'li'
-            if (!ne.isHTMLTag(panel)) {
+            if (!ne.util.isHTMLTag(panel)) {
                 panel = panel && panel.nextSibling;
             }
-            tag = ne.isHTMLTag(panel) ? panel.tagName : 'li';
+            tag = ne.util.isHTMLTag(panel) ? panel.tagName : 'li';
             className = (panel && panel.className) || '';
         }
 
@@ -442,15 +442,11 @@ ne.component.Rolling.Roller.movePanelSet = {
          *    // ..... run code
          * });
          */
-        var result = this.fire('beforeMove', { data: data });
+        var res = this.fire('beforeMove', { data: data });
 
-        if (result && result.isCanceled) {
+        if (!res) {
             this.status = 'idle';
             return;
-        }
-
-        if (this._option.isVariable && ne.isString(result && result.data)) {
-            data = result.data;
         }
 
         // 다음에 중앙에 올 패널 설정
@@ -474,7 +470,7 @@ ne.component.Rolling.Roller.movePanelSet = {
         var flow = this._flow,
             pos = this._getMoveSet(flow),
             range = this._range;
-        ne.forEach(this._targets, function(element, index) {
+        ne.util.forEach(this._targets, function(element, index) {
             element.style[range] = pos[index] + 'px';
         });
         this.complate();
@@ -497,15 +493,15 @@ ne.component.Rolling.Roller.movePanelSet = {
             delay: 10,
             duration: duration || 1000,
             delta: this._motion,
-            step: ne.bind(function(delta) {
-                ne.forEach(this._targets, function(element, index) {
+            step: ne.util.bind(function(delta) {
+                ne.util.forEach(this._targets, function(element, index) {
 
                     var dest = (flow === 'prev') ? distance * delta : -(distance * delta);
                     element.style[range] = start[index] + dest + 'px';
 
                 });
             }, this),
-            complate: ne.bind(this.complate, this)
+            complate: ne.util.bind(this.complate, this)
         });
     },
     /**
@@ -526,7 +522,7 @@ ne.component.Rolling.Roller.movePanelSet = {
         this.status = 'idle';
 
         // 큐에 데이터가 있으면 무브를 다시 호출하고 없으면 move의 완료로 간주하고 afterMove를 호출한다
-        if (ne.isNotEmpty(this._queue)) {
+        if (ne.util.isNotEmpty(this._queue)) {
             var first = this._queue.shift();
             this.move(first.data, first.duration, first.flow);
         } else {
@@ -560,7 +556,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
             wrap;
         // 이미 그려진 데이터면, 컨테이너 지정해서 넘김
         if (this._isDrawn) {
-            wrap = ne.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
+            wrap = ne.util.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
             this._container = wrap;
             this._container.style[this._range] = 0;
         }
@@ -592,7 +588,11 @@ ne.component.Rolling.Roller.moveContainerSet = {
          *    // ..... run code
          * });
          */
-        this.fire('beforeMove', { data: data });
+        var res = this.invoke('beforeMove', { data: data });
+        if (!res) {
+            this.status = 'idle';
+            return;
+        }
         // 다음에 중앙에 올 패널 설정
 
         this._rotatePanel(flow);
@@ -654,11 +654,11 @@ ne.component.Rolling.Roller.moveContainerSet = {
             delay: 10,
             duration: duration || 1000,
             delta: this._motion,
-            step: ne.bind(function(delta) {
+            step: ne.util.bind(function(delta) {
                 var dest = distance * delta;
                 container.style[range] = start + dest + 'px';
             }, this),
-            complate: ne.bind(this.complate, this)
+            complate: ne.util.bind(this.complate, this)
         });
     },
     /**
@@ -692,11 +692,11 @@ ne.component.Rolling.Roller.moveContainerSet = {
         // 방향에 따른 동작수행
         if (isPrev) {
             standard = this._panels[0];
-            ne.forEach(moveset, function(element) {
+            ne.util.forEach(moveset, function(element) {
                 this._container.insertBefore(element, standard);
             }, this);
         } else {
-            ne.forEach(moveset, function(element) {
+            ne.util.forEach(moveset, function(element) {
                 this._container.appendChild(element);
             }, this);
         }
@@ -769,14 +769,14 @@ ne.component.Rolling.Roller.moveContainerSet = {
             arr;
 
         // toArray에 NodeList케이스가 추가되면 코드 변경 예정
-        panels = ne.toArray(panels);
+        panels = ne.util.toArray(panels);
 
-        this._panels = ne.filter(panels, function(element) {
-            return ne.isHTMLTag(element);
+        this._panels = ne.util.filter(panels, function(element) {
+            return ne.util.isHTMLTag(element);
         });
         this._basis = this._basis || 0;
     }
 };
 
 // 커스텀이벤트 믹스인
-ne.CustomEvents.mixin(ne.component.Rolling.Roller);
+ne.util.CustomEvents.mixin(ne.component.Rolling.Roller);

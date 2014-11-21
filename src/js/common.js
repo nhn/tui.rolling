@@ -9,6 +9,9 @@
     if (!ne) {
         ne = window.ne = {};
     }
+    if (!ne.util) {
+        ne.util = window.ne.util = {};
+    }
 
     /**
      * 객체의 생성및 상속을 편하게 도와주는 메소드
@@ -61,19 +64,19 @@
 
         obj = props.init || function(){};
 
-        parent && ne.inherit(obj, parent);
+        parent && ne.util.inherit(obj, parent);
 
         if (props.hasOwnProperty('static')) {
-            ne.extend(obj, props.static);
+            ne.util.extend(obj, props.static);
             delete props.static;
         }
 
-        ne.extend(obj.prototype, props);
+        ne.util.extend(obj.prototype, props);
 
         return obj;
     };
 
-    ne.defineClass = defineClass;
+    ne.util.defineClass = defineClass;
 
 })(window.ne);
 /**
@@ -87,27 +90,87 @@
     if (!ne) {
         ne = window.ne = {};
     }
+    if (!ne.util) {
+        ne.util = window.ne.util = {};
+    }
 
     /**
-     * 인자가 null 또는 undefined가 아닌지 확인하는 메서드
+     * 값이 정의되어 있는지 확인(null과 undefined가 아니면 true를 반환한다)
      * @param {*} obj
-     * @return {boolean}
+     * @param {(String|Array)} [key]
+     * @returns {boolean}
+     * @example
+     *
+     * var obj = {a: {b: {c: 1}}};
+     * a 가 존재하는지 확인한다(존재함, true반환)
+     * ne.util.isExisty(a);
+     * => true;
+     * a 에 속성 b 가 존재하는지 확인한다.(존재함, true반환)
+     * ne.util.isExisty(a, 'b');
+     * => true;
+     * a 의 속성 b에 c가 존재하는지 확인한다.(존재함, true반환)
+     * ne.util.isExisty(a, 'b.c');
+     * => true;
+     * a 의 속성 b에 d가 존재하는지 확인한다.(존재하지 않음, false반환)
+     * ne.util.isExisty(a, 'b.d');
+     * => false;
      */
-    function isDefined(obj) {
-        return obj !== null && obj !== undefined;
+    function isExisty(obj, key) {
+        if (arguments.length < 2) {
+            return !isNull(obj) && !isUndefined(obj);
+        }
+        if (!isObject(obj)) {
+            return false;
+        }
+
+        key = isString(key) ? key.split('.') : key;
+
+        if (!isArray(key)) {
+            return false;
+        }
+        key.unshift(obj);
+
+        var res = ne.util.reduce(key, function(acc, a) {
+            if (!acc) {
+                return;
+            }
+            return acc[a];
+        });
+        return !isNull(res) && !isUndefined(res);
+    }
+
+    /**
+     * 인자가 undefiend 인지 체크하는 메서드
+     * @param obj
+     * @returns {boolean}
+     */
+    function isUndefined(obj) {
+        return obj === undefined;
+    }
+
+    /**
+     * 인자가 null 인지 체크하는 메서드
+     * @param {*} obj
+     * @returns {boolean}
+     */
+    function isNull(obj) {
+        return obj === null;
     }
 
     /**
      * 인자가 null, undefined, false가 아닌지 확인하는 메서드
+     * (0도 true로 간주한다)
+     *
      * @param {*} obj
      * @return {boolean}
      */
     function isTruthy(obj) {
-        return isDefined(obj) && obj !== false;
+        return isExisty(obj) && obj !== false;
     }
 
     /**
      * 인자가 null, undefined, false인지 확인하는 메서드
+     * (truthy의 반대값)
      * @param {*} obj
      * @return {boolean}
      */
@@ -124,7 +187,7 @@
      * @return {boolean}
      */
     function isArguments(obj) {
-        var result = isDefined(obj) &&
+        var result = isExisty(obj) &&
             ((toString.call(obj) === '[object Arguments]') || 'callee' in obj);
 
         return result;
@@ -158,21 +221,12 @@
     }
 
     /**
-     * 인자가 음수인지 확인하는 메서드
+     * 인자가 숫자인지 확인하는 메서드
      * @param {*} obj
      * @return {boolean}
      */
-    function isNegative(obj) {
-        return !isNaN(obj) && obj < 0;
-    }
-
-    /**
-     * 인자가 양수인지 확인하는 메서드
-     * @param {*} obj
-     * @return {boolean}
-     */
-    function isPositive(obj) {
-        return !isNaN(obj) && obj > 0;
+    function isNumber(obj) {
+        return toString.call(obj) === '[object Number]';
     }
 
     /**
@@ -224,7 +278,7 @@
         var key,
             hasKey = false;
 
-        if (!isDefined(obj)) {
+        if (!isExisty(obj)) {
             return true;
         }
 
@@ -233,7 +287,7 @@
         }
 
         if (isObject(obj) && !isFunction(obj)) {
-            ne.forEachOwnProperties(obj, function() {
+            ne.util.forEachOwnProperties(obj, function() {
                 hasKey = true;
                 return false;
             });
@@ -254,25 +308,24 @@
         return !isEmpty(obj);
     }
 
-
-    ne.isDefined = isDefined;
-    ne.isTruthy = isTruthy;
-    ne.isFalsy = isFalsy;
-    ne.isArguments = isArguments;
-    ne.isArray = Array.isArray || isArray;
-    ne.isObject = isObject;
-    ne.isFunction = isFunction;
-    ne.isNegative = isNegative;
-    ne.isPositive = isPositive;
-    ne.isString = isString;
-    ne.isBoolean = isBoolean;
-    ne.isHTMLNode = isHTMLNode;
-    ne.isHTMLTag = isHTMLTag;
-    ne.isEmpty = isEmpty;
-    ne.isNotEmpty = isNotEmpty;
+    ne.util.isExisty = isExisty;
+    ne.util.isUndefined = isUndefined;
+    ne.util.isNull = isNull;
+    ne.util.isTruthy = isTruthy;
+    ne.util.isFalsy = isFalsy;
+    ne.util.isArguments = isArguments;
+    ne.util.isArray = Array.isArray || isArray;
+    ne.util.isObject = isObject;
+    ne.util.isFunction = isFunction;
+    ne.util.isNumber = isNumber;
+    ne.util.isString = isString;
+    ne.util.isBoolean = isBoolean;
+    ne.util.isHTMLNode = isHTMLNode;
+    ne.util.isHTMLTag = isHTMLTag;
+    ne.util.isEmpty = isEmpty;
+    ne.util.isNotEmpty = isNotEmpty;
 
 })(window.ne);
-
 /**
  * @fileoverview
  * @author FE개발팀
@@ -283,6 +336,9 @@
     /* istanbul ignore if */
     if (!ne) {
         ne = window.ne = {};
+    }
+    if (!ne.util) {
+        ne.util = window.ne.util = {};
     }
 
     /**
@@ -295,7 +351,8 @@
         var source,
             prop,
             hasOwnProp = Object.prototype.hasOwnProperty,
-            i, len;
+            i,
+            len;
 
         for (i = 1, len = arguments.length; i < len; i++) {
             source = arguments[i];
@@ -345,13 +402,12 @@
         return keys;
     };
 
-    ne.extend = extend;
-    ne.stamp = stamp;
-    ne._resetLastId = resetLastId;
-    ne.keys = Object.keys || keys;
+    ne.util.extend = extend;
+    ne.util.stamp = stamp;
+    ne.util._resetLastId = resetLastId;
+    ne.util.keys = Object.keys || keys;
 
 })(window.ne);
-
 /**
  * @fileoverview 객체나 배열을 다루기위한 펑션들이 정의 되어있는 모듈
  * @author FE개발팀
@@ -362,6 +418,9 @@
     'use strict';
     if (!ne) {
         ne = window.ne = {};
+    }
+    if (!ne.util) {
+        ne.util = window.ne.util = {};
     }
 
     /**
@@ -451,12 +510,12 @@
         var key,
             len;
 
-        if (ne.isArray(obj)) {
+        if (ne.util.isArray(obj)) {
             for (key = 0, len = obj.length; key < len; key++) {
                 iteratee.call(context || null, obj[key], key, obj);
             }
         } else {
-            ne.forEachOwnProperties(obj, iteratee, context);
+            ne.util.forEachOwnProperties(obj, iteratee, context);
         }
     }
 
@@ -477,7 +536,7 @@
     function map(obj, iteratee, context) {
         var resultArray = [];
 
-        ne.forEach(obj, function() {
+        ne.util.forEach(obj, function() {
             resultArray.push(iteratee.apply(context || null, arguments));
         });
 
@@ -505,8 +564,8 @@
             store;
 
 
-        if (!ne.isArray(obj)) {
-            keys = ne.keys(obj);
+        if (!ne.util.isArray(obj)) {
+            keys = ne.util.keys(obj);
         }
 
         length = keys ? keys.length : obj.length;
@@ -571,20 +630,20 @@
      *
      * => {a: 1, c: 3};
      */
-    function filter(obj, iteratee, context) {
-        var result = ne.isArray(obj) ? [] : {},
+    var filter = function(obj, iteratee, context) {
+        var result = ne.util.isArray(obj) ? [] : {},
             value,
             key;
 
-        if (!ne.isObject(obj) || !ne.isFunction(iteratee)) {
+        if (!ne.util.isObject(obj) || !ne.util.isFunction(iteratee)) {
             throw new Error('wrong parameter');
         }
 
-        ne.forEach(obj, function() {
+        forEach(obj, function() {
             if (iteratee.apply(context || null, arguments)) {
                 value = arguments[0];
                 key = arguments[1];
-                if (ne.isArray(obj)) {
+                if (ne.util.isArray(obj)) {
                     result.push(value);
                 } else {
                     result[key] = value;
@@ -593,18 +652,18 @@
         }, context);
 
         return result;
-    }
+    };
 
-    ne.forEachOwnProperties = forEachOwnProperties;
-    ne.forEachArray = forEachArray;
-    ne.forEach = forEach;
-    ne.toArray = toArray;
-    ne.map = map;
-    ne.reduce = reduce;
-    ne.filter = filter;
+
+    ne.util.forEachOwnProperties = forEachOwnProperties;
+    ne.util.forEachArray = forEachArray;
+    ne.util.forEach = forEach;
+    ne.util.toArray = toArray;
+    ne.util.map = map;
+    ne.util.reduce = reduce;
+    ne.util.filter = filter;
 
 })(window.ne);
-
 /**
  * @fileoverview 함수관련 메서드 모음
  * @author FE개발팀
@@ -615,6 +674,9 @@
     /* istanbul ignore if */
     if (!ne) {
         ne = window.ne = {};
+    }
+    if (!ne.util) {
+        ne.util = window.ne.util = {};
     }
 
     /**
@@ -640,12 +702,14 @@
         };
     }
 
-    ne.bind = bind;
+    ne.util.bind = bind;
 
 })(window.ne);
+
 /**
  * @fileoverview 옵저버 패턴을 이용하여 객체 간 커스텀 이벤트를 전달할 수 있는 기능을 제공하는 모듈
  * @author FE개발팀
+ * @dependency type.js, collection.js object.js
  */
 
 (function(ne) {
@@ -653,6 +717,9 @@
     /* istanbul ignore if */
     if (!ne) {
         ne = window.ne = {};
+    }
+    if (!ne.util) {
+        ne.util = window.ne.util = {};
     }
 
     /**
@@ -717,7 +784,7 @@
          * instance.off();
          */
         off: function(types, fn, context) {
-            if (!ne.isDefined(types)) {
+            if (!ne.util.isExisty(types)) {
                 this._events = null;
                 return;
             }
@@ -738,14 +805,14 @@
             var methodName = isOn ? '_on' : '_off',
                 method = this[methodName];
 
-            if (ne.isObject(types)) {
-                ne.forEachOwnProperties(types, function(handler, type) {
+            if (ne.util.isObject(types)) {
+                ne.util.forEachOwnProperties(types, function(handler, type) {
                     method.call(this, type, handler, fn);
                 }, this);
             } else {
                 types = types.split(' ');
 
-                ne.forEach(types, function(type) {
+                ne.util.forEach(types, function(type) {
                     method.call(this, type, fn, context);
                 }, this);
             }
@@ -769,7 +836,7 @@
          */
         _on: function(type, fn, context) {
             var events = this._events = this._events || {},
-                contextId = context && (context !== this) && ne.stamp(context);
+                contextId = context && (context !== this) && ne.util.stamp(context);
 
             if (contextId) {
                 /*
@@ -780,7 +847,7 @@
                 var indexKey = type + '_idx',
                     indexLenKey = type + '_len',
                     typeIndex = events[indexKey] = events[indexKey] || {},
-                    id = ne.stamp(fn) + '_' + contextId; // 핸들러의 id + context의 id
+                    id = ne.util.stamp(fn) + '_' + contextId; // 핸들러의 id + context의 id
 
                 if (!typeIndex[id]) {
                     typeIndex[id] = {
@@ -814,31 +881,93 @@
                 return;
             }
 
-            var contextId = context && (context !== this) && ne.stamp(context),
+            var contextId = context && (context !== this) && ne.util.stamp(context),
                 listeners,
                 id;
 
             if (contextId) {
-                id = ne.stamp(fn) + '_' + contextId;
+                id = ne.util.stamp(fn) + '_' + contextId;
                 listeners = events[indexKey];
 
                 if (listeners && listeners[id]) {
                     listeners[id] = null;
-                    events[indexLenKey]--;
+                    events[indexLenKey] -= 1;
                 }
 
             } else {
                 listeners = events[type];
 
                 if (listeners) {
-                    ne.forEach(listeners, function(listener, arr, index) {
-                        if (ne.isDefined(listener) && (listener.fn === fn)) {
+                    ne.util.forEach(listeners, function(listener, index) {
+                        if (ne.util.isExisty(listener) && (listener.fn === fn)) {
                             listeners.splice(index, 1);
                             return true;
                         }
                     });
                 }
             }
+        },
+
+        /**
+         * 이벤트를 발생시키는 메서드
+         *
+         * 등록한 리스너들의 실행 결과를 boolean AND 연산하여
+         *
+         * 반환한다는 점에서 {@link CustomEvents#fire} 와 차이가 있다
+         *
+         * 보통 컴포넌트 레벨에서 before 이벤트로 사용자에게
+         *
+         * 이벤트를 취소할 수 있게 해 주는 기능에서 사용한다.
+         * @param {string} type
+         * @param {object} data
+         * @returns {*}
+         * @example
+         * // 확대 기능을 지원하는 컴포넌트 내부 코드라 가정
+         * if (this.invoke('beforeZoom')) {    // 사용자가 등록한 리스너 결과 체크
+         *     // 리스너의 실행결과가 true 일 경우
+         *     // doSomething
+         * }
+         *
+         * //
+         * // 아래는 사용자의 서비스 코드
+         * map.on({
+         *     'beforeZoom': function() {
+         *         if (that.disabled && this.getState()) {    //서비스 페이지에서 어떤 조건에 의해 이벤트를 취소해야한다
+         *             return false;
+         *         }
+         *         return true;
+         *     }
+         * });
+         */
+        invoke: function(type, data) {
+            if (!this.hasListener(type)) {
+                return this;
+            }
+
+            var event = ne.util.extend({}, data, {type: type, target: this}),
+                events = this._events;
+
+            if (!events) {
+                return;
+            }
+
+            var typeIndex = events[type + '_idx'],
+                listeners,
+                result = true;
+
+            if (events[type]) {
+                listeners = events[type].slice();
+
+                ne.util.forEach(listeners, function(listener) {
+                    result = result && !!listener.fn.call(this, event);
+                }, this);
+            }
+
+            ne.util.forEachOwnProperties(typeIndex, function(eventItem) {
+                result = result && !!eventItem.fn.call(eventItem.ctx, event);
+            });
+
+            return ne.util.isBoolean(result) ? result : false;
         },
 
         /**
@@ -855,45 +984,8 @@
          * });
          */
         fire: function(type, data) {
-            var isCanceled,
-                resultData,
-                cached;
-
-            if (!this.hasListener(type)) {
-                return;
-            }
-
-            var event = ne.extend({}, data, {type: type, target: this}),
-                events = this._events;
-
-            if (!events) {
-                return;
-            }
-
-            var typeIndex = events[type + '_idx'],
-                listeners;
-
-            if (events[type]) {
-                listeners = events[type].slice();
-
-                ne.forEach(listeners, function(listener) {
-                    resultData = listener.fn.call(this, event);
-                    if (ne.isDefined(resultData)) {
-                        isCanceled = ne.isFalsy(resultData) ? true : isCanceled;
-                        cached = resultData;
-                    }
-                }, this);
-            }
-
-            ne.forEachOwnProperties(typeIndex, function(eventItem) {
-                resultData = listener.fn.call(this, event);
-                if (ne.isDefined(resultData)) {
-                    isCanceled = ne.isFalsy(resultData) ? true : isCanceled;
-                    cached = resultData;
-                }
-            });
-
-            return { isCanceled : isCanceled , data : cached };
+            this.invoke(type, data);
+            return this;
         },
 
         /**
@@ -903,9 +995,34 @@
          */
         hasListener: function(type) {
             var events = this._events,
-                isDefineMethod = ne.isDefined;
+                existyFunc = ne.util.isExisty;
 
-            return isDefineMethod(events) && (isDefineMethod(events[type]) || events[type + '_len']);
+            return existyFunc(events) && (existyFunc(events[type]) || events[type + '_len']);
+        },
+
+        /**
+         * 등록된 이벤트 핸들러의 갯수 반환
+         * @param {string} type
+         * @returns {number}
+         */
+        getListenerLength: function(type) {
+            var events = this._events,
+                lenKey = type + '_len',
+                length = 0,
+                types,
+                len;
+
+            if (!ne.util.isExisty(events)) {
+                return 0;
+            }
+
+            types = events[type];
+            len = events[lenKey];
+
+            length += (ne.util.isExisty(types) && ne.util.isArray(types)) ? types.length : 0;
+            length += ne.util.isExisty(len) ? len : 0;
+
+            return length;
         },
 
         /**
@@ -917,9 +1034,9 @@
         once: function(types, fn, context) {
             var that = this;
 
-            if (ne.isObject(types)) {
-                ne.forEachOwnProperties(types, function(type) {
-                    this.once(type, types[type], fn)
+            if (ne.util.isObject(types)) {
+                ne.util.forEachOwnProperties(types, function(type) {
+                    this.once(type, types[type], fn);
                 }, this);
 
                 return;
@@ -947,16 +1064,16 @@
      * function Model() {}
      *
      * // 커스텀 이벤트 믹스인
-     * ne.CustomEvents.mixin(Model);
+     * ne.util.CustomEvents.mixin(Model);
      *
      * var model = new Model();
      *
      * model.on('changed', function() {}, this);
      */
     CustomEvents.mixin = function(func) {
-        ne.extend(func.prototype, CustomEventMethod);
+        ne.util.extend(func.prototype, CustomEventMethod);
     };
 
-    ne.CustomEvents = CustomEvents;
+    ne.util.CustomEvents = CustomEvents;
 
 })(window.ne);

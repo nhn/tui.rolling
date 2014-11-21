@@ -10,7 +10,7 @@
  * @namespace ne.component.Rolling.Data
  * @constructor
  */
-ne.component.Rolling.Data = ne.defineClass(/** @lends ne.component.Rolling.Data.prototype */{
+ne.component.Rolling.Data = ne.util.defineClass(/** @lends ne.component.Rolling.Data.prototype */{
     init: function(option, data) {
         /**
          * 가변성 데이터인지?
@@ -39,7 +39,7 @@ ne.component.Rolling.Data = ne.defineClass(/** @lends ne.component.Rolling.Data.
          * @type {Boolean}
          * @private
          */
-        this._isCircular = ne.isBoolean(option.isCircular) ? option.isCircular : true;
+        this._isCircular = ne.util.isBoolean(option.isCircular) ? option.isCircular : true;
         if (this.isVariable) {
             this.mixin(ne.component.Rolling.Data.remoteDataMethods);
         } else {
@@ -54,7 +54,7 @@ ne.component.Rolling.Data = ne.defineClass(/** @lends ne.component.Rolling.Data.
      * @param {Object} methods 사용할 메서드셋 [ne.component.Rolling.Data.staticDataMethods|ne.component.Rolling.Data.remoteDataMethods]
      */
     mixin: function(methods) {
-        ne.extend(this, methods);
+        ne.util.extend(this, methods);
     }
 });
 /**
@@ -74,7 +74,7 @@ ne.component.Rolling.Data.staticDataMethods = {
             first,
             nodelist;
 
-        nodelist = ne.map(datalist, function(data, index) {
+        nodelist = ne.util.map(datalist, function(data, index) {
 
             var node = new ne.component.Rolling.Data.Node(data);
             node.prev = before;
