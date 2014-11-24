@@ -6,7 +6,7 @@
 /** 롤링 데이터를 조작
  *
  * @param {Object} option 롤링컴포넌트(ne.component.Rolling)의 옵션
- * @param {{Array|Object}} data 롤링 데이터
+ * @param {(Array|Object)} data 롤링 데이터
  * @namespace ne.component.Rolling.Data
  * @constructor
  */
