@@ -83,12 +83,10 @@ ne.component.Rolling.Data.staticDataMethods = {
             if (before) {
                 before.next = node;
             } else {
-                node.first = true;
                 first = node;
             }
             // 마지막 요소일 경우 처음앨리먼트와 연결한다
             if (index === (datalist.length - 1)) {
-                node.last = true;
                 node.next = first;
                 first.prev = node;
             }
@@ -239,8 +237,6 @@ ne.component.Rolling.Data.Node = function(data) {
 
     this.prev = null;
     this.next = null;
-    this.last = false;
-    this.first = false;
     this.data = data;
 
 };
