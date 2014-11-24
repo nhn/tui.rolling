@@ -241,14 +241,10 @@ describe('roller', function() {
                     finalDelta = delta;
                 }, roller1),
                 complete: function() {
-
+                    expect(finalDelta).toBe(1);
+                    done();
                 }
             });
-
-            setTimeout(function() {
-                expect(finalDelta).toBe(1);
-                done();
-            }, 3000);
         });
 
         it('ne.component.Rolling.Roller motion quad', function(done) {
@@ -282,10 +278,6 @@ describe('roller', function() {
                 }
             });
 
-            setTimeout(function() {
-                expect(finalDelta2).toBe(1);
-            }, 3000);
-
             roller1._animate({
                 delay: 10,
                 duration: 1000,
@@ -299,6 +291,8 @@ describe('roller', function() {
             });
 
             setTimeout(function() {
+
+                expect(finalDelta2).toBe(1);
                 expect(finalDelta3).toBe(1);
                 done();
             }, 4000);
@@ -318,10 +312,6 @@ describe('roller', function() {
                 }
             });
 
-            setTimeout(function() {
-                expect(finalDelta).toBe(1);
-                //done();
-            }, 1500);
 
             roller1._animate({
                 delay: 10,
@@ -335,9 +325,6 @@ describe('roller', function() {
                 }
             });
 
-            setTimeout(function() {
-                expect(finalDelta2).toBe(1);
-            }, 3000);
 
             roller1._animate({
                 delay: 10,
@@ -352,6 +339,8 @@ describe('roller', function() {
             });
 
             setTimeout(function() {
+                expect(finalDelta).toBe(1);
+                expect(finalDelta2).toBe(1);
                 expect(finalDelta3).toBe(1);
                 done();
             }, 4000);
