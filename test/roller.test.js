@@ -240,7 +240,7 @@ describe('roller', function() {
                 step: ne.util.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
-                complate: function() {
+                complete: function() {
 
                 }
             });
@@ -260,7 +260,7 @@ describe('roller', function() {
                 step: ne.util.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
-                complate: function() {
+                complete: function() {
 
                 }
             });
@@ -277,7 +277,7 @@ describe('roller', function() {
                 step: ne.util.bind(function(delta) {
                     finalDelta2 = delta;
                 }, roller1),
-                complate: function() {
+                complete: function() {
 
                 }
             });
@@ -293,7 +293,7 @@ describe('roller', function() {
                 step: ne.util.bind(function(delta) {
                     finalDelta3 = delta;
                 }, roller1),
-                complate: function() {
+                complete: function() {
 
                 }
             });
@@ -313,7 +313,7 @@ describe('roller', function() {
                 step: ne.util.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
-                complate: function() {
+                complete: function() {
 
                 }
             });
@@ -330,7 +330,7 @@ describe('roller', function() {
                 step: ne.util.bind(function(delta) {
                     finalDelta2 = delta;
                 }, roller1),
-                complate: function() {
+                complete: function() {
 
                 }
             });
@@ -346,7 +346,7 @@ describe('roller', function() {
                 step: ne.util.bind(function(delta) {
                     finalDelta3 = delta;
                 }, roller1),
-                complate: function() {
+                complete: function() {
 
                 }
             });

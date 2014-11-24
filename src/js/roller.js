@@ -237,7 +237,7 @@ ne.component.Rolling.Roller = ne.util.defineClass(/** @lends ne.component.Rollin
 
                 if (progress === 1) {
                     window.clearInterval(id);
-                    option.complate();
+                    option.complete();
                 }
             }, option.delay || 10);
     }
@@ -473,7 +473,7 @@ ne.component.Rolling.Roller.movePanelSet = {
         ne.util.forEach(this._targets, function(element, index) {
             element.style[range] = pos[index] + 'px';
         });
-        this.complate();
+        this.complete();
     },
     /**
      * 모션이 있을 경우, 모션을 수행한다
@@ -501,14 +501,14 @@ ne.component.Rolling.Roller.movePanelSet = {
 
                 });
             }, this),
-            complate: ne.util.bind(this.complate, this)
+            complete: ne.util.bind(this.complete, this)
         });
     },
     /**
      * 러닝상태를 해제한다.
      * 센터를 재설정 한다.
      */
-    complate: function() {
+    complete: function() {
         var panel = this.panel,
             tempPanel,
             flow = this._flow;
@@ -603,7 +603,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
             this._moveWithMotion(duration);
         }
     },
-    complate: function() {
+    complete: function() {
         // this._panels 업데이트 this._basis 업데이트
         this._setPanel();
         this.status = 'idle';
@@ -633,7 +633,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
             range = this._range,
             start = parseInt(this._container.style[range], 10);
         this._container.style[range] = start + pos + 'px';
-        this.complate();
+        this.complete();
     },
     /**
      * 모션이 있을 경우, 모션을 수행한다.
@@ -658,7 +658,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
                 var dest = distance * delta;
                 container.style[range] = start + dest + 'px';
             }, this),
-            complate: ne.util.bind(this.complate, this)
+            complete: ne.util.bind(this.complete, this)
         });
     },
     /**
