@@ -145,12 +145,16 @@ ne.component.Rolling.Data.staticDataMethods = {
     changeCurrent: function(flow) {
         var length = this.getDataListLength();
         if (flow === 'prev') {
-            if ((--this._current) < 1) {
+            this._current -= 1;
+            if (this._current < 1) {
                 this._current = this._isCircular ? length : 1;
+                return true;
             }
         } else {
-            if ((++this._current) > length) {
+            this._current += 1;
+            if (this._current > length) {
                 this._current = this._isCircular ? 1 : length;
+                return true;
             }
         }
     },

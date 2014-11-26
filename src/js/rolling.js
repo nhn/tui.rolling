@@ -21,9 +21,9 @@ if (!ne.component) {
  *      @param {Boolean} [option.isCircular=true|false] 순환하는 롤링인지 여부. (기본값은 순환형, isVariable이 true일 경우는 무시된다)
  *      @param {Boolean} [option.auto=true|false] 자동롤링 할 것인지 여부(기본값 false)
  *      @param {Number} [option.delayTime=1000|...] 자동롤링 간격(기본값 3초)
- *      @param {Number} [option.initNum=1] 초기에 보여질 부분을 정할때 사용한다.
  *      @param {Number} [option.direction='horizontal|vertical'] 패널 이동방향(기본값은 horizontal)
  *      @param {Number} [option.duration='1000|...] 패널의 이동속도
+ *      @param {Number} [option.initNum='0|...] 초기 이동페이지
  *      @param {String} [option.motion='linear|[quad]easeIn|[quad]easeOut|[quad]easeInOut|circEaseIn|circEaseOut|circEaseInOut] 패널 이동효과(기본값은 noeffect)
  *      @param {String} [option.unit='item|page'] 롤링을 하는 단위를 설정한다
  *      @param {String} [option.flow='prev|next'] 롤링의 방향을 결정한다. (좌에서 우로, 우에서 좌로이 이동중에 선택, 기본값 next)
@@ -95,7 +95,9 @@ ne.component.Rolling = ne.util.defineClass(/** @lends ne.component.Rolling.proto
          */
         this._roller = new ne.component.Rolling.Roller(option, this._model && this._model.getData());
 
-
+        if (option.initNum) {
+            this.moveTo(option.initNum);
+        }
         if (!!option.isAuto) {
             this.auto();
         }
@@ -116,21 +118,24 @@ ne.component.Rolling = ne.util.defineClass(/** @lends ne.component.Rolling.proto
         }
 
         if (this._option.isVariable) {
-
             if (!data) {
                 throw new Error('roll must run with data');
             }
 
             this.setFlow(flow);
             this._roller.move(data);
+
         } else {
+            var overBoundary;
             this.setFlow(flow);
             // 모델이 없을 경우는 데이터를 넘기지 않는다.
             if (this._model) {
-                this._model.changeCurrent(flow);
+                overBoundary = this._model.changeCurrent(flow);
                 data = this._model.getData();
             }
-            this._roller.move(data);
+            if(!overBoundary) {
+                this._roller.move(data);
+            }
         }
 
     },
@@ -149,6 +154,13 @@ ne.component.Rolling = ne.util.defineClass(/** @lends ne.component.Rolling.proto
      * @param {Number} page 이동할 페이지
      */
     moveTo: function(page) {
+
+        // 만약 fix된 html이면 roller의 moveTo를 진행한다.
+        if (this._isDrawn) {
+            this._roller.moveTo(page);
+            return;
+        }
+
         var len = this._model.getDataListLength(),
             max = Math.min(len, page),
             min = Math.max(1, page),
@@ -161,10 +173,10 @@ ne.component.Rolling = ne.util.defineClass(/** @lends ne.component.Rolling.proto
 
         // 번호가 입력되지 않았거나, 데이터설정에 문제가 있을 시 에러발생
         if (isNaN(Number(page))) {
-            throw new Error('moveTo method have to run with page');
+            throw new Error('#PageError moveTo method have to run with page');
         }
         if (this._option.isVariable) {
-            throw new Error('Variable Rolling can\'t use moveTo');
+            throw new Error('#DataError : Variable Rolling can\'t use moveTo');
         }
 
         // 좌우에 따른 최대/최소값 설정
