@@ -19,7 +19,7 @@ FE 개발팀 이제인 <jein.yi@nhnent.com>
 http://fetech.nhnent.com/svnrun/fetech/components/Rolling/sample/
 
 ## 다운로드
-http://fetech.nhnent.com/svnrun/fetech/components/Rolling/dest/
+http://fetech.nhnent.com/svnrun/fetech/components/Rolling/dist/
 
 ## API 문서
 http://fetech.nhnent.com/svnrun/fetech/components/Rolling/doc/index.html
