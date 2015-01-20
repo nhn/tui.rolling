@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Namespace: movePanelSet</title>
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-fe2.css">
+</head>
+<body>
+
+<div id="wrap">
+
+    <div class="header">
+
+        <div class="container-fluid">
+            <h3><a href="index.html">API Documentation</a> <small>FE개발팀</small></h3>
+        </div>
+
+    </div>
+
+    <div class="body">
+        <div id="navigation" class="navigation"><h3>Classes</h3><ul class="list classes"><li class="item" id="ne.component.Rolling"><span class="title"><span class="p-item">ne.component.</span><a href="ne.component.Rolling.html">Rolling</a></span><span class="icon blue static">static</span><ul class="sublist members ne.component.Rolling"><span class="subtitle">Members</span><li><a href="ne.component.Rolling.html#delayTime">delayTime</a></li></ul><ul class="sublist division ne.component.Rolling"><li></li></ul><ul class="sublist methods ne.component.Rolling"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.html#attach">attach</a></li><li><a href="ne.component.Rolling.html#auto">auto</a></li><li><a href="ne.component.Rolling.html#fire">fire</a></li><li><a href="ne.component.Rolling.html#init">init</a></li><li><a href="ne.component.Rolling.html#moveTo">moveTo</a></li><li><a href="ne.component.Rolling.html#roll">roll</a></li><li><a href="ne.component.Rolling.html#setFlow">setFlow</a></li><li><a href="ne.component.Rolling.html#stop">stop</a></li></ul></li><li class="item" id="ne.component.Rolling.Data"><span class="title"><span class="p-item">ne.component.Rolling.</span><a href="ne.component.Rolling.Data.html">Data</a></span><span class="icon blue static">static</span><ul class="sublist members ne.component.Rolling.Data"><span class="subtitle">Members</span><li><a href="ne.component.Rolling.Data.html#_current">_current</a></li><li><a href="ne.component.Rolling.Data.html#_datalist">_datalist</a></li><li><a href="ne.component.Rolling.Data.html#isVariable">isVariable</a></li></ul><ul class="sublist division ne.component.Rolling.Data"><li></li></ul><ul class="sublist methods ne.component.Rolling.Data"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Data.html#mixin">mixin</a></li></ul></li><li class="item" id="ne.component.Rolling.Data.Node"><span class="title"><span class="p-item">ne.component.Rolling.Data.</span><a href="ne.component.Rolling.Data.Node.html">Node</a></span><span class="icon blue static">static</span></li><li class="item" id="ne.component.Rolling.Roller"><span class="title"><span class="p-item">ne.component.Rolling.</span><a href="ne.component.Rolling.Roller.html">Roller</a></span><span class="icon blue static">static</span><ul class="sublist members ne.component.Rolling.Roller"><span class="subtitle">Members</span><li><a href="ne.component.Rolling.Roller.html#_basis">_basis</a></li><li><a href="ne.component.Rolling.Roller.html#_motion">_motion</a></li><li><a href="ne.component.Rolling.Roller.html#_option">_option</a></li><li><a href="ne.component.Rolling.Roller.html#_panels">_panels</a></li><li><a href="ne.component.Rolling.Roller.html#panel">panel</a></li><li><a href="ne.component.Rolling.Roller.html#status">status</a></li></ul><ul class="sublist division ne.component.Rolling.Roller"><li></li></ul><ul class="sublist methods ne.component.Rolling.Roller"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Roller.html#_animate">_animate</a></li><li><a href="ne.component.Rolling.Roller.html#changeMotion">changeMotion</a></li><li><a href="ne.component.Rolling.Roller.html#mixin">mixin</a></li><li><a href="ne.component.Rolling.Roller.html#setFlow">setFlow</a></li></ul></li></ul><h3>Namespaces</h3><ul class="list namespaces"><li class="item" id="ne.component.Rolling.Data.remoteDataMethods"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Data.remoteDataMethods.html">remoteDataMethods</a></span><ul class="sublist methods ne.component.Rolling.Data.remoteDataMethods"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Data.remoteDataMethods.html#getData">getData</a></li><li><a href="ne.component.Rolling.Data.remoteDataMethods.html#setData">setData</a></li><li><a href="ne.component.Rolling.Data.remoteDataMethods.html#severLink">severLink</a></li></ul></li><li class="item" id="ne.component.Rolling.Data.staticDataMethods"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Data.staticDataMethods.html">staticDataMethods</a></span><ul class="sublist methods ne.component.Rolling.Data.staticDataMethods"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Data.staticDataMethods.html#getCurrent">getCurrent</a></li><li><a href="ne.component.Rolling.Data.staticDataMethods.html#getData">getData</a></li><li><a href="ne.component.Rolling.Data.staticDataMethods.html#getDataListLength">getDataListLength</a></li></ul></li><li class="item" id="ne.component.Rolling.Roller.moveContainerSet"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Roller.moveContainerSet.html">moveContainerSet</a></span><ul class="sublist methods ne.component.Rolling.Roller.moveContainerSet"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Roller.moveContainerSet.html#complete">complete</a></li><li><a href="ne.component.Rolling.Roller.moveContainerSet.html#move">move</a></li><li><a href="ne.component.Rolling.Roller.moveContainerSet.html#moveTo">moveTo</a></li></ul></li><li class="item" id="ne.component.Rolling.Roller.movePanelSet"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Roller.movePanelSet.html">movePanelSet</a></span><ul class="sublist methods ne.component.Rolling.Roller.movePanelSet"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Roller.movePanelSet.html#_appendMoveData">_appendMoveData</a></li><li><a href="ne.component.Rolling.Roller.movePanelSet.html#complete">complete</a></li><li><a href="ne.component.Rolling.Roller.movePanelSet.html#move">move</a></li></ul></li></ul></div>
+        <div id="main" class="main">
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+            <span class="ancestors"><a href="ne.component.Rolling.html">.Rolling</a><a href="ne.component.Rolling.Roller.html">.Roller</a>.</span>
+        
+        movePanelSet
+        
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>3개의 패널을 돌리는 비정형 롤러 메서드 모음</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+        <dd class="tag-source"><ul class="dummy"><li>
+            <a href="roller.js.html">roller.js</a>, <a href="roller.js.html#line261">line 261</a>
+        </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+        
+    
+    </div>
+    
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+    <div class="container-methods">
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    
+        <h4 class="name" id="_appendMoveData">
+            <span class="type-signature"><span class="icon green">static</span> </span>_appendMoveData<span class="signature">()</span><span class="type-signature"></span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line380">line 380</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>이동할 패널을 붙인다</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="_getMoveSet">
+            <span class="type-signature"><span class="icon green">private</span>, <span class="icon green">static</span> </span>_getMoveSet<span class="signature">()</span><span class="type-signature"> &rarr; {*}</span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line397">line 397</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>각 패널들이 움직일 값을 구한다</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <div class="returns">
+        <h5>Returns:</h5>
+        <div class="details">
+        
+                
+    
+<span class="param-type">*</span>
+
+
+
+            
+        </div>
+        </div>
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="_getStartSet">
+            <span class="type-signature"><span class="icon green">private</span>, <span class="icon green">static</span> </span>_getStartSet<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line412">line 412</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>이동 시작점들을 구해온다</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <div class="returns">
+        <h5>Returns:</h5>
+        <div class="details">
+        
+                
+    
+<span class="param-type">Array</span>
+
+
+
+            
+        </div>
+        </div>
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="_makeElement">
+            <span class="type-signature"><span class="icon green">private</span>, <span class="icon green">static</span> </span>_makeElement<span class="signature">(tag, className, key)</span><span class="type-signature"> &rarr; {HTMLElement}</span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line358">line 358</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>HTML Element를 만든다</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <div class="params">
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name first"><code>tag</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>엘리먼트 태그명</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name first"><code>className</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>엘리먼트 클래스 명</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name first"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>클래스에 붙는 이름</p></td>
+        </tr>
+
+    
+    </tbody>
+</table></div>
+    </div>
+    
+
+    
+    <div class="container-returns">
+        <div class="returns">
+        <h5>Returns:</h5>
+        <div class="details">
+        
+                
+    
+<span class="param-type">HTMLElement</span>
+
+
+
+            
+        </div>
+        </div>
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="_moveWithMotion">
+            <span class="type-signature"><span class="icon green">private</span>, <span class="icon green">static</span> </span>_moveWithMotion<span class="signature">()</span><span class="type-signature"></span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line499">line 499</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>모션이 있을 경우, 모션을 수행한다</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="_moveWithoutMotion">
+            <span class="type-signature"><span class="icon green">private</span>, <span class="icon green">static</span> </span>_moveWithoutMotion<span class="signature">()</span><span class="type-signature"></span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line485">line 485</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>모션이 없을 경우, 바로 좌표설정을 한다</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="_setContainer">
+            <span class="type-signature"><span class="icon green">private</span>, <span class="icon green">static</span> </span>_setContainer<span class="signature">()</span><span class="type-signature"></span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line273">line 273</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>롤링될 컨테이너를 생성 or 구함</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="_setPanel">
+            <span class="type-signature"><span class="icon green">private</span>, <span class="icon green">static</span> </span>_setPanel<span class="signature">()</span><span class="type-signature"></span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line314">line 314</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>롤링될 패널들을 만든다</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="_setTarget">
+            <span class="type-signature"><span class="icon green">private</span>, <span class="icon green">static</span> </span>_setTarget<span class="signature">(flow)</span><span class="type-signature"></span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line426">line 426</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>움직일 타겟을 선택한다.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <div class="params">
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name first"><code>flow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>방향</p></td>
+        </tr>
+
+    
+    </tbody>
+</table></div>
+    </div>
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="_updatePanel">
+            <span class="type-signature"><span class="icon green">private</span>, <span class="icon green">static</span> </span>_updatePanel<span class="signature">(data)</span><span class="type-signature"></span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line374">line 374</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>해당 패널 데이터를 설정한다.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <div class="params">
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name first"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>패널을 갱신할 데이터</p></td>
+        </tr>
+
+    
+    </tbody>
+</table></div>
+    </div>
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="complete">
+            <span class="type-signature"><span class="icon green">static</span> </span>complete<span class="signature">()</span><span class="type-signature"></span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line527">line 527</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>러닝상태를 해제한다.
+센터를 재설정 한다.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    
+        <h4 class="name" id="move">
+            <span class="type-signature"><span class="icon green">static</span> </span>move<span class="signature">(data)</span><span class="type-signature"></span>
+            
+                <div class="container-source method">
+                    <code><a href="roller.js.html">roller.js</a></code>,
+                    <code><a href="roller.js.html#line441">line 441</a></code>
+                </div>
+            
+        </h4>
+
+
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>패널 이동</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <div class="params">
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name first"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>이동할 패널의 갱신데이터</p></td>
+        </tr>
+
+    
+    </tbody>
+</table></div>
+    </div>
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    <!--
+    
+    -->
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
+    </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+</div>
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+<script>
+(function() {
+// 영역 height 설정
+var height = (window.innerHeight || document.documentElement.clientHeight || document.getElementByTagName('body')[0].clientHeight) - 50;
+var navigation = document.getElementById('navigation');
+var main = document.getElementById('main');
+navigation.style.height = height + 'px';
+main.style.height = height + 'px';
+
+// IE 7,8을 위한 getElementsByClassName 구현
+var getElementsByClassName = function(className, parentElement) {
+	if(document.getElementsByClassName) {
+		return (parentElement || document).getElementsByClassName(className);
+	}
+
+    var regEx = new RegExp('(^| )'+className+'( |$)');
+	var nodes = new Array();
+    var elements = (parentElement || document.body).getElementsByTagName("*");
+    for(var i = 0, len = elements.length; i < len ; i++) {
+        if(regEx.test(elements[i].className)) {
+			nodes.push(elements[i]);
+		}
+	}
+	elements = null;
+    return nodes;
+}
+
+// url 파싱후 해당 카테고리만 display:block 처리
+var url = location.href;
+var path = url.lastIndexOf('/');
+var fileName = url.substring(path+1);
+var fullName = fileName.split('.');
+fullName.length -= 1;
+fullName = fullName.join('.');
+fullName = fullName.split('-');
+fullName = fullName[fullName.length - 1];
+var lnbList = getElementsByClassName(fullName);
+if(lnbList.length && lnbList.length > 0) {
+    for(var i = 0, len = lnbList.length; i < len; i++) {
+        lnbList[i].className += ' selected';
+    }
+}
+
+var title = document.getElementById(fullName);
+if(title) {
+    title.className += ' selected';
+    title.innerHTML = '<span class="arrow">▶</span>' + title.innerHTML;
+
+    var static = getElementsByClassName('static', title);
+    if(static) {
+        static[0].className += ' selected';
+    }
+}
+})();
+</script>
+<script type="text/javascript" src="scripts/prettify/prettify.js"></script>
+<script type="text/javascript" src="scripts/prettify/lang-css.js"></script>
+<script type="text/javascript">prettyPrint();</script>
+<script type="text/javascript" src="scripts/linenumber.js"></script>
+</body>
+</html>
