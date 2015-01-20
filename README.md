@@ -16,11 +16,11 @@ FE 개발팀 이제인 <jein.yi@nhnent.com>
 - 커스텀이벤트(페이지 이동 전, 페이지 이동 후)
 
 ## 샘플 페이지
-https://github.nhnent.com/pages/FE/Component-Pagination/sample/
+https://github.nhnent.com/pages/FE/Component-Rolling/sample/
 
 ## 다운로드
-https://github.nhnent.com/FE/Component-Pagination/tree/dist
+https://github.nhnent.com/FE/Component-Rolling/tree/dist
 
 ## API 문서
-https://github.nhnent.com/pages/FE/Component-Pagination/
+https://github.nhnent.com/pages/FE/Component-Rolling/
 
