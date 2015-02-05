@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         // You can set arbitrary key-value pairs.
         distFolder: 'dist',
-        name: 'Rolling',
+        name: 'Calendar',
         // You can also set the value of a key as parsed JSON.
         // Allows us to reference properties we declared in package.json.
         pkg: grunt.file.readJSON('package.json'),
@@ -14,7 +14,7 @@ module.exports = function(grunt) {
         concat: {
             // Specify some options, usually specific to each plugin.
             options: {
-                banner: '(function() {\n',
+                banner: '/*!<%= pkg.name %> v<%=pkg.version%> | NHN Entertainment*/\n' + '(function() {\n',
                 footer: '\n})();'
             },
             // 'dist' is what is called a "target."
@@ -25,13 +25,15 @@ module.exports = function(grunt) {
                 src: [
                     'src/common/*.js',
                     'src/js/rolling.js',
+                    'src/js/rolldata.js',
+                    'src/js/roller.js',
                     'src/js/*.js'
                 ],
                 // The destination file:
                 // Notice the angle-bracketed ERB-like templating,
                 // which allows you to reference other properties.
                 // This is equivalent to 'dist/main.js'.
-                dest: '<%= distFolder %>/Component-<%= name %>.js'
+                dest: '<%= distFolder %>/<%= pkg.name %>.js'
                 // You can reference any grunt config property you want.
                 // Ex: '<%= concat.options.separator %>' instead of ';'
             },
@@ -40,13 +42,15 @@ module.exports = function(grunt) {
                 // Notice the wildcard, which is automatically expanded.
                 src: [
                     'src/js/rolling.js',
+                    'src/js/rolldata.js',
+                    'src/js/roller.js',
                     'src/js/*.js'
                 ],
                 // The destination file:
                 // Notice the angle-bracketed ERB-like templating,
                 // which allows you to reference other properties.
                 // This is equivalent to 'dist/main.js'.
-                dest: '<%= distFolder %>/Component-<%= name %>.core.js'
+                dest: '<%= distFolder %>/<%= pkg.name %>.core.js'
                 // You can reference any grunt config property you want.
                 // Ex: '<%= concat.options.separator %>' instead of ';'
             }
@@ -54,12 +58,24 @@ module.exports = function(grunt) {
         uglify: {
             normal: {
                 files: {
-                    '<%= distFolder %>/Component-<%= name %>.min.js' : '<%= distFolder %>/Component-<%= name %>.js'
+                    '<%= distFolder %>/<%= pkg.name %>.min.js' : '<%= distFolder %>/<%= pkg.name %>.js'
+                },
+                options: {
+                    banner: '/*!<%= pkg.name %> v<%=pkg.version%> | NHN Entertainment*/',
+                    preserveComments: false,
+                    sourceMap: true,
+                    sourceMapName: "<%= distFolder %>/<%= pkg.name %>.min.map"
                 }
             },
             core: {
                 files: {
-                    '<%= distFolder %>/Component-<%= name %>.core.min.js' : '<%= distFolder %>/Component-<%= name %>.core.js'
+                    '<%= distFolder %>/<%= pkg.name %>.core.min.js' : '<%= distFolder %>/<%= pkg.name %>.core.js'
+                },
+                options: {
+                    banner: '/*!<%= pkg.name %> v<%=pkg.version%> | NHN Entertainment*/',
+                    preserveComments: false,
+                    sourceMap: true,
+                    sourceMapName: "<%= distFolder %>/<%= pkg.name %>.core.min.map"
                 }
             }
         },
@@ -73,7 +89,7 @@ module.exports = function(grunt) {
         zip: {
             main: {
                 src: ['<%= distFolder %>/*'],
-                dest: '<%= distFolder %>/Component-<%= name %>.zip'
+                dest: '<%= distFolder %>/<%= pkg.name %>.zip'
             }
         }
     }); // The end of grunt.initConfig
