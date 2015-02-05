@@ -1,12 +1,3 @@
-## 샘플 페이지
-https://github.nhnent.com/pages/FE/Component-Rolling/sample/
-
-## 다운로드
-https://github.nhnent.com/FE/Component-Rolling/tree/dist
-
-## API 문서
-https://github.nhnent.com/pages/FE/Component-Rolling/
-
 Component-Rolling
 ======================
 롤링 기능을 지원하기 위한 컴포넌트<br>
