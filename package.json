@@ -1,6 +1,6 @@
 {
     "name": "Component-Rolling",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "롤링 컴포넌트",
     "private": true,
     "devDependencies": {
