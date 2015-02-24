@@ -13,13 +13,13 @@ Component-Rolling
 
 
 ## Documentation
-* **API** - <https://github.nhnent.com/pages/FE/Component-Rolling/>
-* **Sample** - <https://github.nhnent.com/pages/FE/Component-Rolling/sample/>
+* **API** - <https://github.nhnent.com/pages/fe/Component-Rolling/>
+* **Sample** - <https://github.nhnent.com/pages/fe/Component-Rolling/sample/>
 * **CI** - <http://fe.nhnent.com:8080/jenkins/job/Component-Rolling/>
 
 ## Download/Install
-* Bower: `bower install "git+http://3c672057a1ac16c4e6f1baaba73e24d5270ef453:x-oauth-basic@github.nhnent.com/FE/Component-Rolling.git#version"`
-* Download: <https://github.nhnent.com/FE/Component-Rolling/tree/dist>
+* Bower: `bower install "git+http://3c672057a1ac16c4e6f1baaba73e24d5270ef453:x-oauth-basic@github.nhnent.com/fe/Component-Rolling.git#version"`
+* Download: <https://github.nhnent.com/fe/Component-Rolling/tree/dist>
 
 ## History
 | Version | Description | Date | Developer |
