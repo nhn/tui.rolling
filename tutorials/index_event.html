@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/common.css" />
+    <script type="text/javascript" src="js/Component-Rolling.js"></script>
+    <style>
+        ul, ol, li { list-style:none }
+        .panel { border:1px solid #eee; }
+        .rolling { width: 300px; height:150px;margin:30px auto;}
+        .sample { text-align: center; }
+        .status { background: green; text-align: center; }
+    </style>
+</head>
+<body>
+<div class="panel panel-primary">
+    <div class="panel-heading">실행화면 | 커스텀 이벤</div>
+    <div class="sample">
+        <div id="rolling" class="rolling">
+            <ul>
+                <li class="panel"></li>
+            </ul>
+        </div>
+        <div class="btn-group" id="control">
+            <button class="left">이전</button>
+            <button class="right">다음</button>
+        </div>
+        <div id="status" class="status">상태 : 초기</div>
+    </div>
+</div>
+<div class="panel panel-primary">
+    <div class="panel-heading">Code</div>
+    <xmp>
+        <div id="rolling" class="rolling">
+            <ul>
+                <li class="panel"></li>
+            </ul>
+        </div>
+        <div class="btn-group" id="control">
+            <button class="left">이전</button>
+            <button class="right">다음</button>
+        </div>
+        <div id="status" class="status">상태 : 초기</div>
+
+        <script>
+            var htmlData = '<div class="panel-heading">default Content</div><p>default Content</p>',
+                    nextData = '<div class="panel-heading">nextData</div><p>next Content</p>',
+                    prevData = '<div class="panel-heading">prevData</div><p>prev Content</p>';
+
+            var rolling1 = new ne.component.Rolling({
+                element: document.getElementById('rolling'),
+                initNum: 0,
+                direction: 'horizontal',
+                isVariable: true,
+                duration: 400,
+                motion: 'linear',
+                isCircle: false
+            }, htmlData);
+
+            var control = document.getElementById('control');
+            control.onclick = function(e) {
+                var e = e || window.event,
+                        target = e.target || e.srcElement,
+                        value;
+                if (target.tagName.toLowerCase() !== 'button') {
+                    return;
+                }
+                className = target.className;
+                if (className.indexOf('left') > -1) {
+                    rolling1.roll(nextData, 'prev');
+                } else {
+                    rolling1.roll(prevData, 'next');
+                }
+            };
+
+            var statusElement = document.getElementById('status');
+            rolling1.attach('beforeMove', function() {
+                statusElement.style.backgroundColor = 'yellow';
+                statusElement.innerHTML = '상태 : 무브';
+            });
+            rolling1.attach('afterMove', function() {
+                statusElement.style.backgroundColor = 'green';
+                statusElement.innerHTML = '상태 : 무브끝';
+            });
+        </script>
+    </xmp>
+</div>
+<script>
+    var htmlData = '<div class="panel-heading">default Content</div><p>default Content</p>',
+            nextData = '<div class="panel-heading">nextData</div><p>next Content</p>',
+            prevData = '<div class="panel-heading">prevData</div><p>prev Content</p>';
+
+    var rolling1 = new ne.component.Rolling({
+        element: document.getElementById('rolling'),
+        initNum: 0,
+        direction: 'horizontal',
+        isVariable: true,
+        duration: 400,
+        motion: 'linear',
+        isCircle: false
+    }, htmlData);
+
+    var control = document.getElementById('control');
+    control.onclick = function(e) {
+        var e = e || window.event,
+                target = e.target || e.srcElement,
+                value;
+        if (target.tagName.toLowerCase() !== 'button') {
+            return;
+        }
+        className = target.className;
+        if (className.indexOf('left') > -1) {
+            rolling1.roll(nextData, 'prev');
+        } else {
+            rolling1.roll(prevData, 'next');
+        }
+    };
+
+    var statusElement = document.getElementById('status');
+    rolling1.attach('beforeMove', function() {
+        statusElement.style.backgroundColor = 'yellow';
+        statusElement.innerHTML = '상태 : 무브';
+    });
+    rolling1.attach('afterMove', function() {
+        statusElement.style.backgroundColor = 'green';
+        statusElement.innerHTML = '상태 : 무브끝';
+    });
+
+</script>
+</body>
+</html>
