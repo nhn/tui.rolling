@@ -14,7 +14,7 @@ Rolling
 
 ## Documentation
 * **API** - https://github.nhnent.com/pages/fe/component-rolling/
-* **Sample** - https://github.nhnent.com/pages/fe/component-rolling/sample/
+* **Sample** - https://github.nhnent.com/pages/fe/component-rolling/tutorial-index_default_nocircle.html
 * **CI** - http://fe.nhnent.com:8080/jenkins/job/component-rolling/
 
 ## Download/Install
