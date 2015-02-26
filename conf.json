@@ -1,6 +1,6 @@
 {
     "source": {
-        "include": ["src/js/rolling.js", "src/js/rolldata.js", "src/js/roller.js"],
+        "include": ["src/js/rolling.js", "src/js/rolldata.js", "src/js/roller.js", "README.md"],
         "exclude": [],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
