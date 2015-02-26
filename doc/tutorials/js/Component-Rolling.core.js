@@ -1,35 +1,491 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: roller.js</title>
-    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-fe2.css">
-</head>
-<body>
+(function() {
+/**
+ * @fileoverview 롤링컴퍼넌트의 코어
+ * @author Jein Yi
+ * @dependency common.js[type, object, collection, function, CustomEvents, defineClass]
+ *
+ * */
+/* istanbul ignore if */
+if (!ne) {
+    ne = window.ne = {};
+}
+/* istanbul ignore if */
+if (!ne.component) {
+    ne.component = {};
+}
+/**
+ * 롤링 코어객체
+ *
+ * @param {Object} option 롤링의 옵션값
+ *      @param {HTMLElement|String} option.element 루트 엘리먼트 혹은 엘리먼트 아이디 값
+ *      @param {Boolean} [option.isVariable=true|false] 가변성이 있는 데이터 인지여부. (기본값은 false)
+ *      @param {Boolean} [option.isCircular=true|false] 순환하는 롤링인지 여부. (기본값은 순환형, isVariable이 true일 경우는 무시된다)
+ *      @param {Boolean} [option.auto=true|false] 자동롤링 할 것인지 여부(기본값 false)
+ *      @param {Number} [option.delayTime=1000|...] 자동롤링 간격(기본값 3초)
+ *      @param {Number} [option.direction='horizontal|vertical'] 패널 이동방향(기본값은 horizontal)
+ *      @param {Number} [option.duration='1000|...] 패널의 이동속도
+ *      @param {Number} [option.initNum='0|...] 초기 이동페이지
+ *      @param {String} [option.motion='linear|[quad]easeIn|[quad]easeOut|[quad]easeInOut|circEaseIn|circEaseOut|circEaseInOut] 패널 이동효과(기본값은 noeffect)
+ *      @param {String} [option.unit='item|page'] 롤링을 하는 단위를 설정한다
+ *      @param {String} [option.flow='prev|next'] 롤링의 방향을 결정한다. (좌에서 우로, 우에서 좌로이 이동중에 선택, 기본값 next)
+ *      @param {String} [option.wrapperTag='ul.className|div.className'] 패널의 래퍼에 사용되는 태그, .으로 클래스 연결(기본값 ul)
+ *      @param {String} [option.panelTag='li.className'] 패널에 사용되는 태그, .으로 클래스를 연결(기본값 li)
+ * @param {Array|String} data 롤링 데이터값
+ *
+ * @example
+ * var roll = new ne.component.Rolling({
+ *      element: document.getElementById('rolling'),
+ *      initNum: 0,
+ *      direction: 'horizontal',
+ *      isVariable: true,
+ *      unit: 'page',
+ *      isAuto: false,
+ *      motion: 'easeInOut',
+ *      duration:2000
+ * }, ['<div>data1</div>','<div>data2</div>', '<div>data3</div>']);
+ * @constructor
+ * */
+ne.component.Rolling = ne.util.defineClass(/** @lends ne.component.Rolling.prototype */{
+    /**
+     * 초기화
+     * */
+    init: function(option, data) {
+        /**
+         * 옵션객체
+         * @type {Object}
+         * @private
+         */
+        this._option = option;
+        /**
+         * 패널의 이동방향 정보
+         *
+         * @type {String|string}
+         * @private
+         */
+        this._flow = option.flow || 'next';
+        /**
+         * 그려진 html을 돌리는 것인지 확인
+         *
+         * @type {boolean}
+         * @private
+         */
+        this._isDrawn = !!option.isDrawn;
+        /**
+         * 자동롤링 타이머
+         *
+         * @type {null}
+         * @private
+         */
+        this._timer = null;
+        /**
+         * 자동롤링 간격
+         */
+        this.delayTime = this.delayTime || 3000;
+        /**
+         * 롤링 데이터 조작객체
+         *
+         * @type {ne.component.Rolling.Data}
+         * @private
+         */
+        this._model = !option.isDrawn ? new ne.component.Rolling.Data(option, data) : null;
+        /**
+         * 롤링 액션 객체
+         *
+         * @type {ne.component.Rolling.Roller}
+         * @private
+         */
+        this._roller = new ne.component.Rolling.Roller(option, this._model && this._model.getData());
 
-<div id="wrap">
+        if (option.initNum) {
+            this.moveTo(option.initNum);
+        }
+        if (!!option.isAuto) {
+            this.auto();
+        }
+    },
+    /**
+     * 롤러에게 롤링을 요청한다. 가변데이터일 경우 data가 입력되어야 하고,
+     * 액션의 방향을 설정하는 flow가 반드시 입력되지 않으면 기본값인 'next'를 따른다
+     *
+     * @param {String} data 롤링 데이터
+     * @param {String} [flow] 롤링 방향
+     */
+    roll: function(data, flow) {
+        flow = flow || this._flow;
 
-    <div class="header">
+        // 롤러가 idle상태가 아니면 외부에서의 입력은 모두 튕겨낸다.
+        if (this._roller.status !== 'idle') {
+            return;
+        }
 
-        <div class="container-fluid">
-            <h3><a href="index.html">API Documentation</a> <small>FE개발팀</small></h3>
-        </div>
+        if (this._option.isVariable) {
+            if (!data) {
+                throw new Error('roll must run with data');
+            }
 
-    </div>
+            this.setFlow(flow);
+            this._roller.move(data);
 
-    <div class="body">
-        <div id="navigation" class="navigation"><h3>Samples</h3><ul class="list samples"><li class="item"><a href="tutorial-index_animate.html">정적 데이터 - 애니메이션</a></li><li class="item"><a href="tutorial-index_auto.html">정적 데이터 - 자동롤링</a></li><li class="item"><a href="tutorial-index_data.html">동적 데이터</a></li><li class="item"><a href="tutorial-index_default.html">정적HTML - 순환</a></li><li class="item"><a href="tutorial-index_default_nocircle.html">정적HTML - 비순환</a></li><li class="item"><a href="tutorial-index_event.html">index_event</a></li></ul><h3>Classes</h3><ul class="list classes"><li class="item" id="ne.component.Rolling"><span class="title"><span class="p-item">ne.component.</span><a href="ne.component.Rolling.html">Rolling</a></span><span class="icon blue static">static</span><ul class="sublist methods ne.component.Rolling"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.html#attach">attach</a></li><li><a href="ne.component.Rolling.html#auto">auto</a></li><li><a href="ne.component.Rolling.html#fire">fire</a></li><li><a href="ne.component.Rolling.html#init">init</a></li><li><a href="ne.component.Rolling.html#moveTo">moveTo</a></li><li><a href="ne.component.Rolling.html#roll">roll</a></li><li><a href="ne.component.Rolling.html#setFlow">setFlow</a></li><li><a href="ne.component.Rolling.html#stop">stop</a></li></ul></li><li class="item" id="ne.component.Rolling.Data"><span class="title"><span class="p-item">ne.component.Rolling.</span><a href="ne.component.Rolling.Data.html">Data</a></span><span class="icon blue static">static</span><ul class="sublist methods ne.component.Rolling.Data"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Data.html#mixin">mixin</a></li></ul></li><li class="item" id="ne.component.Rolling.Data.Node"><span class="title"><span class="p-item">ne.component.Rolling.Data.</span><a href="ne.component.Rolling.Data.Node.html">Node</a></span><span class="icon blue static">static</span></li><li class="item" id="ne.component.Rolling.Roller"><span class="title"><span class="p-item">ne.component.Rolling.</span><a href="ne.component.Rolling.Roller.html">Roller</a></span><span class="icon blue static">static</span><ul class="sublist methods ne.component.Rolling.Roller"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Roller.html#_animate">_animate</a></li><li><a href="ne.component.Rolling.Roller.html#changeMotion">changeMotion</a></li><li><a href="ne.component.Rolling.Roller.html#mixin">mixin</a></li><li><a href="ne.component.Rolling.Roller.html#setFlow">setFlow</a></li></ul></li></ul><h3>Namespaces</h3><ul class="list namespaces"><li class="item" id="ne.component.Rolling.Data.remoteDataMethods"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Data.remoteDataMethods.html">remoteDataMethods</a></span><ul class="sublist methods ne.component.Rolling.Data.remoteDataMethods"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Data.remoteDataMethods.html#.getData">getData</a></li><li><a href="ne.component.Rolling.Data.remoteDataMethods.html#.setData">setData</a></li><li><a href="ne.component.Rolling.Data.remoteDataMethods.html#.severLink">severLink</a></li></ul></li><li class="item" id="ne.component.Rolling.Data.staticDataMethods"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Data.staticDataMethods.html">staticDataMethods</a></span><ul class="sublist methods ne.component.Rolling.Data.staticDataMethods"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Data.staticDataMethods.html#.getCurrent">getCurrent</a></li><li><a href="ne.component.Rolling.Data.staticDataMethods.html#.getData">getData</a></li><li><a href="ne.component.Rolling.Data.staticDataMethods.html#.getDataListLength">getDataListLength</a></li></ul></li><li class="item" id="ne.component.Rolling.Roller.moveContainerSet"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Roller.moveContainerSet.html">moveContainerSet</a></span><ul class="sublist methods ne.component.Rolling.Roller.moveContainerSet"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Roller.moveContainerSet.html#.complete">complete</a></li><li><a href="ne.component.Rolling.Roller.moveContainerSet.html#.move">move</a></li><li><a href="ne.component.Rolling.Roller.moveContainerSet.html#.moveTo">moveTo</a></li></ul></li><li class="item" id="ne.component.Rolling.Roller.movePanelSet"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Roller.movePanelSet.html">movePanelSet</a></span><ul class="sublist methods ne.component.Rolling.Roller.movePanelSet"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Roller.movePanelSet.html#._appendMoveData">_appendMoveData</a></li><li><a href="ne.component.Rolling.Roller.movePanelSet.html#.complete">complete</a></li><li><a href="ne.component.Rolling.Roller.movePanelSet.html#.move">move</a></li></ul></li></ul></div>
-        <div id="main" class="main">
+        } else {
+            var overBoundary;
+            this.setFlow(flow);
+            // 모델이 없을 경우는 데이터를 넘기지 않는다.
+            if (this._model) {
+                overBoundary = this._model.changeCurrent(flow);
+                data = this._model.getData();
+            }
+            if(!overBoundary) {
+                this._roller.move(data);
+            }
+        }
+
+    },
+    /**
+     * 이동방향을 설정한다.
+     *
+     * @param {String} flow 롤링방향
+     */
+    setFlow: function(flow) {
+        this._flow = flow;
+        this._roller.setFlow(flow);
+    },
+    /**
+     * 타겟페이지로 이동한다
+     *
+     * @param {Number} page 이동할 페이지
+     */
+    moveTo: function(page) {
+
+        // 만약 fix된 html이면 roller의 moveTo를 진행한다.
+        if (this._isDrawn) {
+            this._roller.moveTo(page);
+            return;
+        }
+
+        var len = this._model.getDataListLength(),
+            max = Math.min(len, page),
+            min = Math.max(1, page),
+            current = this._model.getCurrent(),
+            duration,
+            absInterval,
+            isPrev,
+            flow,
+            i;
+
+        // 번호가 입력되지 않았거나, 데이터설정에 문제가 있을 시 에러발생
+        if (isNaN(Number(page))) {
+            throw new Error('#PageError moveTo method have to run with page');
+        }
+        if (this._option.isVariable) {
+            throw new Error('#DataError : Variable Rolling can\'t use moveTo');
+        }
+
+        // 좌우에 따른 최대/최소값 설정
+        isPrev = this.isNegative(page - current);
+        page = isPrev ? min : max;
+        flow = isPrev ? 'prev' : 'next';
+        absInterval = Math.abs(page - current);
+        // 이동패널 수로 설정된 duration을 나눈다
+        duration = this._option.duration / absInterval;
+
+        this.setFlow(flow);
+
+        for (i = 0; i < absInterval; i++) {
+            this._model.changeCurrent(flow);
+            this._roller.move(this._model.getData(), duration);
+        }
+
+    },
+    isNegative: function(number) {
+        return !isNaN(number) && number < 0;
+    },
+    /**
+     * 자동롤링 멈춤
+     */
+    stop: function() {
+        window.clearInterval(this._timer);
+    },
+    /**
+     * 자동롤링 시작
+     */
+    auto: function() {
+        this.stop();
+        this._timer = window.setInterval(ne.util.bind(function() {
+            this._model.changeCurrent(this._flow);
+            this._roller.move(this._model.getData());
+
+        }, this), this.delayTime);
+    },
+    /**
+     * 커스텀이벤트를 등록한다.
+     *
+     * @param {String} type 이벤트 타입
+     * @param {Function} callback 이벤트 핸들러
+     */
+    attach: function(type, callback) {
+        this._roller.on(type, callback);
+    },
+    /**
+     * 커스텀이벤트를 실행시킨다.
+     * @param {String} type 이벤트 타입
+     * @param {Object} [options] 이벤트 실행 데이터
+     */
+    fire: function(type, options) {
+        this._roller.fire(type, options);
+    }
+});
 
 
 
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
+
+
+/**
+ * @fileoverview 움직임 좌표, 움직이는 방식 위치등을 정하여 액션을 수행함
+ * @author Jein Yi
+ * @dependency common.js[type, object, collection, function, CustomEvents, defineClass]
+ */
+/** 롤링 데이터를 조작
+ *
+ * @param {Object} option 롤링컴포넌트(ne.component.Rolling)의 옵션
+ * @param {(Array|Object)} data 롤링 데이터
+ * @namespace ne.component.Rolling.Data
+ * @constructor
+ */
+ne.component.Rolling.Data = ne.util.defineClass(/** @lends ne.component.Rolling.Data.prototype */{
+    init: function(option, data) {
+        /**
+         * 가변성 데이터인지?
+         * @type {Boolean}
+         */
+        this.isVariable = !!option.isVariable;
+        /**
+         * 상호간 연결된 데이터리스트를 갖는다
+         * @type {Array}
+         */
+        this._datalist = null;
+        /**
+         * 가변데이터 일경우 노드데이터 리스트가 아닌, 데이터를 사용
+         * @type {Node}
+         * @private
+         */
+        this._data = null;
+        /**
+         * 초기 페이지 번호
+         * @type {Number}
+         */
+        this._current = option.initNum || 1;
+        /**
+         * 순환형인가 여부
+         *
+         * @type {Boolean}
+         * @private
+         */
+        this._isCircular = ne.util.isBoolean(option.isCircular) ? option.isCircular : true;
+        if (this.isVariable) {
+            this.mixin(ne.component.Rolling.Data.remoteDataMethods);
+        } else {
+            this.mixin(ne.component.Rolling.Data.staticDataMethods);
+        }
+
+        this._initData(data);
+    },
+    /**
+     * 사용하는 메서드들을 붙인다
+     *
+     * @param {Object} methods 사용할 메서드셋 [ne.component.Rolling.Data.staticDataMethods|ne.component.Rolling.Data.remoteDataMethods]
+     */
+    mixin: function(methods) {
+        ne.util.extend(this, methods);
+    }
+});
+/**
+ * 정적인 데이터일 경우 사용되는 메서드 셋
+ * @namespace ne.component.Rolling.Data.staticDataMethods
+ */
+ne.component.Rolling.Data.staticDataMethods = {
+    /**
+     * 서로 연결되지 않은 데이터리스트를 서로 연결한다.
+     *
+     * @param {Array} datalist 서로 연결되지 않은 리스
+     * @returns {Array} _datalist
+     * @private
+     */
+    _initData: function(datalist) {
+        var before = null,
+            first,
+            nodelist;
+
+        nodelist = ne.util.map(datalist, function(data, index) {
+
+            var node = new ne.component.Rolling.Data.Node(data);
+            node.prev = before;
+
+            // 첫번째 요소일 경우, 마지막 요소와 연결을위해 first에 저장, 아니면 이전요소에 노드를 링크
+            if (before) {
+                before.next = node;
+            } else {
+                first = node;
+            }
+            // 마지막 요소일 경우 처음앨리먼트와 연결한다
+            if (index === (datalist.length - 1)) {
+                node.next = first;
+                first.prev = node;
+            }
+
+            before = node;
+
+            return node;
+
+        }, this);
+        nodelist.unshift(null);
+        this._datalist = nodelist;
+    },
+    /**
+     * 현재 데이터 또는, 특정인덱스의 데이터를 받아온다.
+     *
+     * @param {Number} index 받아올 데이터 인덱스값
+     * @returns {String}
+     */
+    getData: function(index) {
+        return this._datalist[index || this._current].data;
+    },
+    /**
+     * 데이터 리스트 길이를 반환한다.
+     *
+     * @returns {Array}
+     */
+    getDataListLength: function() {
+        return this._datalist.length - 1;
+    },
+    /**
+     * 다음데이터를 받아온다.
+     *
+     * @param {Number} index 받아올 다음 데이터의 기준 인덱스값
+     * @returns {String}
+     * @private
+     */
+    getPrevData: function(index) {
+        return this._datalist[index || this._current].prev.data;
+    },
+    /**
+     * 이전데이터를 받아온다.
+     *
+     * @param {Number} index 받아올 이전 데이터의 기준 인덱스값
+     * @returns {String}
+     * @private
+     */
+    getNextData: function(index) {
+        return this._datalist[index || this._current].next.data;
+    },
+    /**
+     * 현재 페이지를 변경한다.
+     *
+     * @param {String} flow 방향값
+     * @private
+     */
+    changeCurrent: function(flow) {
+        var length = this.getDataListLength();
+        if (flow === 'prev') {
+            this._current -= 1;
+            if (this._current < 1) {
+                this._current = this._isCircular ? length : 1;
+                return true;
+            }
+        } else {
+            this._current += 1;
+            if (this._current > length) {
+                this._current = this._isCircular ? 1 : length;
+                return true;
+            }
+        }
+    },
+    /**
+     * 현재 위치를 돌려준다.
+     *
+     * @returns {number}
+     */
+    getCurrent: function() {
+        return this._current;
+    }
+};
+/**
+ * 동적인 데이터일 경우 사용되는 메서드 셋.
+ * @namespace ne.component.Rolling.Data.remoteDataMethods
+ * @static
+ */
+ne.component.Rolling.Data.remoteDataMethods = {
+    /**
+     * 가변데이터 일때 데이터 세팅
+     *
+     * @param {String} data 화면에 그려질 데이터
+     * @private
+     */
+    _initData: function(data) {
+        this._data = new ne.component.Rolling.Data.Node(data);
+    },
+    /**
+     * 현재 데이터 또는, 특정인덱스의 데이터를 받아온다.
+     *
+     * @param {Number} index 받아올 데이터 인덱스값
+     * @returns {String}
+     */
+    getData: function() {
+        return this._data.data;
+    },
+    /**
+     * 데이터 세팅
+     *
+     * @param {String} type ['prev|next'] 선택된 데이터 인덱스
+     * @param {String} data 롤링 컴퍼넌트 내부에 사용될 데이터
+     */
+    setData: function(type, data) {
+        this._data[type] = new ne.component.Rolling.Data.Node(data);
+    },
+    /**
+     * 데이터 연결을 끊는다.
+     *
+     * @param {String} type ['prev|next'] 선택된 데이터로, 현재데이터를 덮는다
+     */
+    severLink: function(type) {
+        var data = this._data;
+        this._data = this._data[type];
+        data[type] = null;
+    },
+    /**
+     * 다음데이터를 받아온다.
+     *
+     * @returns {String}
+     * @private
+     */
+    getPrevData: function() {
+        return this._data.prev && this._data.prev.data;
+    },
+    /**
+     * 이전데이터를 받아온다.
+     *
+     * @returns {String}
+     * @private
+     */
+    getNextData: function() {
+        return this._data.next && this._data.next.data;
+    }
+};
+
+/**
+ * 데이터끼리 연결하기 위한 노드데이터 형
+ *
+ * @namespace ne.component.Rolling.Data.Node
+ * @param {Object} data 노드데이터/각패널에 들어갈 html값
+ * @constructor
+ */
+ne.component.Rolling.Data.Node = function(data) {
+
+    this.prev = null;
+    this.next = null;
+    this.data = data;
+
+};
+/**
  * @fileoverview 움직임 좌표, 움직이는 방식 위치등을 정하여 액션을 수행함
  * @author Jein Yi
  * @dependency common.js[type, object, collection, function, CustomEvents, defineClass]
@@ -229,7 +685,7 @@ ne.component.Rolling.Roller = ne.util.defineClass(/** @lends ne.component.Rollin
         }
 
         // 이동단위가 페이지가 아닐경우
-        if (this._rollunit !== 'page' &amp;&amp; this._isDrawn) {
+        if (this._rollunit !== 'page' && this._isDrawn) {
             dist = Math.ceil(dist / this._itemcount);
         }
         this._distance = parseInt(dist, 10);
@@ -312,8 +768,8 @@ ne.component.Rolling.Roller.movePanelSet = {
 
         // 옵션으로 넘겨받은 태그가 있으면 새로 생성
         if (option.wrapperTag) {
-            tag = option.wrapperTag &amp;&amp; option.wrapperTag.split('.')[0];
-            className = option.wrapperTag &amp;&amp; option.wrapperTag.split('.')[1] || '';
+            tag = option.wrapperTag && option.wrapperTag.split('.')[0];
+            className = option.wrapperTag && option.wrapperTag.split('.')[1] || '';
             wrap = document.createElement(tag);
             if (className) {
             wrap.className = className;
@@ -326,7 +782,7 @@ ne.component.Rolling.Roller.movePanelSet = {
                 wrap = firstChild;
             }
             // 아닐경우 그 다음앨리먼트를 찾는다
-            next = firstChild &amp;&amp; firstChild.nextSibling;
+            next = firstChild && firstChild.nextSibling;
             if (ne.util.isHTMLTag(next)) {
                 wrap = next;
             } else {
@@ -359,10 +815,10 @@ ne.component.Rolling.Roller.movePanelSet = {
             // 옵션으로 설정되어 있지 않을 경우 컨테이너 내부에 존재하는 패널 엘리먼트 검색
             // 첫번째가 텍스트 일수 있으므로 다음요소까지 확인한다. 없으면 'li'
             if (!ne.util.isHTMLTag(panel)) {
-                panel = panel &amp;&amp; panel.nextSibling;
+                panel = panel && panel.nextSibling;
             }
             tag = ne.util.isHTMLTag(panel) ? panel.tagName : 'li';
-            className = (panel &amp;&amp; panel.className) || '';
+            className = (panel && panel.className) || '';
         }
 
         this._container.innerHTML = '';
@@ -625,7 +1081,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
                 return true;
             }
         } else {
-            if(moved &lt; 0) {
+            if(moved < 0) {
                 return false;
             } else {
                 return true;
@@ -667,7 +1123,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
             return;
         }
         // 비순환이고, 영역을 넘어갔으면 움직임 없이 리턴한다.
-        if(!this._isCircular &amp;&amp; this._isLimitPoint(flow)) {
+        if(!this._isCircular && this._isLimitPoint(flow)) {
             this.status = 'idle';
             return;
         }
@@ -806,7 +1262,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
     _isInclude: function(item, colleciton) {
         var i,
             len;
-        for(i = 0, len = colleciton.length; i &lt; len; i++) {
+        for(i = 0, len = colleciton.length; i < len; i++) {
             if (colleciton[i] === item) {
                 return true;
             }
@@ -954,75 +1410,136 @@ ne.component.Rolling.Roller.moveContainerSet = {
 
 // 커스텀이벤트 믹스인
 ne.util.CustomEvents.mixin(ne.component.Rolling.Roller);
-</code></pre>
-        </article>
-    </section>
 
+/**
+ * 롤링에 필요한 모션 함수 컬렉션
+ *
+ * @namespace ne.component.Rolling.Roller.motion
+ */
+ne.component.Rolling.Roller.motion = (function() {
+    var quadEaseIn,
+        circEaseIn,
+        quadEaseOut,
+        circEaseOut,
+        quadEaseInOut,
+        circEaseInOut;
 
-
-</div>
-        <div class="clearfix"></div>
-    </div>
-
-</div>
-<script>
-(function() {
-// 영역 height 설정
-var height = (window.innerHeight || document.documentElement.clientHeight || document.getElementByTagName('body')[0].clientHeight) - 50;
-var navigation = document.getElementById('navigation');
-var main = document.getElementById('main');
-navigation.style.height = height + 'px';
-main.style.height = height + 'px';
-
-// IE 7,8을 위한 getElementsByClassName 구현
-var getElementsByClassName = function(className, parentElement) {
-	if(document.getElementsByClassName) {
-		return (parentElement || document).getElementsByClassName(className);
-	}
-
-    var regEx = new RegExp('(^| )'+className+'( |$)');
-	var nodes = new Array();
-    var elements = (parentElement || document.body).getElementsByTagName("*");
-    for(var i = 0, len = elements.length; i < len ; i++) {
-        if(regEx.test(elements[i].className)) {
-			nodes.push(elements[i]);
-		}
-	}
-	elements = null;
-    return nodes;
-}
-
-// url 파싱후 해당 카테고리만 display:block 처리
-var url = location.href;
-var path = url.lastIndexOf('/');
-var fileName = url.substring(path+1);
-var fullName = fileName.split('.');
-fullName.length -= 1;
-fullName = fullName.join('.');
-fullName = fullName.split('-');
-fullName = fullName[fullName.length - 1];
-var lnbList = getElementsByClassName(fullName);
-if(lnbList.length && lnbList.length > 0) {
-    for(var i = 0, len = lnbList.length; i < len; i++) {
-        lnbList[i].className += ' selected';
+    /**
+     * easeIn
+     *
+     * @param delta
+     * @returns {Function}
+     */
+    function makeEaseIn(delta) {
+        return function(progress) {
+            return delta(progress);
+        };
     }
-}
-
-var title = document.getElementById(fullName);
-if(title) {
-    title.className += ' selected';
-    title.innerHTML = '<span class="arrow">▶</span>' + title.innerHTML;
-
-    var static = getElementsByClassName('static', title);
-    if(static) {
-        static[0].className += ' selected';
+    /**
+     * easeOut
+     *
+     * @param delta
+     * @returns {Function}
+     */
+    function makeEaseOut(delta) {
+        return function(progress) {
+            return 1 - delta(1 - progress);
+        };
     }
-}
+
+    /**
+     * easeInOut
+     *
+     * @param delta
+     * @returns {Function}
+     */
+    function makeEaseInOut(delta) {
+        return function(progress) {
+            if (progress < 0.5) {
+                return delta(2 * progress) / 2;
+            } else {
+                return (2 - delta(2 * (1 - progress))) / 2;
+            }
+        };
+    }
+    /**
+     * 선형
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method linear
+     * @static
+     */
+    function linear(progress) {
+        return progress;
+    }
+    function quad(progress) {
+        return Math.pow(progress, 2);
+    }
+    function circ(progress) {
+        return 1 - Math.sin(Math.acos(progress));
+    }
+
+    /**
+     * qued + easeIn
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method quadEaseIn
+     * @static
+     */
+    quadEaseIn = makeEaseIn(quad);
+    /**
+     * circ + easeIn
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method circEaseIn
+     * @static
+     */
+        circEaseIn = makeEaseIn(circ);
+    /**
+     * quad + easeOut
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method quadEaseOut
+     * @static
+     */
+        quadEaseOut = makeEaseOut(quad);
+    /**
+     * circ + easeOut
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method circEaseOut
+     * @static
+     */
+    circEaseOut = makeEaseOut(circ);
+    /**
+     * quad + easeInOut
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method quadEaseInOut
+     * @static
+     */
+    quadEaseInOut = makeEaseInOut(quad);
+    /**
+     * circ + easeInOut
+     *
+     * @memberof ne.component.Rolling.Roller.motion
+     * @method circEaseInOut
+     * @static
+     */
+    circEaseInOut = makeEaseInOut(circ);
+
+    return {
+        linear: linear,
+        easeIn: quadEaseIn,
+        easeOut: quadEaseOut,
+        easeInOut: quadEaseInOut,
+        quadEaseIn: quadEaseIn,
+        quadEaseOut: quadEaseOut,
+        quadEaseInOut: quadEaseInOut,
+        circEaseIn: circEaseIn,
+        circEaseOut: circEaseOut,
+        circEaseInOut: circEaseInOut
+    };
 })();
-</script>
-<script type="text/javascript" src="scripts/prettify/prettify.js"></script>
-<script type="text/javascript" src="scripts/prettify/lang-css.js"></script>
-<script type="text/javascript">prettyPrint();</script>
-<script type="text/javascript" src="scripts/linenumber.js"></script>
-</body>
-</html>
+
+})();
