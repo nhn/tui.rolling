@@ -1,9 +1,0 @@
-{
-  "index_default": { "title" : "정적HTML - 순환" },
-  "index_default_nocircle": { "title" : "정적HTML - 비순환" },
-  "index_auto": { "title" : "정적 데이터 - 자동롤링" },
-  "index_animate": { "title" : "정적 데이터 - 애니메이션" },
-  "index_vertical": { "title" : "정적 데이터 - 애니메이션(세로)" },
-  "index_data": { "title" : "동적 데이터" },
-  "index_customevent": { "title" : "커스텀 이벤트" }
-}
