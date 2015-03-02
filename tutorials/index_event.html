@@ -30,10 +30,12 @@
     </div>
 </div>
 <script>
+    // HTML 데이터
     var htmlData = '<div class="panel-heading">default Content</div><p>default Content</p>',
             nextData = '<div class="panel-heading">nextData</div><p>next Content</p>',
             prevData = '<div class="panel-heading">prevData</div><p>prev Content</p>';
 
+    // 생성
     var rolling1 = new ne.component.Rolling({
         element: document.getElementById('rolling'),
         initNum: 0,
@@ -44,6 +46,7 @@
         isCircle: false
     }, htmlData);
 
+    // 이벤트 등록
     var control = document.getElementById('control');
     control.onclick = function(e) {
         var e = e || window.event,
@@ -60,6 +63,7 @@
         }
     };
 
+    // 커스텀 이벤트 등록
     var statusElement = document.getElementById('status');
     rolling1.attach('beforeMove', function() {
         statusElement.style.backgroundColor = 'yellow';

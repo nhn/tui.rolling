@@ -29,10 +29,12 @@
     </div>
 </div>
 <script>
+    // HTML 데이터
     var htmlData = '<div class="panel-heading">default Content</div><p>default Content</p>',
             nextData = '<div class="panel-heading">nextData {number}</div><p>next Content</p>',
             prevData = '<div class="panel-heading">prevData {number}</div><p>prev Content</p>';
 
+    // 생성
     var rolling1 = new ne.component.Rolling({
         element: document.getElementById('rolling'),
         initNum: 0,
@@ -43,6 +45,7 @@
         isCircle: false
     }, htmlData);
 
+    // 이벤트 등록
     var control = document.getElementById('control'),
             prevcount = 0, nextcount = 0;
     control.onclick = function(e) {

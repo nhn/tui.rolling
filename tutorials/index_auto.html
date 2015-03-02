@@ -35,6 +35,8 @@
 </div>
 
 <script>
+
+    // HTML 데이터
     var htmlData = [
         '<span>data1</span><span>data2</span><span>data3</span><span>data4</span><span>data5</span>',
         '<span>data11</span><span>data22</span><span>data33</span><span>data44</span><span>data55</span>',
@@ -44,6 +46,7 @@
         '<span>data222</span><span>data333</span><span>data444</span><span>data555</span><span>data666</span>'
     ];
 
+    // 생성
     var rolling1 = new ne.component.Rolling({
         element: document.getElementById('rolling'),
         direction: 'horizontal',
@@ -55,6 +58,7 @@
         isCircular: false
     }, htmlData);
 
+    // 이벤트 등록
     var control = document.getElementById('control');
     control.onclick = function(e) {
         var e = e || window.event,
