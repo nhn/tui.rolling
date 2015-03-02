@@ -28,56 +28,6 @@
         </div>
     </div>
 </div>
-<div class="panel panel-primary">
-    <div class="panel-heading">Code</div>
-    <xmp>
-        <div id="rolling" class="rolling">
-            <ul>
-                <li class="panel"></li>
-            </ul>
-        </div>
-        <div class="btn-group" id="control">
-            <button class="left">이전</button>
-            <button class="right">다음</button>
-        </div>
-
-        <script>
-            var htmlData = '<div class="panel-heading">default Content</div><p>default Content</p>',
-                    nextData = '<div class="panel-heading">nextData {number}</div><p>next Content</p>',
-                    prevData = '<div class="panel-heading">prevData {number}</div><p>prev Content</p>';
-
-            var rolling1 = new ne.component.Rolling({
-                element: document.getElementById('rolling'),
-                initNum: 0,
-                direction: 'horizontal',
-                isVariable: true,
-                duration: 400,
-                motion: 'linear',
-                isCircle: false
-            }, htmlData);
-
-            var control = document.getElementById('control'),
-                    prevcount = 0, nextcount = 0;
-            control.onclick = function(e) {
-                var e = e || window.event,
-                        target = e.target || e.srcElement,
-                        value;
-                if (target.tagName.toLowerCase() !== 'button') {
-                    return;
-                }
-                className = target.className;
-                if (className.indexOf('left') > -1) {
-                    prevcount++;
-                    rolling1.roll(prevData.replace(/{number}/g, prevcount), 'prev');
-                } else {
-                    nextcount++;
-                    rolling1.roll(nextData.replace(/{number}/g, nextcount), 'next');
-                }
-            };
-
-        </script>
-    </xmp>
-</div>
 <script>
     var htmlData = '<div class="panel-heading">default Content</div><p>default Content</p>',
             nextData = '<div class="panel-heading">nextData {number}</div><p>next Content</p>',

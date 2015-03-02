@@ -39,69 +39,6 @@
         </div>
     </div>
 </div>
-<div class="panel panel-primary">
-    <div class="panel-heading">Code</div>
-    <xmp>
-        <div id="rolling" class="rolling">
-            <ul>
-                <li class="panel"></li>
-            </ul>
-        </div>
-
-        <script>
-            var htmlData = [
-                '<div class="panel-heading">data1</div><p>content1</p>',
-                '<div class="panel-heading">data2</div><p>content2</p>',
-                '<div class="panel-heading">data3</div><p>content3</p>',
-                '<div class="panel-heading">data4</div><p>content4</p>',
-                '<div class="panel-heading">data5</div><p>content5</p>'
-            ];
-
-            var rolling1 = new ne.component.Rolling({
-                element: document.getElementById('rolling'),
-                direction: 'horizontal',
-                isVariable: false,
-                unit: 'page',
-                isAuto: true,
-                duration: 400,
-                motion: 'linear',
-                flow: 'prev',
-                isCircle: true
-            }, htmlData);
-            var rolling2 = new ne.component.Rolling({
-                element: document.getElementById('rolling1'),
-                direction: 'horizontal',
-                isVariable: false,
-                unit: 'page',
-                isAuto: true,
-                duration: 400,
-                motion: 'easeIn',
-                flow: 'prev',
-                isCircle: true
-            }, htmlData);
-            var rolling3 = new ne.component.Rolling({
-                element: document.getElementById('rolling2'),
-                direction: 'horizontal',
-                isVariable: false,
-                unit: 'page',
-                isAuto: true,
-                duration: 400,
-                motion: 'easeOut',
-                isCircle: true
-            }, htmlData);
-            var rolling4 = new ne.component.Rolling({
-                element: document.getElementById('rolling3'),
-                direction: 'horizontal',
-                isVariable: false,
-                unit: 'page',
-                isAuto: true,
-                duration: 400,
-                motion: 'easeInOut',
-                isCircle: true
-            }, htmlData);
-        </script>
-    </xmp>
-</div>
 <script>
     var htmlData = [
         '<div class="panel-heading">data1</div><p>content1</p>',
