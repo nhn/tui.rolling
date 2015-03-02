@@ -65,6 +65,7 @@
     </div>
 </div>
 <script>
+    // 생성
     var rolling1 = new ne.component.Rolling({
         element: document.getElementById('rolling'),
         direction: 'horizontal',
@@ -89,7 +90,7 @@
         unit: 'page'
     });
 
-
+    // 이벤트 등록
     var control = document.getElementById('control1');
     control.onclick = function(e) {
         var e = e || window.event,
