@@ -20,6 +20,8 @@ Rolling
 ## Download/Install
 * Bower: `bower install "git+http://3c672057a1ac16c4e6f1baaba73e24d5270ef453:x-oauth-basic@github.nhnent.com/fe/component-rolling.git#version"`
 * Download: https://github.nhnent.com/fe/component-rolling
+  * Component-Roling.js(FE common code snippets 포함)
+  * Component-Roling.core.js(FE common code snippets 미포함)
 
 ## History
 | Version | Description | Date | Developer |
