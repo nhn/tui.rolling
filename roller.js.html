@@ -760,11 +760,13 @@ ne.component.Rolling.Roller.moveContainerSet = {
      * @private
      */
     _rotatePanel: function(flow) {
+
+        flow = flow || this._flow;
+
         var standard,
             moveset,
             movesetLength,
             range = this._range,
-            flow = flow || this._flow,
             containerMoveDist,
             isPrev = flow === 'prev',
             basis = this._basis;
