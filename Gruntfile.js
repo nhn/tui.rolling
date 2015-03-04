@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         // You can set arbitrary key-value pairs.
         distFolder: 'dist',
-        name: 'Calendar',
+        name: 'rolling',
         // You can also set the value of a key as parsed JSON.
         // Allows us to reference properties we declared in package.json.
         pkg: grunt.file.readJSON('package.json'),
@@ -23,7 +23,6 @@ module.exports = function(grunt) {
                 // The files to concatenate:
                 // Notice the wildcard, which is automatically expanded.
                 src: [
-                    'src/common/*.js',
                     'src/js/rolling.js',
                     'src/js/rolldata.js',
                     'src/js/roller.js',
@@ -33,24 +32,7 @@ module.exports = function(grunt) {
                 // Notice the angle-bracketed ERB-like templating,
                 // which allows you to reference other properties.
                 // This is equivalent to 'dist/main.js'.
-                dest: '<%= distFolder %>/<%= pkg.name %>.js'
-                // You can reference any grunt config property you want.
-                // Ex: '<%= concat.options.separator %>' instead of ';'
-            },
-            core: {
-                // The files to concatenate:
-                // Notice the wildcard, which is automatically expanded.
-                src: [
-                    'src/js/rolling.js',
-                    'src/js/rolldata.js',
-                    'src/js/roller.js',
-                    'src/js/*.js'
-                ],
-                // The destination file:
-                // Notice the angle-bracketed ERB-like templating,
-                // which allows you to reference other properties.
-                // This is equivalent to 'dist/main.js'.
-                dest: '<%= distFolder %>/<%= pkg.name %>.core.js'
+                dest: '<%= name %>.js'
                 // You can reference any grunt config property you want.
                 // Ex: '<%= concat.options.separator %>' instead of ';'
             }
@@ -58,24 +40,13 @@ module.exports = function(grunt) {
         uglify: {
             normal: {
                 files: {
-                    '<%= distFolder %>/<%= pkg.name %>.min.js' : '<%= distFolder %>/<%= pkg.name %>.js'
+                    '<%= name %>.min.js' : '<%= pkg.name %>.js'
                 },
                 options: {
                     banner: '/*!<%= pkg.name %> v<%=pkg.version%> | NHN Entertainment*/',
                     preserveComments: false,
                     sourceMap: true,
-                    sourceMapName: "<%= distFolder %>/<%= pkg.name %>.min.map"
-                }
-            },
-            core: {
-                files: {
-                    '<%= distFolder %>/<%= pkg.name %>.core.min.js' : '<%= distFolder %>/<%= pkg.name %>.core.js'
-                },
-                options: {
-                    banner: '/*!<%= pkg.name %> v<%=pkg.version%> | NHN Entertainment*/',
-                    preserveComments: false,
-                    sourceMap: true,
-                    sourceMapName: "<%= distFolder %>/<%= pkg.name %>.core.min.map"
+                    sourceMapName: "<%= pkg.name %>.min.map"
                 }
             }
         },

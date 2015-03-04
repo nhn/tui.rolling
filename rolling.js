@@ -1,4 +1,4 @@
-/*!Component-Rolling v1.0.0 | NHN Entertainment*/
+/*!Component-Rolling v0.0.1 | NHN Entertainment*/
 (function() {
 /**
  * @fileoverview 롤링컴퍼넌트의 코어
@@ -1217,11 +1217,13 @@ ne.component.Rolling.Roller.moveContainerSet = {
      * @private
      */
     _rotatePanel: function(flow) {
+
+        flow = flow || this._flow;
+
         var standard,
             moveset,
             movesetLength,
             range = this._range,
-            flow = flow || this._flow,
             containerMoveDist,
             isPrev = flow === 'prev',
             basis = this._basis;
