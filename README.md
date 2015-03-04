@@ -11,11 +11,13 @@ Rolling
 * 이동시 애니메이션 효과 (정속, 가감속)
 * 커스텀이벤트(페이지 이동 전, 페이지 이동 후)
 
-
 ## Documentation
 * **API** - https://github.nhnent.com/pages/fe/component-rolling/
 * **Sample** - https://github.nhnent.com/pages/fe/component-rolling/tutorial-index_default_nocircle.html
 * **CI** - http://fe.nhnent.com:8080/jenkins/job/component-rolling/
+
+## Dependency
+* code-snippet - https://github.nhnent.com/fe/share-code-snippet
 
 ## Download/Install
 * Bower: `bower install "git+http://3c672057a1ac16c4e6f1baaba73e24d5270ef453:x-oauth-basic@github.nhnent.com/fe/component-rolling.git#version"`
