@@ -40,13 +40,13 @@ module.exports = function(grunt) {
         uglify: {
             normal: {
                 files: {
-                    '<%= name %>.min.js' : '<%= pkg.name %>.js'
+                    '<%= name %>.min.js' : '<%= name %>.js'
                 },
                 options: {
                     banner: '/*!<%= pkg.name %> v<%=pkg.version%> | NHN Entertainment*/',
                     preserveComments: false,
                     sourceMap: true,
-                    sourceMapName: "<%= pkg.name %>.min.map"
+                    sourceMapName: "<%= name %>.min.map"
                 }
             }
         },
