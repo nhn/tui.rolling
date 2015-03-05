@@ -8,19 +8,17 @@
     <script type="text/javascript" src="js/Component-Rolling.js"></script>
     <style>
         ul, ol, li { list-style:none;padding:0;margin:0; }
-        .panel { border:1px solid #eee; }
         .rolling { width: 300px; height:150px;margin:30px auto;}
         .rolling ul {width:1000000px; float:left;position:absolute;}
         .sample { text-align: center; }
-        li.panel { width: 100px; margin:0; padding:0; float:left; height:150px;  border-radius: 0; box-shadow: none; border:0; background-color:#eee; }
+        li.panel { width: 100px; margin:0; padding:0; float:left; height:150px;  border-radius: 0; box-shadow: none; border:0; background-color: #6d676b; color:#fff; }
         .rolling_vertical { width: 100px; height:150px;margin:30px auto;}
-        .rolling_vertical li.panel { width: 100px; margin:0; float:none; padding:0; height:50px;  border-radius: 0; box-shadow: none; border:0; background-color:#eee; }
+        .rolling_vertical li.panel { width: 100px; margin:0; float:none; padding:0; height:50px;  border-radius: 0; box-shadow: none; border:0; background-color: #6d676b; color:#fff; }
         .rolling_vertical ul {height:1000000px; float:left;position:absolute;}
     </style>
 </head>
 <body>
 <div class="panel panel-primary">
-    <div class="panel-heading">실행화면 | Static Data</div>
     <div class="sample">
         <div id="rolling" class="rolling">
             <ul>
@@ -42,7 +40,7 @@
             <button class="right">우</button>
         </div>
     </div>
-    <div class="sample">
+    <div class="sample" style="margin-left:15px;">
         <div id="rolling_vertical" class="rolling_vertical">
             <ul>
                 <li class="panel">data1</li>
@@ -72,11 +70,11 @@
         isVariable: false,
         isAuto: false,
         duration: 400,
-        isCircular: true,
+        isCircular: false,
         isDrawn: true,
-        initNum: 3,
+        unitCount: 2,
         motion: 'linear',
-        unit: 'page'
+        unit: 'item'
     });
     var rolling2 = new ne.component.Rolling({
         element: document.getElementById('rolling_vertical'),
@@ -84,10 +82,10 @@
         isVariable: false,
         isAuto: false,
         duration: 400,
-        isCircular: true,
+        isCircular: false,
         isDrawn: true,
         motion: 'linear',
-        unit: 'page'
+        unit: 'item'
     });
 
     // 이벤트 등록

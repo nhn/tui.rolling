@@ -1,9 +1,8 @@
 {
-  "index_default": { "title" : "정적HTML - 순환" },
-  "index_default_nocircle": { "title" : "정적HTML - 비순환" },
-  "index_auto": { "title" : "정적 데이터 - 자동롤링" },
-  "index_animate": { "title" : "정적 데이터 - 애니메이션" },
-  "index_vertical": { "title" : "정적 데이터 - 애니메이션(세로)" },
-  "index_data": { "title" : "동적 데이터" },
-  "index_event": { "title" : "커스텀 이벤트" }
+  "sample1": { "title" : "기본 : 순환" },
+  "sample2": { "title" : "기본 : 비순환" },
+  "sample3": { "title" : "정적 데이터 - 자동롤링" },
+  "sample6": { "title" : "정적 데이터 - 애니메이션" },
+  "sample4": { "title" : "동적 데이터" },
+  "sample5": { "title" : "커스텀 이벤트" }
 }

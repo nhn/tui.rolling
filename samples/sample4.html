@@ -8,15 +8,15 @@
     <script type="text/javascript" src="js/Component-Rolling.js"></script>
     <style>
         ul, ol, li { list-style:none }
-        .panel { border:1px solid #eee; }
         .rolling { width: 300px; height:150px;margin:30px auto;}
         .sample { text-align: center; }
-        .panel-heading.pan {width:100%;height:100%;background-color: #9381ff; color:#fff;}
+        .panel-heading.pan {width:100%;height:100%;background-color: #6d676b; color:#fff;}
+        .status {background-color:transparent; border:1px solid #eee; }
+        .area {width:300px; height:100px; display:block; border:1px solid #eee; color:#999; margin:5px auto; }
     </style>
 </head>
 <body>
 <div class="panel panel-primary">
-    <div class="panel-heading">실행화면 | 동적 데이터</div>
     <div class="sample">
         <div id="rolling" class="rolling">
             <ul>
@@ -28,12 +28,27 @@
             <button class="right">다음</button>
         </div>
     </div>
+    <div id="status" class="status">
+        <br>
+        이전데이터
+        <textarea id="next-data" class="area">
+<div class="panel-heading pan">
+    {number} 번째로 갱신된 데이터
+</div>
+        </textarea>
+        다음데이터
+        <textarea id="prev-data" class="area">
+<div class="panel-heading pan">
+    {number} 번째 데이터
+</div>
+        </textarea>
+
+        입력한 값으로 다음 패널이 갱신된다.
+    </div>
 </div>
 <script>
     // HTML 데이터
-    var htmlData = '<div class="panel-heading pan">default Content</div>',
-            nextData = '<div class="panel-heading pan">nextData {number}</div>',
-            prevData = '<div class="panel-heading pan">prevData {number}</div>';
+    var htmlData = '<div class="panel-heading pan">default Content</div>';
 
     // 생성
     var rolling1 = new ne.component.Rolling({
@@ -48,21 +63,22 @@
 
     // 이벤트 등록
     var control = document.getElementById('control'),
+            nextText = document.getElementById('next-data'),
+            prevText = document.getElementById('prev-data'),
             prevcount = 0, nextcount = 0;
     control.onclick = function(e) {
         var e = e || window.event,
-                target = e.target || e.srcElement,
-                value;
+                target = e.target || e.srcElement;
         if (target.tagName.toLowerCase() !== 'button') {
             return;
         }
         className = target.className;
         if (className.indexOf('left') > -1) {
             prevcount++;
-            rolling1.roll(prevData.replace(/{number}/g, prevcount), 'prev');
+            rolling1.roll(nextText.value.replace(/{number}/g, prevcount), 'prev');
         } else {
             nextcount++;
-            rolling1.roll(nextData.replace(/{number}/g, nextcount), 'next');
+            rolling1.roll(prevText.value.replace(/{number}/g, nextcount), 'next');
         }
     };
 
