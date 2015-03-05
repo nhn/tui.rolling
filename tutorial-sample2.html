@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Data</title>
+    <title>JSDoc: Tutorial: 기본 : 비순환</title>
     <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
@@ -22,390 +22,75 @@
 
     <div class="body">
         <div id="navigation" class="navigation"><h3>Samples</h3><ul class="list samples"><li class="item"><a href="tutorial-sample1.html">기본 : 순환</a></li><li class="item"><a href="tutorial-sample2.html">기본 : 비순환</a></li><li class="item"><a href="tutorial-sample3.html">정적 데이터 - 자동롤링</a></li><li class="item"><a href="tutorial-sample4.html">동적 데이터</a></li><li class="item"><a href="tutorial-sample5.html">커스텀 이벤트</a></li><li class="item"><a href="tutorial-sample6.html">정적 데이터 - 애니메이션</a></li></ul><h3>Classes</h3><ul class="list classes"><li class="item" id="ne.component.Rolling"><span class="title"><span class="p-item">ne.component.</span><a href="ne.component.Rolling.html">Rolling</a></span><span class="icon blue static">static</span><ul class="sublist methods ne.component.Rolling"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.html#attach">attach</a></li><li><a href="ne.component.Rolling.html#auto">auto</a></li><li><a href="ne.component.Rolling.html#fire">fire</a></li><li><a href="ne.component.Rolling.html#init">init</a></li><li><a href="ne.component.Rolling.html#moveTo">moveTo</a></li><li><a href="ne.component.Rolling.html#roll">roll</a></li><li><a href="ne.component.Rolling.html#setFlow">setFlow</a></li><li><a href="ne.component.Rolling.html#stop">stop</a></li></ul></li><li class="item" id="ne.component.Rolling.Data"><span class="title"><span class="p-item">ne.component.Rolling.</span><a href="ne.component.Rolling.Data.html">Data</a></span><span class="icon blue static">static</span><ul class="sublist methods ne.component.Rolling.Data"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Data.html#mixin">mixin</a></li></ul></li><li class="item" id="ne.component.Rolling.Data.Node"><span class="title"><span class="p-item">ne.component.Rolling.Data.</span><a href="ne.component.Rolling.Data.Node.html">Node</a></span><span class="icon blue static">static</span></li><li class="item" id="ne.component.Rolling.Roller"><span class="title"><span class="p-item">ne.component.Rolling.</span><a href="ne.component.Rolling.Roller.html">Roller</a></span><span class="icon blue static">static</span><ul class="sublist methods ne.component.Rolling.Roller"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Roller.html#_animate">_animate</a></li><li><a href="ne.component.Rolling.Roller.html#changeMotion">changeMotion</a></li><li><a href="ne.component.Rolling.Roller.html#mixin">mixin</a></li><li><a href="ne.component.Rolling.Roller.html#setFlow">setFlow</a></li></ul></li></ul><h3>Namespaces</h3><ul class="list namespaces"><li class="item" id="ne.component.Rolling.Data.remoteDataMethods"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Data.remoteDataMethods.html">remoteDataMethods</a></span><ul class="sublist methods ne.component.Rolling.Data.remoteDataMethods"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Data.remoteDataMethods.html#.getData">getData</a></li><li><a href="ne.component.Rolling.Data.remoteDataMethods.html#.setData">setData</a></li><li><a href="ne.component.Rolling.Data.remoteDataMethods.html#.severLink">severLink</a></li></ul></li><li class="item" id="ne.component.Rolling.Data.staticDataMethods"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Data.staticDataMethods.html">staticDataMethods</a></span><ul class="sublist methods ne.component.Rolling.Data.staticDataMethods"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Data.staticDataMethods.html#.getCurrent">getCurrent</a></li><li><a href="ne.component.Rolling.Data.staticDataMethods.html#.getData">getData</a></li><li><a href="ne.component.Rolling.Data.staticDataMethods.html#.getDataListLength">getDataListLength</a></li></ul></li><li class="item" id="ne.component.Rolling.Roller.moveContainerSet"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Roller.moveContainerSet.html">moveContainerSet</a></span><ul class="sublist methods ne.component.Rolling.Roller.moveContainerSet"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Roller.moveContainerSet.html#.complete">complete</a></li><li><a href="ne.component.Rolling.Roller.moveContainerSet.html#.move">move</a></li><li><a href="ne.component.Rolling.Roller.moveContainerSet.html#.moveTo">moveTo</a></li></ul></li><li class="item" id="ne.component.Rolling.Roller.movePanelSet"><span class="icon blue static">static</span><span class="title"><a href="ne.component.Rolling.Roller.movePanelSet.html">movePanelSet</a></span><ul class="sublist methods ne.component.Rolling.Roller.movePanelSet"><span class="subtitle">Methods</span><li><a href="ne.component.Rolling.Roller.movePanelSet.html#._appendMoveData">_appendMoveData</a></li><li><a href="ne.component.Rolling.Roller.movePanelSet.html#.complete">complete</a></li><li><a href="ne.component.Rolling.Roller.movePanelSet.html#.move">move</a></li></ul></li></ul></div>
-        <div id="main" class="main">
-
-
-
-
-<section>
-
+        <div id="main" class="main"><section>
 <header>
     
-        <h2>
-        
-            <span class="ancestors"><a href="ne.component.Rolling.html">.Rolling</a>.</span>
-        
-        Data
-        
-        
-        </h2>
-        
-    
+
+    <h2>기본 : 비순환</h2>
 </header>
 
 <article>
-    
-    <div class="container-overview">
-    
-        
-<dt>
-    
-        <h4 class="name" id="Data">
-            <span class="type-signature"></span>new Data<span class="signature">(option, data)</span><span class="type-signature"></span>
-            
-                <div class="container-source method">
-                    <code><a href="rolldata.js.html">rolldata.js</a></code>,
-                    <code><a href="rolldata.js.html#line6">line 6</a></code>
-                </div>
-            
-        </h4>
-
-
-
-        
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>롤링 데이터를 조작</p>
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-params">
-        <div class="params">
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name first"><code>option</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>롤링컴포넌트(ne.component.Rolling)의 옵션</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name first"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-|
-
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>롤링 데이터</p></td>
-        </tr>
-
-    
-    </tbody>
-</table></div>
-    </div>
-    
-
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    <!--
-    
-    -->
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-    
-    </div>
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-        
-<dl>
-    <dt><h4 class="name">
-        ne.component.Rolling.Data.Node
-        <div class="container-source members">
-            <code><a href="ne.component.Rolling.Data.Node.html">ne.component.Rolling.Data.Node</a></code>
-        </div>
-    <h4></dt>
-    <dd></dd>
-</dl>
-    
-
-     
-
-    
-        <h3 class="subsection-title">Namespaces</h3>
-
-        <dl>
-            <dt><a href="ne.component.Rolling.Data.remoteDataMethods.html">remoteDataMethods</a></dt>
-            <dd></dd>
-        
-            <dt><a href="ne.component.Rolling.Data.staticDataMethods.html">staticDataMethods</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-    <div class="container-methods">
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    
-        <h4 class="name" id="mixin">
-            <span class="type-signature"></span>mixin<span class="signature">(methods)</span><span class="type-signature"></span>
-            
-                <div class="container-source method">
-                    <code><a href="rolldata.js.html">rolldata.js</a></code>,
-                    <code><a href="rolldata.js.html#line56">line 56</a></code>
-                </div>
-            
-        </h4>
-
-
-
-        
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>사용하는 메서드들을 붙인다</p>
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-params">
-        <div class="params">
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name first"><code>methods</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>사용할 메서드셋 [ne.component.Rolling.Data.staticDataMethods|ne.component.Rolling.Data.remoteDataMethods]</p></td>
-        </tr>
-
-    
-    </tbody>
-</table></div>
-    </div>
-    
-
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    <!--
-    
-    -->
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        </dl>
-    </div>
-    
-
-    
-
-    
+	
+    <a href="tutorials/sample2.html" target="_blank">새창으로 열기</a><br/>
+    <iframe id="exampleFrame" width="500" height="700" frameborder="0" src=tutorials/sample2.html onload="onIframeLoad()"></iframe>
+    <br/>
+    <div id='codeArea'></div>
 </article>
+<script>
+/**
+ * iframe load 이벤트 핸들러
+ */
+function onIframeLoad() {
+    generateCode();
+    autoResize();
+}
 
-</section>
+/**
+ * iframe 의 너비/높이를 resize 한다.
+ */
+function autoResize() {
+    var ef = document.getElementById('exampleFrame');
+    ef.width = document.getElementById('main').clientWidth - 40;
+    ef.height = getIframeDocument().body.clientHeight + 40;
+}
 
+/**
+ * iframe 의 document 를 반환한다.
+ * @returns {HTMLDocument|Document}
+ */
+function getIframeDocument() {
+    var ef = document.getElementById('exampleFrame');
+    return ef.contentDocument || ef.contentWindow.document;
+}
 
+/**
+ * iframe 마지막 script code 를 div 에 할당한다.
+ */
+function generateCode() {
+    var codeArea = document.getElementById('codeArea'),
+        doc = getIframeDocument(),
+        scripts;
 
-</div>
+    if (doc) {
+        scripts = doc.getElementsByTagName('script');
+        codeArea.innerHTML = '<pre>' + encodeHTMLEntity(scripts[scripts.length-1].innerHTML) + '</pre>';
+    }
+}
+
+/**
+ * html entity 로 인코딩한다.
+ * @param html
+ * @returns {XML|string|void}
+ */
+function encodeHTMLEntity(html) {
+    var entities = {'"': 'quot', '&': 'amp', '<': 'lt', '>': 'gt', '\'': '#39'};
+    return html.replace(/[<>&"']/g, function(m0) {
+        return entities[m0] ? '&' + entities[m0] + ';' : m0;
+    });
+}
+</script>
+
+</section></div>
         <div class="clearfix"></div>
     </div>
 
