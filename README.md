@@ -20,7 +20,7 @@ Rolling
 * code-snippet - https://github.nhnent.com/fe/share-code-snippet
 
 ## Download/Install
-* Bower: `bower install "git+http://3c672057a1ac16c4e6f1baaba73e24d5270ef453:x-oauth-basic@github.nhnent.com/fe/component-rolling.git#version"`
+* Bower: `bower install "git+http://3c672057a1ac16c4e6f1baaba73e24d5270ef453:x-oauth-basic@github.nhnent.com/fe/component-rolling.git[#tag]"`
 * Download: https://github.nhnent.com/fe/component-rolling
 
 ## History
