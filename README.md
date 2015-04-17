@@ -12,8 +12,8 @@ Rolling
 * 커스텀이벤트(페이지 이동 전, 페이지 이동 후)
 
 ## Documentation
-* **API** - https://github.nhnent.com/pages/fe/component-rolling/
-* **Sample** - https://github.nhnent.com/pages/fe/component-rolling/tutorial-index_default_nocircle.html
+* **API** - https://github.nhnent.com/pages/fe/component-rolling/1.0.0/
+* **Sample** - https://github.nhnent.com/pages/fe/component-rolling/1.0.0/tutorial-index_default_nocircle.html
 * **CI** - http://fe.nhnent.com:8080/jenkins/job/component-rolling/
 
 ## Dependency
