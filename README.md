@@ -12,22 +12,27 @@ Rolling
 * 커스텀이벤트(페이지 이동 전, 페이지 이동 후)
 
 ## Documentation
-* **API** - https://github.nhnent.com/pages/fe/component-rolling/
-* **Sample** - https://github.nhnent.com/pages/fe/component-rolling/tutorial-index_default_nocircle.html
-* **CI** - http://fe.nhnent.com:8080/jenkins/job/component-rolling/
+* **API** - https://nhnent.github.io/fe.component-rolling/1.0.0/
+* **Sample** - https://nhnent.github.io/fe.component-rolling/1.0.0/tutorial-index_default_nocircle.html
+* **Tutorial** - https://github.com/nhnent/fe.component-rolling/wiki/롤링-컴포넌트-적용방법
 
 ## Dependency
-* code-snippet - https://github.nhnent.com/fe/share-code-snippet
+* code-snippet - https://github.com/nhnent/fe.code-snippet
+
+## Test environment
+* browser :
+   * IE7~11
+   * Chrome
+   * Firefox
 
 ## Download/Install
-* Bower: `bower install "git+http://3c672057a1ac16c4e6f1baaba73e24d5270ef453:x-oauth-basic@github.nhnent.com/fe/component-rolling.git#version"`
-* Download: https://github.nhnent.com/fe/component-rolling
+* Bower:
+   * 최신버전 :  `bower install ne-component-rolling#master`
+   * 특정버전 : `bower install ne-component-rolling[#tag]`
+* Download: https://github.com/nhnent/fe.component-rolling
 
 ## History
 | Version | Description | Date | Developer |
 | ---- | ---- | ---- | ---- |
-| 1.0.0 | 배포 | 2015.03 | FE 개발팀 이제인 <jein.yi@nhnent.com> |
+| <a href="https://nhnent.github.io/fe.component-rolling/1.0.0/">1.0.0</a> | 배포 | 2015.03 | FE 개발팀 이제인 <jein.yi@nhnent.com> |
 | 0.1.0 | 최초개발 | 2014.11 | FE 개발팀 이제인 <jein.yi@nhnent.com> |
-
-
-
