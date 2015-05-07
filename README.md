@@ -17,7 +17,7 @@ Rolling
 * **Tutorial** - https://github.com/nhnent/fe.component-rolling/wiki/롤링-컴포넌트-적용방법
 
 ## Dependency
-* code-snippet - https://github.nhnent.com/fe/share-code-snippet
+* code-snippet - https://github.com/nhnent/fe.code-snippet
 
 ## Test environment
 * browser :
