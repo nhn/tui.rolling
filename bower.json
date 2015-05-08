@@ -4,6 +4,7 @@
     "authors": [
         "FE개발팀 이제인<jein.yi@nhnent.com>"
     ],
+    "main": "rolling.js",
     "license": "MIT",
     "ignore": [
         "**/.*",
