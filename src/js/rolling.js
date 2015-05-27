@@ -4,14 +4,9 @@
  * @dependency common.js[type, object, collection, function, CustomEvents, defineClass]
  *
  * */
-/* istanbul ignore if */
-if (!ne) {
-    ne = window.ne = {};
-}
-/* istanbul ignore if */
-if (!ne.component) {
-    ne.component = {};
-}
+
+ne.util.defineNamespace('ne.component');
+
 /**
  * 롤링 코어객체
  *

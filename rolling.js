@@ -1,4 +1,4 @@
-/*!Component-Rolling v0.0.1 | NHN Entertainment*/
+/*!component-rolling v1.0.0 | NHN Entertainment*/
 (function() {
 /**
  * @fileoverview 롤링컴퍼넌트의 코어
@@ -6,14 +6,9 @@
  * @dependency common.js[type, object, collection, function, CustomEvents, defineClass]
  *
  * */
-/* istanbul ignore if */
-if (!ne) {
-    ne = window.ne = {};
-}
-/* istanbul ignore if */
-if (!ne.component) {
-    ne.component = {};
-}
+
+ne.util.defineNamespace('ne.component');
+
 /**
  * 롤링 코어객체
  *
