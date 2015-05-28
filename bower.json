@@ -5,6 +5,7 @@
     "이제인 <jein.yi@nhnent.com>"
   ],
   "license": "MIT",
+	"private" : true,
   "ignore": [
     "**/.*",
     "node_modules",
