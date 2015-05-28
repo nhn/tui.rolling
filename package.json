@@ -11,7 +11,7 @@
     "커스텀이벤트(페이지 이동 전, 페이지 이동 후)"
   ],
   "tutorial": "롤링",
-  "samplePage": "index_default_nocircle.html",
+  "samplePage": "sample1.html",
   "dependency": [
     "ne-code-snippet#~1.0.2"
   ],
