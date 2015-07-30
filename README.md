@@ -11,9 +11,9 @@ Rolling
 * 커스텀이벤트(페이지 이동 전, 페이지 이동 후)
 
 ## Documentation
-* **API** : https://nhnent.github.io/fe.component-rolling/lastest
+* **API** : https://nhnent.github.io/fe.component-rolling/latest
 * **Tutorial** : https://github.com/nhnent/fe.component-rolling/wiki/롤링-컴포넌트-적용방법
-* **Sample** - https://nhnent.github.io/fe.component-rolling/1.0.0/tutorial-sample1.html
+* **Sample** - https://nhnent.github.io/fe.component-rolling/latest/tutorial-sample1.html
 
 
 
