@@ -12,7 +12,7 @@ Rolling Component<br>Show data list and move the list items.
 
 ## Documentation
 * **API** : https://nhnent.github.io/fe.component-rolling/latest
-* **Tutorial** : https://github.com/nhnent/fe.component-rolling/wiki/Rolling_Component_Tutorial
+* **Tutorial** : https://github.com/nhnent/fe.component-rolling/wiki/Rolling-Tutorial
 * **Sample** - https://nhnent.github.io/fe.component-rolling/latest/tutorial-sample1.html
 
 
