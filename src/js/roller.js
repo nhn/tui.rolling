@@ -1,152 +1,142 @@
 /**
- * @fileoverview 움직임 좌표, 움직이는 방식 위치등을 정하여 액션을 수행함
- * @author Jein Yi
- * @dependency common.js[type, object, collection, function, CustomEvents, defineClass]
- *
- **/
-
+ * @fileoverview Roller 
+ * @author NHN Ent. FE dev team.<dl_javascript@nhnent.com>
+ * @dependency ne-code-snippet
+ */
+var motion = require('./motion');
 /**
- * 롤링의 움직임을 수행하는 롤러
+ * Roller that move rolling panel
  *
- * @param {Object} option 롤링컴포넌트(ne.component.Rolling)의 옵션
- * @namespace ne.component.Rolling.Roller
+ * @param {Object} option The option of rolling component
  * @constructor
  */
-ne.component.Rolling.Roller = ne.util.defineClass(/** @lends ne.component.Rolling.Roller.prototype */{
+var Roller = ne.util.defineClass(/** @lends Roller.prototype */{
     init: function(option, initData) {
         /**
-         * 옵션을 저장한다
+         * A options
          * @type {Object}
          */
         this._option = option;
         /**
-         * 루트 엘리먼트를 저장한다
+         * A root element
          * @type {(HTMLelement|String)}
          * @private
          */
         this._element = ne.util.isString(option.element) ? document.getElementById(option.element) : option.element;
         /**
-         * 롤링컴포넌트의 방향 저장(수직, 수평)
+         * A direction of rolling (vertical|horizontal)
          * @type {String}
          * @private
          */
         this._direction = option.direction || 'horizontal';
         /**
-         * 이동할 스타일 속성 ('left | top')
-         *
+         * A style attribute to move('left | top')
          * @type {string}
          * @private
          */
         this._range = this._direction === 'horizontal' ? 'left' : 'top';
         /**
-         * 이동에 사용되는 함수
+         * A function that is used to move
          * @type {Function}
          */
-        this._motion = ne.component.Rolling.Roller.motion[option.motion || 'noeffect'];
+        this._motion = motion[option.motion || 'noeffect'];
         /**
-         * 롤링을 할 단위
+         * A rolling unit
          * @type {Number}
          * @private
          */
         this._rollunit = option.unit || 'page';
         /**
-         * 그려진 html을 돌리는 것인지 확인
-         *
+         * Whether html is drawn or not
          * @type {boolean}
          * @private
          */
         this._isDrawn = !!option.isDrawn;
         /**
-         * 페이지당 패널 수
-         *
+         * A item per page
          * @type {boolean}
          * @private
          */
         this._itemcount = option.itemcount;
         /**
-         * 롤링의 방향을 결정한다(전, 후)
-         *
+         * A direction to next rolling
          * @type {String|string}
          * @private
          */
         this._flow = option.flow || 'next';
         /**
-         * 애니메이션의 duration
-         *
+         * A animation duration
          * @type {*|number}
          * @private
          */
         this._duration = option.duration || 1000;
         /**
-         * 순환여부 기본값 true
+         * Whether circular or not
          * @type {Boolean}
          * @private
          */
         this._isCircular = ne.util.isExisty(option.isCircular) ? option.isCircular : true;
         /**
-         * 롤러 상태
+         * A roller state
          * @type {String}
          */
         this.status = 'idle';
         /**
-         * 좌표를 움직일 컨테이너
+         * A container that will be moved
          * @type {HTMLElement}
          * @private
          */
         this._container = null;
         /**
-         * 가변 데이터의 롤러 패널들, 3가지 패널만 갖는다
+         * Changable data panel
          * @type {Object}
          */
         this.panel = { prev: null, center: null, next: null };
         /**
-         * html 고정의 롤러 패널들, 노드리스트를 배열로 갖는다
+         * Fixed roller panels, that have node list by array
          * @type {Array}
          */
         this._panels = [];
         /**
-         * 기준 엘리먼트 설정, 롤링 시마다 변경된다.
-         *
+         * Base element 
          * @type {HTMLElement}
          */
         this._basis = null;
         /**
-         * 루트 엘리먼트의 너비, 이동단위가 페이지이면 이게 곧 이동 단위가 된다
+         * Root element width, if move unit is page this is move width
          * @type {number}
          * @private
          */
         this._distance = 0;
         /**
-         * 움직일 패널 타겟들
-         *
+         * Moved panel target
          * @type {Array}
          * @private
          */
         this._targets = [];
         /**
-         * 무브 상태일때 들어오는 명령 저장
-         *
+         * Queue for order that is requested during moving 
          * @type {Array}
          * @private
          */
         this._queue = [];
         /**
-         * 아이템 단위로 움직이지 않을 경우, 움직일 카운트
+         * A move unit count
          * @type {number}
          * @private
          */
         this._unitCount = option.rollunit === 'page' ? 1 : (option.unitCount || 1);
         /**
-         * 커스텀이벤트
+         * Custom event
          * @type {Object}
          * @private
          */
         this._events = {};
 
         if (!this._isDrawn) {
-            this.mixin(ne.component.Rolling.Roller.movePanelSet);
+            this.mixin(movePanelSet);
         } else {
-            this.mixin(ne.component.Rolling.Roller.moveContainerSet);
+            this.mixin(moveContainerSet);
         }
         this._setContainer();
         this._masking();
@@ -157,33 +147,31 @@ ne.component.Rolling.Roller = ne.util.defineClass(/** @lends ne.component.Rollin
         }
         this._setPanel(initData);
     },
+
     /**
-     * 사용하는 메서드들을 붙인다
-     *
-     * @param {Object} methods 사용할 메서드셋 [ne.component.Rolling.Data.staticDataMethods|ne.component.Rolling.Data.remoteDataMethods]
+     * Mixin
+     * @param {Object} methods A method set [staticDataMethods|remoteDataMethods]
      */
     mixin: function(methods) {
         ne.util.extend(this, methods);
     },
+
     /**
-     * 롤링을 위해, 루트앨리먼트를 마스크화 한다
-     *
+     * Masking 
      * @method
      * @private
      */
     _masking: function() {
-
         var element = this._element,
             elementStyle = element.style;
         elementStyle.position = 'relative';
         elementStyle.overflow = 'hidden';
         elementStyle.width = elementStyle.width || (element.clientWidth + 'px');
         elementStyle.height = elementStyle.height || (element.clientHeight + 'px');
-
     },
+
     /**
-     * 유닛의 이동거리를 구한다
-     *
+     * Get unit move distance
      * @private
      */
     _setUnitDistance: function() {
@@ -197,18 +185,17 @@ ne.component.Rolling.Roller = ne.util.defineClass(/** @lends ne.component.Rollin
             dist = elementStyle.height.replace('px', '');
         }
 
-        // 이동단위가 페이지가 아닐경우
         if (this._rollunit !== 'page' && this._isDrawn) {
             dist = Math.ceil(dist / this._itemcount);
         }
         this._distance = parseInt(dist, 10);
     },
+
     /**
-     * 이동 명령 큐잉한다.
-     *
-     * @param {String} data 페이지 데이터
-     * @param {Number} duration 이동속도
-     * @param {String} flow 진행방향
+     * Queue move order    
+     * @param {String} data A page data
+     * @param {Number} duration A duartion
+     * @param {String} flow A direction to move
      * @private
      */
     _queueing: function(data, duration, flow) {
@@ -218,25 +205,26 @@ ne.component.Rolling.Roller = ne.util.defineClass(/** @lends ne.component.Rollin
             flow: flow
         });
     },
+
     /**
-     * 기본 방향값 설정
-     *
-     * @param {String} flow 아무값도 넘어오지 않을시, 기본으로 사용될 방향값
+     * A default direction
+     * @param {String} flow A flow that will be defualt value
      */
     setFlow: function(flow) {
         this._flow = flow || this._flow || 'next';
     },
+
     /**
-     * 애니메이션 효과를 변경한다.
-     * @param {String} type 바꿀 모션이름
+     * change animation effect
+     * @param {String} type A name of effect
      */
     changeMotion: function(type) {
-        this._motion = ne.component.Rolling.Roller.motion[type];
+        this._motion = motion[type];
     },
+
     /**
-     * 애니메이션 수행
-     *
-     * @param {Object} option 애니메이션 옵션
+     * Animate
+     * @param {Object} option A options for animating
      */
     _animate: function(option) {
         var start = new Date(),
@@ -258,16 +246,15 @@ ne.component.Rolling.Roller = ne.util.defineClass(/** @lends ne.component.Rollin
             }, option.delay || 10);
     }
 });
+
 /**
- * 3개의 패널을 돌리는 비정형 롤러 메서드 모음
- *
- * @namespace ne.component.Rolling.Roller.movePanelSet
+ * A roller method set for fixed panel
+ * @namespace movePanelSet
  * @static
  */
-ne.component.Rolling.Roller.movePanelSet = {
+var movePanelSet = {
     /**
-     * 롤링될 컨테이너를 생성 or 구함
-     *
+     * Set rooling container
      * @private
      */
     _setContainer: function() {
@@ -279,7 +266,6 @@ ne.component.Rolling.Roller.movePanelSet = {
             tag,
             className;
 
-        // 옵션으로 넘겨받은 태그가 있으면 새로 생성
         if (option.wrapperTag) {
             tag = option.wrapperTag && option.wrapperTag.split('.')[0];
             className = option.wrapperTag && option.wrapperTag.split('.')[1] || '';
@@ -290,16 +276,13 @@ ne.component.Rolling.Roller.movePanelSet = {
             this._element.innerHTML = '';
             this._element.appendChild(wrap);
         } else {
-            // 만약 번째 엘리먼트가 존재하면 컨테이너로 인식
             if (ne.util.isHTMLTag(firstChild)) {
                 wrap = firstChild;
             }
-            // 아닐경우 그 다음앨리먼트를 찾는다
             next = firstChild && firstChild.nextSibling;
             if (ne.util.isHTMLTag(next)) {
                 wrap = next;
             } else {
-                // 엘리먼트가 존재하지 않을경우 기본값인 ul을 만들어 컨테이너로 리턴
                 wrap = document.createElement('ul');
                 this._element.appendChild(wrap);
             }
@@ -307,12 +290,10 @@ ne.component.Rolling.Roller.movePanelSet = {
         this._container = wrap;
     },
     /**
-     * 롤링될 패널들을 만든다
-     *
+     * Make rolling panel
      * @private
      */
     _setPanel: function(initData) {
-        // 데이터 입력
         var panel = this._container.firstChild,
             panelSet = this.panel,
             option = this._option,
@@ -320,13 +301,10 @@ ne.component.Rolling.Roller.movePanelSet = {
             className,
             key;
 
-        // 옵션으로 패널 태그가 있으면 옵션사용
         if (ne.util.isString(option.panelTag)) {
             tag = (option.panelTag).split('.')[0];
             className = (option.panelTag).split('.')[1] || '';
         } else {
-            // 옵션으로 설정되어 있지 않을 경우 컨테이너 내부에 존재하는 패널 엘리먼트 검색
-            // 첫번째가 텍스트 일수 있으므로 다음요소까지 확인한다. 없으면 'li'
             if (!ne.util.isHTMLTag(panel)) {
                 panel = panel && panel.nextSibling;
             }
@@ -336,22 +314,19 @@ ne.component.Rolling.Roller.movePanelSet = {
 
         this._container.innerHTML = '';
 
-        // 패널 생성
         for (key in panelSet) {
             panelSet[key] = this._makeElement(tag, className, key);
         }
 
-        // 중앙 패널만 붙임
         panelSet.center.innerHTML = initData;
         this._container.appendChild(panelSet.center);
 
     },
     /**
-     * HTML Element를 만든다
-     *
-     * @param {String} tag 엘리먼트 태그명
-     * @param {String} className 엘리먼트 클래스 명
-     * @param {String} key 클래스에 붙는 이름
+     * Make HTML Element     
+     * @param {String} tag A tag name
+     * @param {String} className A class name
+     * @param {String} key A class key name
      * @returns {HTMLElement}
      * @private
      */
@@ -365,17 +340,19 @@ ne.component.Rolling.Roller.movePanelSet = {
         element.style.top = '0px';
         return element;
     },
+
     /**
-     * 해당 패널 데이터를 설정한다.
-     *
-     * @param {String} data 패널을 갱신할 데이터
+     * Set panel data
+     * @param {String} data A data for replace panel
      * @private
      */
     _updatePanel: function(data) {
         this.panel[this._flow || 'center'].innerHTML = data;
     },
+
     /**
-     * 이동할 패널을 붙인다
+     * Append move panel
+     * @private
      */
     _appendMoveData: function() {
         var flow = this._flow,
@@ -388,24 +365,23 @@ ne.component.Rolling.Roller.movePanelSet = {
         this.movePanel = movePanel;
         this._container.appendChild(movePanel);
     },
+
     /**
-     * 각 패널들이 움직일 값을 구한다
-     *
+     * Get each panels' move distances
      * @returns {*}
      * @private
      */
     _getMoveSet: function() {
         var flow = this._flow;
-        // 좌측이나 위에 붙어있으면 다음패널로 가는 것으로 인식
         if (flow === 'prev') {
             return [0, this._distance];
         } else {
             return [-this._distance, 0];
         }
     },
+
     /**
-     * 이동 시작점들을 구해온다
-     *
+     * Get start points
      * @returns {Array}
      * @private
      */
@@ -418,13 +394,13 @@ ne.component.Rolling.Roller.movePanelSet = {
             second = isPrev ? panel['center'] : panel['next'];
         return [parseInt(first.style[range], 10), parseInt(second.style[range], 10)];
     },
+
     /**
-     * 움직일 타겟을 선택한다.
-     * @param {String} flow 방향
+     * Get move target
+     * @param {String} flow A flow to move
      * @private
      */
     _setTarget: function(flow) {
-        // 움직일 타겟 선
         this._targets = [this.panel['center']];
         if (flow === 'prev') {
             this._targets.unshift(this.panel[flow]);
@@ -434,12 +410,10 @@ ne.component.Rolling.Roller.movePanelSet = {
 
     },
     /**
-     * 패널 이동
-     *
-     * @param {Object} data 이동할 패널의 갱신데이터
+     * A panel move
+     * @param {Object} data A data to update panel
      */
     move: function(data, duration, flow) {
-        // 상태 체크, idle상태가 아니면 큐잉
         flow = flow || this._flow;
         if (this.status === 'idle') {
             this.status = 'run';
@@ -449,10 +423,9 @@ ne.component.Rolling.Roller.movePanelSet = {
         }
 
         /**
-         * 무브 시작전에 이벤트 수행
-         *
+         * Before move custom event fire
          * @fires beforeMove
-         * @param {String} data 내부에 위치한 HTML
+         * @param {String} data Inner HTML
          * @example
          * ne.component.RollingInstance.attach('beforeMove', function(data) {
          *    // ..... run code
@@ -465,21 +438,20 @@ ne.component.Rolling.Roller.movePanelSet = {
             return;
         }
 
-        // 다음에 중앙에 올 패널 설정
+        // Set next panel
         this._updatePanel(data);
         this._appendMoveData();
         this._setTarget(flow);
 
-        // 모션이 없으면 기본 좌표 움직임
         if (!this._motion) {
             this._moveWithoutMotion();
         } else {
             this._moveWithMotion(duration);
         }
     },
+
     /**
-     * 모션이 없을 경우, 바로 좌표설정을 한다
-     *
+     * Set position
      * @private
      */
     _moveWithoutMotion: function() {
@@ -491,13 +463,12 @@ ne.component.Rolling.Roller.movePanelSet = {
         });
         this.complete();
     },
+
     /**
-     * 모션이 있을 경우, 모션을 수행한다
-     *
+     * Run animation
      * @private
      */
     _moveWithMotion: function(duration) {
-        // 일시적 duration의 변경이 있을땐 인자로 넘어온다.(ex 페이지 한꺼번에 건너 뛸때)
         var flow = this._flow,
             start = this._getStartSet(flow),
             distance = this._distance,
@@ -520,9 +491,9 @@ ne.component.Rolling.Roller.movePanelSet = {
             complete: ne.util.bind(this.complete, this)
         });
     },
+
     /**
-     * 러닝상태를 해제한다.
-     * 센터를 재설정 한다.
+     * Complate callback
      */
     complete: function() {
         var panel = this.panel,
@@ -537,13 +508,12 @@ ne.component.Rolling.Roller.movePanelSet = {
         this._container.removeChild(tempPanel);
         this.status = 'idle';
 
-        // 큐에 데이터가 있으면 무브를 다시 호출하고 없으면 move의 완료로 간주하고 afterMove를 호출한다
         if (ne.util.isNotEmpty(this._queue)) {
             var first = this._queue.shift();
             this.move(first.data, first.duration, first.flow);
         } else {
             /**
-             * 이동이 끝나면 이벤트 수행
+             * After custom event run
              * @fires afterMove
              * @example
              * ne.component.RollingInstance.attach('afterMove', function() {
@@ -554,23 +524,21 @@ ne.component.Rolling.Roller.movePanelSet = {
         }
     }
 };
+
 /**
- * 컨테이너를 움직이는 롤러의 메서드 모음
- *
- * @namespace ne.component.Rolling.Roller.moveContainerSet
+ * Container move methods
+ * @namespace moveContainerSet
  * @static
  */
-ne.component.Rolling.Roller.moveContainerSet = {
+var moveContainerSet = {
     /**
-     * 컨테이너를 설정한다.
-     *
+     * Set container
      * @private
      */
     _setContainer: function() {
         var element = this._element,
             firstChild = element.firstChild,
             wrap;
-        // 이미 그려진 데이터면, 컨테이너 지정해서 넘김
         if (this._isDrawn) {
             wrap = ne.util.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
             this._container = wrap;
@@ -578,10 +546,10 @@ ne.component.Rolling.Roller.moveContainerSet = {
         }
         this._setItemCount();
     },
+
     /**
-     * 움직일 영역 체크
-     *
-     * @param {String} flow 이동 방향
+     * Move area check
+     * @param {String} flow A direction to move
      * @returns {Boolean}
      * @private
      */
@@ -601,16 +569,20 @@ ne.component.Rolling.Roller.moveContainerSet = {
             }
         }
     },
+
+    /**
+     * Get current position
+     * @private
+     */
     _getCurrentPosition: function() {
         return parseInt(this._container.style[this._range], 10);
     },
+
     /**
-     * 패널 이동
-     *
-     * @param {Object} data 이동할 패널의 갱신데이터
+     * Move panels
+     * @param {Object} data A data to update panel
      */
     move: function(duration, flow) {
-        // 상태 체크, idle상태가 아니면 큐잉
         flow = flow || this._flow;
 
         if (this.status === 'idle') {
@@ -621,10 +593,9 @@ ne.component.Rolling.Roller.moveContainerSet = {
         }
 
         /**
-         * 무브 시작전에 이벤트 수행
-         *
+         * Fire before custom event
          * @fires beforeMove
-         * @param {String} data 내부에 위치한 HTML
+         * @param {String} data inner HTML
          * @example
          * ne.component.RollingInstance.attach('beforeMove', function(data) {
          *    // ..... run code
@@ -635,16 +606,13 @@ ne.component.Rolling.Roller.moveContainerSet = {
             this.status = 'idle';
             return;
         }
-        // 비순환이고, 영역을 넘어갔으면 움직임 없이 리턴한다.
         if(!this._isCircular && this._isLimitPoint(flow)) {
             this.status = 'idle';
             return;
         }
-        // 다음에 중앙에 올 패널 설정
         if (this._isCircular) {
             this._rotatePanel(flow);
         }
-        // 모션이 없으면 기본 좌표 움직임
         if (!this._motion) {
             this._moveWithoutMotion();
         } else {
@@ -652,20 +620,18 @@ ne.component.Rolling.Roller.moveContainerSet = {
         }
     },
     /**
-     * 완료시 패널 재정비
+     * Fix panels
      */
     complete: function() {
-        // this._panels 업데이트 this._basis 업데이트
         if (this._isCircular) {
             this._setPanel();
         }
         this.status = 'idle';
     },
+
     /**
-     * 이동거리를 구한다.
-     * isCircular일때와 아닐때로 나뉜다.
-     *
-     * @param {String} flow 방향
+     * Get move distance
+     * @param {String} flow A direction
      * @returns {number}
      * @private
      */
@@ -684,9 +650,9 @@ ne.component.Rolling.Roller.moveContainerSet = {
             return castDist > (this.limit + moved)? (-this.limit - moved) : -castDist;
         }
     },
+
     /**
-     * 모션이 없을 경우, 바로 좌표설정을 한다
-     *
+     * Set postion
      * @private
      */
     _moveWithoutMotion: function() {
@@ -697,13 +663,12 @@ ne.component.Rolling.Roller.moveContainerSet = {
         this._container.style[range] = start + pos + 'px';
         this.complete();
     },
+
     /**
-     * 모션이 있을 경우, 모션을 수행한다.
-     *
+     * Run animation
      * @private
      */
     _moveWithMotion: function(duration) {
-        // 일시적 duration의 변경이 있을땐 인자로 넘어온다.(ex 페이지 한꺼번에 건너 뛸때)
         var flow = this._flow,
             container = this._container,
             range = this._range,
@@ -722,10 +687,10 @@ ne.component.Rolling.Roller.moveContainerSet = {
             complete: ne.util.bind(this.complete, this)
         });
     },
+
     /**
-     * 패널을 돌린다.
-     *
-     * @param {String} flow 방향
+     * Rotate panel
+     * @param {String} flow A flow to rotate panel
      * @private
      */
     _rotatePanel: function(flow) {
@@ -740,19 +705,16 @@ ne.component.Rolling.Roller.moveContainerSet = {
             isPrev = flow === 'prev',
             basis = this._basis;
 
-        // 로테이션 될 패널을 설정한다.
         this._setPartOfPanels(flow);
 
         moveset = this._movePanelSet;
         movesetLength = moveset.length;
         containerMoveDist = this._getMoveDistance(flow);
 
-        // 현재 페이지에 보이는 패널이, 로테이션 패널로 정해지면, 로테이션을 수행하지 않는다.
         if (this._isInclude(this._panels[this._basis], moveset)) {
             this._basis = isPrev ? basis - movesetLength : basis + movesetLength;
             return;
         }
-        // 방향에 따른 동작수행
         if (isPrev) {
             standard = this._panels[0];
             ne.util.forEach(moveset, function(element) {
@@ -763,14 +725,13 @@ ne.component.Rolling.Roller.moveContainerSet = {
                 this._container.appendChild(element);
             }, this);
         }
-        // 로테이션 후, 컨테이너의 위치 재정렬
         this._container.style[range] = parseInt(this._container.style[range], 10) - containerMoveDist + 'px';
     },
+
     /**
-     * 현재 화면에 보여지는 요소가 로테이트 요소에 포함되어 있는지 확인한다.
-     *
-     * @param {HTMLElement} item 포함되어 있는지 확인하기위한 엘리먼트
-     * @param {Array} colleciton 노드배열
+     * Check current panel is included rotate panels
+     * @param {HTMLElement} item A target element
+     * @param {Array} colleciton A array to compare
      * @returns {boolean}
      * @private
      */
@@ -783,10 +744,10 @@ ne.component.Rolling.Roller.moveContainerSet = {
             }
         }
     },
+
     /**
-     * 방향에 따른, move발생 전 로테이션 될 패널들을 찾는다.
-     *
-     * @param {String} flow 방향
+     * Find rotate panel by direction
+     * @param {String} flow A direction
      * @private
      */
     _setPartOfPanels: function(flow) {
@@ -800,8 +761,7 @@ ne.component.Rolling.Roller.moveContainerSet = {
     },
 
     /**
-     * 한 화면에 보이는 패널 갯수를 구한다.
-     *
+     * Get display item count
      * @private
      */
     _setItemCount: function() {
@@ -820,8 +780,9 @@ ne.component.Rolling.Roller.moveContainerSet = {
             this._itemcount = Math.round(elementHeight / itemHeight);
         }
     },
+
     /**
-     * 패널들을 초기화 한다.
+     * Initalize panels 
      * @private
      */
     _initPanel: function() {
@@ -839,9 +800,9 @@ ne.component.Rolling.Roller.moveContainerSet = {
             panel.className += ' __index' + index + '__';
         });
     },
+
     /**
-     * 패널리스트를 만든다.
-     *
+     * Set panel list
      * @private
      */
     _setPanel: function() {
@@ -858,10 +819,10 @@ ne.component.Rolling.Roller.moveContainerSet = {
         this._basis = this._basis || 0;
         this._setBoundary();
     },
+
     /**
-     * 비순환 롤링시 fix 되는영역을 설정한다.
-     *
-     * @param {String} flow 이동 방향
+     * Set fixed area incircular rolling
+     * @param {String} flow A direction
      * @returns {Boolean}
      * @private
      */
@@ -874,10 +835,10 @@ ne.component.Rolling.Roller.moveContainerSet = {
             limitDist = wrapArea - rangeDistance;
         this.limit = limitDist;
     },
+
     /**
-     * 선택된 페이지의 현재 인덱스를 가져온다.
-     *
-     * @param {Number} page 이동할 패널 번호
+     * Get current index on selected page
+     * @param {Number} page A move panel number
      * @returns {number}
      * @private
      */
@@ -893,16 +854,15 @@ ne.component.Rolling.Roller.moveContainerSet = {
         });
         return dist;
     },
+
     /**
-     * 특정 패널로 이동한다.
-     *
-     * @param {Number} page 이동할 패널 번호
+     * A move to some panel.
+     * @param {Number} page A number of panel
      */
     moveTo: function(page) {
         page = Math.max(page, 0);
         page = Math.min(page, this._panels.length - 1);
 
-        // 이동할 타겟이 현재 몇번째에 위치
         var pos = this._checkPagePosition(page),
             itemCount = this._itemcount,
             panelCount = this._panels.length,
@@ -910,11 +870,9 @@ ne.component.Rolling.Roller.moveContainerSet = {
             itemDist = this._rollunit === 'page' ? distance / itemCount : distance,
             unitDist = -pos * itemDist;
 
-        // 순환 롤링일때는 좌표 이동 후 패널을 다시 묶는다.
         if (!this._isCircular) {
             unitDist = Math.max(unitDist, -this.limit);
         } else {
-            // 순환에는 limit이 없기 때문에 패널 너비 * 패널 갯수(보여지는 패널갯수제외)로 최대값을 구한다.
             unitDist = Math.max(unitDist, -(itemDist * (panelCount - itemCount)));
             this._basis = pos;
             this._setPanel();
@@ -923,5 +881,5 @@ ne.component.Rolling.Roller.moveContainerSet = {
     }
 };
 
-// 커스텀이벤트 믹스인
-ne.util.CustomEvents.mixin(ne.component.Rolling.Roller);
+ne.util.CustomEvents.mixin(Roller);
+module.exports = Roller;
