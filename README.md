@@ -1,18 +1,18 @@
 Rolling
 ===============
-롤링 컴포넌트<br>목록형 데이터를 상하 또는 좌우로 롤링시키며 보여준다.
+Rolling Component<br>Show data list and move the list items.
 
 ## Feature
-* 순환Rolling, 비순환Rolling
-* 롤링 방향을 좌우, 상하 지원
-* 롤링 속도 조절
-* 이전페이지, 다음페이지, 특정페이지로 이동
-* 이동시 애니메이션 효과 (정속, 가감속)
-* 커스텀이벤트(페이지 이동 전, 페이지 이동 후)
+* Circular Rolling, Incircular acyclic rolling
+* Move panel each directions(left and right / up and down)
+* Set duration
+* Move to specific page
+* Animation effect
+* Custom effect
 
 ## Documentation
 * **API** : https://nhnent.github.io/fe.component-rolling/latest
-* **Tutorial** : https://github.com/nhnent/fe.component-rolling/wiki/롤링-컴포넌트-적용방법
+* **Tutorial** : https://github.com/nhnent/fe.component-rolling/wiki/Rolling-Tutorial
 * **Sample** - https://nhnent.github.io/fe.component-rolling/latest/tutorial-sample1.html
 
 
@@ -30,15 +30,15 @@ Rolling
 
 ## Download/Install
 * Bower:
-   * 최신버전 : `bower install ne-component-rolling#master`
-   * 특정버전 : `bower install ne-component-rolling[#tag]`
+   * latest : `bower install ne-component-rolling#master`
+   * each version : `bower install ne-component-rolling[#tag]`
 * Download: https://github.com/nhnent/fe.component-rolling
 
 ## History
 | Version | Description | Date | Developer |
 | ---- | ---- | ---- | ---- |
-| 1.0.0a | defineNamespace적용 | 2015.05 | FE개발팀 이제인 <jein.yi@nhnent.com> |
-| <a href="https://github.nhnent.com/pages/fe/component-rolling/1.0.0">1.0.0</a> | 배포 | 2015.03 | FE개발팀 이제인 <jein.yi@nhnent.com> |
+| 1.0.0a | defineNamespace apply | 2015.05 | NHN Ent. FE dev team.<dl_javascript@nhnent.com> |
+| <a href="https://github.nhnent.com/pages/fe/component-rolling/1.0.0">1.0.0</a> | realease | 2015.03 | NHN Ent. FE dev team.<dl_javascript@nhnent.com> |
 
 ## LICENSE
-[MIT 라이선스](LICENSE)로 자유롭게 사용할 수 있습니다.
+[MIT LICENSE](LICENSE)

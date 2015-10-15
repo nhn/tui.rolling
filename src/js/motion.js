@@ -1,9 +1,8 @@
 /**
- * 롤링에 필요한 모션 함수 컬렉션
- *
- * @namespace ne.component.Rolling.Roller.motion
+ * Rolling motion collection 
+ * @namespace motion
  */
-ne.component.Rolling.Roller.motion = (function() {
+var motion = (function() {
     var quadEaseIn,
         circEaseIn,
         quadEaseOut,
@@ -13,7 +12,6 @@ ne.component.Rolling.Roller.motion = (function() {
 
     /**
      * easeIn
-     *
      * @param delta
      * @returns {Function}
      */
@@ -24,7 +22,6 @@ ne.component.Rolling.Roller.motion = (function() {
     }
     /**
      * easeOut
-     *
      * @param delta
      * @returns {Function}
      */
@@ -36,7 +33,6 @@ ne.component.Rolling.Roller.motion = (function() {
 
     /**
      * easeInOut
-     *
      * @param delta
      * @returns {Function}
      */
@@ -50,9 +46,8 @@ ne.component.Rolling.Roller.motion = (function() {
         };
     }
     /**
-     * 선형
-     *
-     * @memberof ne.component.Rolling.Roller.motion
+     * Linear
+     * @memberof motion
      * @method linear
      * @static
      */
@@ -68,48 +63,42 @@ ne.component.Rolling.Roller.motion = (function() {
 
     /**
      * qued + easeIn
-     *
-     * @memberof ne.component.Rolling.Roller.motion
+     * @memberof motion
      * @method quadEaseIn
      * @static
      */
     quadEaseIn = makeEaseIn(quad);
     /**
      * circ + easeIn
-     *
-     * @memberof ne.component.Rolling.Roller.motion
+     * @memberof motion
      * @method circEaseIn
      * @static
      */
         circEaseIn = makeEaseIn(circ);
     /**
      * quad + easeOut
-     *
-     * @memberof ne.component.Rolling.Roller.motion
+     * @memberof motion
      * @method quadEaseOut
      * @static
      */
         quadEaseOut = makeEaseOut(quad);
     /**
      * circ + easeOut
-     *
-     * @memberof ne.component.Rolling.Roller.motion
+     * @memberof motion
      * @method circEaseOut
      * @static
      */
     circEaseOut = makeEaseOut(circ);
     /**
      * quad + easeInOut
-     *
-     * @memberof ne.component.Rolling.Roller.motion
+     * @memberof motion
      * @method quadEaseInOut
      * @static
      */
     quadEaseInOut = makeEaseInOut(quad);
     /**
      * circ + easeInOut
-     *
-     * @memberof ne.component.Rolling.Roller.motion
+     * @memberof motion
      * @method circEaseInOut
      * @static
      */
@@ -128,3 +117,5 @@ ne.component.Rolling.Roller.motion = (function() {
         circEaseInOut: circEaseInOut
     };
 })();
+
+module.exports = motion;
