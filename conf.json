@@ -12,7 +12,7 @@
         "default": {
             "outputSourceFiles" : true
         },
-        "applicationName": "롤링 컴포넌트",
+        "applicationName": "Rolling component",
         "disqus": "",
         "googleAnalytics": "",
         "openGraph": {
