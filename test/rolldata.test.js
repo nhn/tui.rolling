@@ -3,15 +3,15 @@ describe('RollData Test', function() {
         rollData2 = ['a', 'b', 'c', 'd', 'e', 'f'],
         rollData3 = [100, 200, 300, 400, 500];
 
-    var model1 = new ne.component.Rolling.Data({
+    var model1 = new tui.component.Rolling.Data({
             initNum: 1,
             isVariable: true
         }, rollData1),
-        model2 = new ne.component.Rolling.Data({
+        model2 = new tui.component.Rolling.Data({
             isVariable: false,
             isCircular: false
         }, rollData2),
-        model3 = new ne.component.Rolling.Data({
+        model3 = new tui.component.Rolling.Data({
             isVariable: false,
             isCircular: true
         }, rollData3);

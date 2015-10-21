@@ -24,7 +24,7 @@ var Data = require('./rolldata');
  * @param {Array|String} data A data of rolling panels
  *
  * @example
- * var roll = new ne.component.Rolling({
+ * var roll = new tui.component.Rolling({
  *      element: document.getElementById('rolling'),
  *      initNum: 0,
  *      direction: 'horizontal',
@@ -36,7 +36,7 @@ var Data = require('./rolldata');
  * }, ['<div>data1</div>','<div>data2</div>', '<div>data3</div>']);
  * @constructor
  */
-var Rolling = ne.util.defineClass(/** @lends Rolling.prototype */{
+var Rolling = tui.util.defineClass(/** @lends Rolling.prototype */{
     /**
      * Initialize
      * */
@@ -197,7 +197,7 @@ var Rolling = ne.util.defineClass(/** @lends Rolling.prototype */{
      */
     auto: function() {
         this.stop();
-        this._timer = window.setInterval(ne.util.bind(function() {
+        this._timer = window.setInterval(tui.util.bind(function() {
             this._model.changeCurrent(this._flow);
             this._roller.move(this._model.getData());
 

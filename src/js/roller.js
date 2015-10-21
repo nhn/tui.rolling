@@ -10,7 +10,7 @@ var motion = require('./motion');
  * @param {Object} option The option of rolling component
  * @constructor
  */
-var Roller = ne.util.defineClass(/** @lends Roller.prototype */{
+var Roller = tui.util.defineClass(/** @lends Roller.prototype */{
     init: function(option, initData) {
         /**
          * A options
@@ -22,7 +22,7 @@ var Roller = ne.util.defineClass(/** @lends Roller.prototype */{
          * @type {(HTMLelement|String)}
          * @private
          */
-        this._element = ne.util.isString(option.element) ? document.getElementById(option.element) : option.element;
+        this._element = tui.util.isString(option.element) ? document.getElementById(option.element) : option.element;
         /**
          * A direction of rolling (vertical|horizontal)
          * @type {String}
@@ -75,7 +75,7 @@ var Roller = ne.util.defineClass(/** @lends Roller.prototype */{
          * @type {Boolean}
          * @private
          */
-        this._isCircular = ne.util.isExisty(option.isCircular) ? option.isCircular : true;
+        this._isCircular = tui.util.isExisty(option.isCircular) ? option.isCircular : true;
         /**
          * A roller state
          * @type {String}
@@ -153,7 +153,7 @@ var Roller = ne.util.defineClass(/** @lends Roller.prototype */{
      * @param {Object} methods A method set [staticDataMethods|remoteDataMethods]
      */
     mixin: function(methods) {
-        ne.util.extend(this, methods);
+        tui.util.extend(this, methods);
     },
 
     /**
@@ -276,11 +276,11 @@ var movePanelSet = {
             this._element.innerHTML = '';
             this._element.appendChild(wrap);
         } else {
-            if (ne.util.isHTMLTag(firstChild)) {
+            if (tui.util.isHTMLTag(firstChild)) {
                 wrap = firstChild;
             }
             next = firstChild && firstChild.nextSibling;
-            if (ne.util.isHTMLTag(next)) {
+            if (tui.util.isHTMLTag(next)) {
                 wrap = next;
             } else {
                 wrap = document.createElement('ul');
@@ -301,14 +301,14 @@ var movePanelSet = {
             className,
             key;
 
-        if (ne.util.isString(option.panelTag)) {
+        if (tui.util.isString(option.panelTag)) {
             tag = (option.panelTag).split('.')[0];
             className = (option.panelTag).split('.')[1] || '';
         } else {
-            if (!ne.util.isHTMLTag(panel)) {
+            if (!tui.util.isHTMLTag(panel)) {
                 panel = panel && panel.nextSibling;
             }
-            tag = ne.util.isHTMLTag(panel) ? panel.tagName : 'li';
+            tag = tui.util.isHTMLTag(panel) ? panel.tagName : 'li';
             className = (panel && panel.className) || '';
         }
 
@@ -427,7 +427,7 @@ var movePanelSet = {
          * @fires beforeMove
          * @param {String} data Inner HTML
          * @example
-         * ne.component.RollingInstance.attach('beforeMove', function(data) {
+         * tui.component.RollingInstance.attach('beforeMove', function(data) {
          *    // ..... run code
          * });
          */
@@ -458,7 +458,7 @@ var movePanelSet = {
         var flow = this._flow,
             pos = this._getMoveSet(flow),
             range = this._range;
-        ne.util.forEach(this._targets, function(element, index) {
+        tui.util.forEach(this._targets, function(element, index) {
             element.style[range] = pos[index] + 'px';
         });
         this.complete();
@@ -480,15 +480,15 @@ var movePanelSet = {
             delay: 10,
             duration: duration || 1000,
             delta: this._motion,
-            step: ne.util.bind(function(delta) {
-                ne.util.forEach(this._targets, function(element, index) {
+            step: tui.util.bind(function(delta) {
+                tui.util.forEach(this._targets, function(element, index) {
 
                     var dest = (flow === 'prev') ? distance * delta : -(distance * delta);
                     element.style[range] = start[index] + dest + 'px';
 
                 });
             }, this),
-            complete: ne.util.bind(this.complete, this)
+            complete: tui.util.bind(this.complete, this)
         });
     },
 
@@ -508,7 +508,7 @@ var movePanelSet = {
         this._container.removeChild(tempPanel);
         this.status = 'idle';
 
-        if (ne.util.isNotEmpty(this._queue)) {
+        if (tui.util.isNotEmpty(this._queue)) {
             var first = this._queue.shift();
             this.move(first.data, first.duration, first.flow);
         } else {
@@ -516,7 +516,7 @@ var movePanelSet = {
              * After custom event run
              * @fires afterMove
              * @example
-             * ne.component.RollingInstance.attach('afterMove', function() {
+             * tui.component.RollingInstance.attach('afterMove', function() {
              *    // ..... run code
              * });
              */
@@ -540,7 +540,7 @@ var moveContainerSet = {
             firstChild = element.firstChild,
             wrap;
         if (this._isDrawn) {
-            wrap = ne.util.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
+            wrap = tui.util.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
             this._container = wrap;
             this._container.style[this._range] = 0;
         }
@@ -597,7 +597,7 @@ var moveContainerSet = {
          * @fires beforeMove
          * @param {String} data inner HTML
          * @example
-         * ne.component.RollingInstance.attach('beforeMove', function(data) {
+         * tui.component.RollingInstance.attach('beforeMove', function(data) {
          *    // ..... run code
          * });
          */
@@ -680,11 +680,11 @@ var moveContainerSet = {
             delay: 10,
             duration: duration || 1000,
             delta: this._motion,
-            step: ne.util.bind(function(delta) {
+            step: tui.util.bind(function(delta) {
                 var dest = distance * delta;
                 container.style[range] = start + dest + 'px';
             }, this),
-            complete: ne.util.bind(this.complete, this)
+            complete: tui.util.bind(this.complete, this)
         });
     },
 
@@ -717,11 +717,11 @@ var moveContainerSet = {
         }
         if (isPrev) {
             standard = this._panels[0];
-            ne.util.forEach(moveset, function(element) {
+            tui.util.forEach(moveset, function(element) {
                 this._container.insertBefore(element, standard);
             }, this);
         } else {
-            ne.util.forEach(moveset, function(element) {
+            tui.util.forEach(moveset, function(element) {
                 this._container.appendChild(element);
             }, this);
         }
@@ -791,12 +791,12 @@ var moveContainerSet = {
             i,
             arr;
 
-        panels = ne.util.toArray(panels);
+        panels = tui.util.toArray(panels);
 
-        this._panels = ne.util.filter(panels, function(element) {
-            return ne.util.isHTMLTag(element);
+        this._panels = tui.util.filter(panels, function(element) {
+            return tui.util.isHTMLTag(element);
         });
-        ne.util.forEach(this._panels, function(panel, index) {
+        tui.util.forEach(this._panels, function(panel, index) {
             panel.className += ' __index' + index + '__';
         });
     },
@@ -811,10 +811,10 @@ var moveContainerSet = {
             i,
             arr;
 
-        panels = ne.util.toArray(panels);
+        panels = tui.util.toArray(panels);
 
-        this._panels = ne.util.filter(panels, function(element) {
-            return ne.util.isHTMLTag(element);
+        this._panels = tui.util.filter(panels, function(element) {
+            return tui.util.isHTMLTag(element);
         });
         this._basis = this._basis || 0;
         this._setBoundary();
@@ -845,9 +845,9 @@ var moveContainerSet = {
     _checkPagePosition: function(page) {
         var dist = null,
             panels = this._panels;
-        ne.util.forEach(panels, function(panel, index) {
+        tui.util.forEach(panels, function(panel, index) {
             if (panel.className.indexOf('__index' + page) !== -1) {
-                if (!ne.util.isExisty(dist)) {
+                if (!tui.util.isExisty(dist)) {
                     dist = index;
                 }
             }
@@ -881,5 +881,5 @@ var moveContainerSet = {
     }
 };
 
-ne.util.CustomEvents.mixin(Roller);
+tui.util.CustomEvents.mixin(Roller);
 module.exports = Roller;

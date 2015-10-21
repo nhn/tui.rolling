@@ -18,17 +18,17 @@ describe('rolling 테스트', function() {
                 div3 = document.getElementById('rolling3'),
                 div4 = document.getElementById('rolling4');
 
-            rolling1 = new ne.component.Rolling({
+            rolling1 = new tui.component.Rolling({
                 element: div1,
                 isAuto: true
             }, ['a1', 'a2', 'a3']),
-                rolling2 = new ne.component.Rolling({
+                rolling2 = new tui.component.Rolling({
                     element: div2,
                     direction: 'vertical',
                     isVariable: true
                 }, 'initData');
             // width 300px; height:150px;
-            rolling3 = new ne.component.Rolling({
+            rolling3 = new tui.component.Rolling({
                 element: div3,
                 direction: 'horizontal',
                 isVariable: false,
@@ -39,7 +39,7 @@ describe('rolling 테스트', function() {
                 unit: 'page'
             });
             // width 150px, height: 300px;
-            rolling4 = new ne.component.Rolling({
+            rolling4 = new tui.component.Rolling({
                 element: div4,
                 direction: 'vertical',
                 isVariable: false,

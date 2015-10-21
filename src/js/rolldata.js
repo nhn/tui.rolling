@@ -12,7 +12,7 @@
  * @param {(Array|Object)} data A data of rolling
  * @constructor
  */
-var Data = ne.util.defineClass(/** @lends Data.prototype */{
+var Data = tui.util.defineClass(/** @lends Data.prototype */{
     init: function(option, data) {
         /**
          * Whether changable data
@@ -40,7 +40,7 @@ var Data = ne.util.defineClass(/** @lends Data.prototype */{
          * @type {Boolean}
          * @private
          */
-        this._isCircular = ne.util.isBoolean(option.isCircular) ? option.isCircular : true;
+        this._isCircular = tui.util.isBoolean(option.isCircular) ? option.isCircular : true;
         if (this.isVariable) {
             this.mixin(remoteDataMethods);
         } else {
@@ -54,7 +54,7 @@ var Data = ne.util.defineClass(/** @lends Data.prototype */{
      * @param {Object} methods A method set [staticDataMethods|remoteDataMethods]
      */
     mixin: function(methods) {
-        ne.util.extend(this, methods);
+        tui.util.extend(this, methods);
     }
 });
 
@@ -74,7 +74,7 @@ var staticDataMethods = {
             first,
             nodelist;
 
-        nodelist = ne.util.map(datalist, function(data, index) {
+        nodelist = tui.util.map(datalist, function(data, index) {
 
             var node = new Node(data);
             node.prev = before;

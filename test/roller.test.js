@@ -22,14 +22,14 @@ describe('roller', function() {
                 div4 = document.getElementById('roller4'),
                 div5 = document.getElementById('roller5');
 
-            roller1 = new ne.component.Rolling.Roller({
+            roller1 = new tui.component.Rolling.Roller({
                 element: div1,
                 isVariable: true,
                 wrapperTag: 'div.wrap'
             }, 'data1'),
 
 
-                roller2 = new ne.component.Rolling.Roller({
+                roller2 = new tui.component.Rolling.Roller({
                     element: div2,
                     direction: 'vertical',
                     panelTag: 'li',
@@ -37,7 +37,7 @@ describe('roller', function() {
                 }, 'dd');
 
             // width 300px; height:150px;
-            roller3 = new ne.component.Rolling.Roller({
+            roller3 = new tui.component.Rolling.Roller({
                 element: div3,
                 direction: 'horizontal',
                 isVariable: false,
@@ -48,7 +48,7 @@ describe('roller', function() {
                 unit: 'page'
             });
             // width 150px, height: 300px;
-            roller4 = new ne.component.Rolling.Roller({
+            roller4 = new tui.component.Rolling.Roller({
                 element: div4,
                 direction: 'vertical',
                 isVariable: false,
@@ -61,7 +61,7 @@ describe('roller', function() {
                 unit: 'item'
             });
             // width 150px, height: 300px;
-            roller5 = new ne.component.Rolling.Roller({
+            roller5 = new tui.component.Rolling.Roller({
                 element: div4,
                 direction: 'vertical',
                 isVariable: false,
@@ -232,20 +232,20 @@ describe('roller', function() {
                 div3 = document.getElementById('roller3'),
                 div4 = document.getElementById('roller4');
 
-            roller1 = new ne.component.Rolling.Roller({
+            roller1 = new tui.component.Rolling.Roller({
                 element: div1,
                 isVariable: true,
                 wrapperTag: 'div.wrap'
             }, 'data1'),
 
-                roller2 = new ne.component.Rolling.Roller({
+                roller2 = new tui.component.Rolling.Roller({
                     element: div2,
                     direction: 'vertical',
                     panelTag: 'li'
                 }, 'dd');
 
             // width 300px; height:150px;
-            roller3 = new ne.component.Rolling.Roller({
+            roller3 = new tui.component.Rolling.Roller({
                 element: div3,
                 direction: 'horizontal',
                 isVariable: false,
@@ -256,7 +256,7 @@ describe('roller', function() {
                 unit: 'page'
             });
             // width 150px, height: 300px;
-            roller4 = new ne.component.Rolling.Roller({
+            roller4 = new tui.component.Rolling.Roller({
                 element: div4,
                 direction: 'vertical',
                 isVariable: false,
@@ -270,7 +270,7 @@ describe('roller', function() {
             });
         });
 
-        it('ne.component.Rolling.Roller.movePanelSet move', function() {
+        it('tui.component.Rolling.Roller.movePanelSet move', function() {
             var beforePanel = roller2.panel[roller2._flow],
                 nextPanel;
 
@@ -286,7 +286,7 @@ describe('roller', function() {
 
         });
 
-        it('ne.component.Rolling.Roller.moveContainerSet move', function(done) {
+        it('tui.component.Rolling.Roller.moveContainerSet move', function(done) {
             var first = roller4._panels[0].innerHTML,
                 last = roller4._panels[roller4._panels.length - 1].innerHTML;
             roller4.move();
@@ -296,13 +296,13 @@ describe('roller', function() {
             }, 3500);
         });
 
-        it('ne.component.Rolling.Roller motion linear', function(done) {
+        it('tui.component.Rolling.Roller motion linear', function(done) {
             var finalDelta;
             roller1._animate({
                 delay: 10,
                 duration: 1000,
-                delta: ne.component.Rolling.Roller.motion.linear,
-                step: ne.util.bind(function(delta) {
+                delta: tui.component.Rolling.Roller.motion.linear,
+                step: tui.util.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
                 complete: function() {
@@ -312,13 +312,13 @@ describe('roller', function() {
             });
         });
 
-        it('ne.component.Rolling.Roller motion quad', function(done) {
+        it('tui.component.Rolling.Roller motion quad', function(done) {
             var finalDelta, finalDelta2, finalDelta3;
             roller1._animate({
                 delay: 10,
                 duration: 1000,
-                delta: ne.component.Rolling.Roller.motion.quadEaseIn,
-                step: ne.util.bind(function(delta) {
+                delta: tui.component.Rolling.Roller.motion.quadEaseIn,
+                step: tui.util.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
                 complete: function() {
@@ -334,8 +334,8 @@ describe('roller', function() {
             roller1._animate({
                 delay: 10,
                 duration: 1000,
-                delta: ne.component.Rolling.Roller.motion.quadEaseOut,
-                step: ne.util.bind(function(delta) {
+                delta: tui.component.Rolling.Roller.motion.quadEaseOut,
+                step: tui.util.bind(function(delta) {
                     finalDelta2 = delta;
                 }, roller1),
                 complete: function() {
@@ -346,8 +346,8 @@ describe('roller', function() {
             roller1._animate({
                 delay: 10,
                 duration: 1000,
-                delta: ne.component.Rolling.Roller.motion.quadEaseInOut,
-                step: ne.util.bind(function(delta) {
+                delta: tui.component.Rolling.Roller.motion.quadEaseInOut,
+                step: tui.util.bind(function(delta) {
                     finalDelta3 = delta;
                 }, roller1),
                 complete: function() {
@@ -363,13 +363,13 @@ describe('roller', function() {
             }, 4000);
         });
 
-        it('ne.component.Rolling.Roller motion circ', function(done) {
+        it('tui.component.Rolling.Roller motion circ', function(done) {
             var finalDelta, finalDelta2, finalDelta3;
             roller1._animate({
                 delay: 10,
                 duration: 1000,
-                delta: ne.component.Rolling.Roller.motion.circEaseIn,
-                step: ne.util.bind(function(delta) {
+                delta: tui.component.Rolling.Roller.motion.circEaseIn,
+                step: tui.util.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
                 complete: function() {
@@ -381,8 +381,8 @@ describe('roller', function() {
             roller1._animate({
                 delay: 10,
                 duration: 1000,
-                delta: ne.component.Rolling.Roller.motion.circEaseOut,
-                step: ne.util.bind(function(delta) {
+                delta: tui.component.Rolling.Roller.motion.circEaseOut,
+                step: tui.util.bind(function(delta) {
                     finalDelta2 = delta;
                 }, roller1),
                 complete: function() {
@@ -394,8 +394,8 @@ describe('roller', function() {
             roller1._animate({
                 delay: 10,
                 duration: 1000,
-                delta: ne.component.Rolling.Roller.motion.circEaseInOut,
-                step: ne.util.bind(function(delta) {
+                delta: tui.component.Rolling.Roller.motion.circEaseInOut,
+                step: tui.util.bind(function(delta) {
                     finalDelta3 = delta;
                 }, roller1),
                 complete: function() {
