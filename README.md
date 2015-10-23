@@ -11,9 +11,9 @@ Rolling Component<br>Show data list and move the list items.
 * Custom effect
 
 ## Documentation
-* **API** : https://nhnent.github.io/fe.component-rolling/latest
-* **Tutorial** : https://github.com/nhnent/fe.component-rolling/wiki/Rolling-Tutorial
-* **Sample** - https://nhnent.github.io/fe.component-rolling/latest/tutorial-sample1.html
+* **API** : https://nhnent.github.io/tui.component.rolling/latest
+* **Tutorial** : https://github.com/nhnent/tui.component.rolling/wiki/Rolling-Tutorial
+* **Sample** - https://nhnent.github.io/tui.component.rolling/latest/tutorial-sample1.html
 
 
 
@@ -32,13 +32,14 @@ Rolling Component<br>Show data list and move the list items.
 * Bower:
    * latest : `bower install ne-component-rolling#master`
    * each version : `bower install ne-component-rolling[#tag]`
-* Download: https://github.com/nhnent/fe.component-rolling
+* Download: https://github.com/nhnent/tui.component.rolling
 
 ## History
 | Version | Description | Date | Developer |
 | ---- | ---- | ---- | ---- |
-| 1.0.0a | defineNamespace apply | 2015.05 | NHN Ent. FE dev team.<dl_javascript@nhnent.com> |
-| <a href="https://github.nhnent.com/pages/fe/component-rolling/1.0.0">1.0.0</a> | realease | 2015.03 | NHN Ent. FE dev team.<dl_javascript@nhnent.com> |
+| 1.0.0a | Namespace changed | 2015.10 | NHN Ent. FE dev team <dl_javascript@nhnent.com> |
+| 1.0.0a | defineNamespace apply | 2015.05 | NHN Ent. FE dev team <dl_javascript@nhnent.com> |
+| <a href="https://github.nhnent.com/pages/tui.component.rolling/1.0.0">1.0.0</a> | realease | 2015.03 | NHN Ent. FE dev team <dl_javascript@nhnent.com> |
 
 ## LICENSE
 [MIT LICENSE](LICENSE)
