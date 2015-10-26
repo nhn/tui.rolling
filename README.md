@@ -19,7 +19,7 @@ Rolling Component<br>Show data list and move the list items.
 
 
 ## Dependency
-* ne-code-snippet: ~1.0.2
+* tui-code-snippet: ~1.0.2
 
 ## Test environment
 * PC
