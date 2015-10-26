@@ -30,8 +30,8 @@ Rolling Component<br>Show data list and move the list items.
 
 ## Download/Install
 * Bower:
-   * latest : `bower install ne-component-rolling#master`
-   * each version : `bower install ne-component-rolling[#tag]`
+   * latest : `bower install tui-component-rolling#master`
+   * each version : `bower install tui-component-rolling[#tag]`
 * Download: https://github.com/nhnent/tui.component.rolling
 
 ## History
@@ -39,7 +39,7 @@ Rolling Component<br>Show data list and move the list items.
 | ---- | ---- | ---- | ---- |
 | 1.0.0a | Namespace changed | 2015.10 | NHN Ent. FE dev team <dl_javascript@nhnent.com> |
 | 1.0.0a | defineNamespace apply | 2015.05 | NHN Ent. FE dev team <dl_javascript@nhnent.com> |
-| <a href="https://github.nhnent.com/pages/tui.component.rolling/1.0.0">1.0.0</a> | realease | 2015.03 | NHN Ent. FE dev team <dl_javascript@nhnent.com> |
+| <a href="https://nhnent.github.io/tui.component.rolling/1.0.0">1.0.0</a> | realease | 2015.03 | NHN Ent. FE dev team <dl_javascript@nhnent.com> |
 
 ## LICENSE
 [MIT LICENSE](LICENSE)
