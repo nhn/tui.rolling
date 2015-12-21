@@ -13,7 +13,7 @@ Rolling Component<br>Show data list and move the list items.
 ## Documentation
 * **API** : https://nhnent.github.io/tui.component.rolling/latest
 * **Tutorial** : https://github.com/nhnent/tui.component.rolling/wiki/Rolling-Tutorial
-* **Sample** - https://nhnent.github.io/tui.component.rolling/latest/tutorial-sample1.html
+* **Sample** - https://nhnent.github.io/tui.component.rolling/latest/tutorial.html
 
 
 

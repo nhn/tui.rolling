@@ -92,8 +92,11 @@ var Rolling = tui.util.defineClass(/** @lends Rolling.prototype */{
 
     /**
      * Roll the rolling component. If there is no data, the component have to have with fixed data
+     * @api
      * @param {String} data A rolling data
      * @param {String} [flow] A direction rolling
+     * @example
+     * rolling.roll('<div>data</div>', 'horizontal');
      */
     roll: function(data, flow) {
         flow = flow || this._flow;
@@ -127,17 +130,23 @@ var Rolling = tui.util.defineClass(/** @lends Rolling.prototype */{
 
     /**
      * Set direction
+     * @api
      * @param {String} flow A direction of rolling
+     * @example
+     * rolling.setFlow('horizontal');
      */
     setFlow: function(flow) {
         this._flow = flow;
         this._roller.setFlow(flow);
     },
+
     /**
      * Move to target page
+     * @api
      * @param {Number} page A target page
+     * @example
+     * rolling.moveTo(3);
      */
-
     moveTo: function(page) {
 
         if (this._isDrawn) {
@@ -194,6 +203,9 @@ var Rolling = tui.util.defineClass(/** @lends Rolling.prototype */{
 
     /**
      * Start auto rolling
+     * @api
+     * @example
+     * rolling.auto();
      */
     auto: function() {
         this.stop();
