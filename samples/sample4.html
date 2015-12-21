@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" href="css/common.css" />
-    <script type="text/javascript" src="lib/ne-code-snippet/code-snippet.js"></script>
+    <script type="text/javascript" src="js/code-snippet.js"></script>
     <script type="text/javascript" src="js/rolling.js"></script>
+
     <style>
         ul, ol, li { list-style:none }
         .rolling { width: 300px; height:150px;margin:30px auto;}
@@ -52,7 +53,7 @@
     var htmlData = '<div class="panel-heading pan">default Content</div>';
 
     // 생성
-    var rolling1 = new ne.component.Rolling({
+    var rolling1 = new tui.component.Rolling({
         element: document.getElementById('rolling'),
         initNum: 0,
         direction: 'horizontal',
