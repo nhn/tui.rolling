@@ -1,6 +1,6 @@
 {
     "source": {
-        "include": ["src/js/rolling.js", "src/js/rolldata.js", "src/js/roller.js", "README.md"],
+        "include": ["src/js", "README.md"],
         "exclude": [],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
@@ -34,6 +34,7 @@
         "hardwrap": true
     },
     "opts": {
+        "template": "./node_modules/fedoc-template",
         "recurse": true,
         "destination": "doc",
         "tutorials": "samples",
