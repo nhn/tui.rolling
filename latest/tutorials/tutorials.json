@@ -1,0 +1,8 @@
+{
+  "sample1": { "title" : "Default - Circular" },
+  "sample2": { "title" : "Default - Incircular" },
+  "sample3": { "title" : "Auto rolling" },
+  "sample6": { "title" : "Effect" },
+  "sample4": { "title" : "Changable data" },
+  "sample5": { "title" : "Custom events" }
+}

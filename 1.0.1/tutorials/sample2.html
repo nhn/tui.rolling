@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/common.css" />
+   <style>
+        ul, ol, li { list-style:none;padding:0;margin:0; }
+        .rolling { width: 300px; height:150px;margin:30px auto;}
+        .rolling ul {width:1000000px; float:left;position:absolute;}
+        .sample { text-align: center; }
+        li.panel { width: 100px; margin:0; padding:0; float:left; height:150px;  border-radius: 0; box-shadow: none; border:0; background-color: #6d676b; color:#fff; }
+        .rolling_vertical { width: 100px; height:150px;margin:30px auto;}
+        .rolling_vertical li.panel { width: 100px; margin:0; float:none; padding:0; height:50px;  border-radius: 0; box-shadow: none; border:0; background-color: #6d676b; color:#fff; }
+        .rolling_vertical ul {height:1000000px; float:left;position:absolute;}
+    </style>
+</head>
+<body>
+<div class="panel panel-primary">
+    <div class="sample">
+        <div id="rolling" class="rolling">
+            <ul>
+                <li class="panel">data1</li>
+                <li class="panel">data2</li>
+                <li class="panel">data3</li>
+                <li class="panel">data4</li>
+                <li class="panel">data5</li>
+                <li class="panel">data6</li>
+                <li class="panel">data7</li>
+                <li class="panel">data8</li>
+                <li class="panel">data9</li>
+                <li class="panel">data10</li>
+                <li class="panel">data11</li>
+            </ul>
+        </div>
+        <div class="btn-group" id="control1">
+            <button class="left">좌</button>
+            <button class="right">우</button>
+        </div>
+    </div>
+    <div class="sample" style="margin-left:15px;">
+        <div id="rolling_vertical" class="rolling_vertical">
+            <ul>
+                <li class="panel">data1</li>
+                <li class="panel">data2</li>
+                <li class="panel">data3</li>
+                <li class="panel">data4</li>
+                <li class="panel">data5</li>
+                <li class="panel">data6</li>
+                <li class="panel">data7</li>
+                <li class="panel">data8</li>
+                <li class="panel">data9</li>
+                <li class="panel">data10</li>
+                <li class="panel">data11</li>
+            </ul>
+        </div>
+        <div class="btn-group" id="control2">
+            <button class="left">상</button>
+            <button class="right">하</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdn.rawgit.com/nhnent/tui.code-snippet/1.2.1/code-snippet.js"></script>
+<script type="text/javascript" src="js/rolling.js"></script>
+<script>
+    // 생성
+    var rolling1 = new tui.component.Rolling({
+        element: document.getElementById('rolling'),
+        direction: 'horizontal',
+        isVariable: false,
+        isAuto: false,
+        duration: 400,
+        isCircular: false,
+        isDrawn: true,
+        unitCount: 2,
+        motion: 'linear',
+        unit: 'item'
+    });
+    var rolling2 = new tui.component.Rolling({
+        element: document.getElementById('rolling_vertical'),
+        direction: 'vertical',
+        isVariable: false,
+        isAuto: false,
+        duration: 400,
+        isCircular: false,
+        isDrawn: true,
+        motion: 'linear',
+        unit: 'item'
+    });
+
+    // 이벤트 등록
+    var control = document.getElementById('control1');
+    control.onclick = function(e) {
+        var e = e || window.event,
+                target = e.target || e.srcElement,
+                value;
+        if (target.tagName.toLowerCase() !== 'button') {
+            return;
+        }
+        className = target.className;
+        if (className.indexOf('left') > -1) {
+            rolling1.roll(null, 'prev');
+        } else if (className.indexOf('right') > -1) {
+            rolling1.roll(null, 'next');
+        }
+    };
+    var control = document.getElementById('control2');
+    control.onclick = function(e) {
+        var e = e || window.event,
+                target = e.target || e.srcElement,
+                value;
+        if (target.tagName.toLowerCase() !== 'button') {
+            return;
+        }
+        className = target.className;
+        if (className.indexOf('left') > -1) {
+            rolling2.roll(null, 'prev');
+        } else if (className.indexOf('right') > -1) {
+            rolling2.roll(null, 'next');
+        }
+    };
+</script>
+</body>
+</html>
