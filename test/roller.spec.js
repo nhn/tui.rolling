@@ -1,3 +1,6 @@
+var Roller = require('../src/js/roller');
+var motion = require('../src/js/motion');
+
 describe('roller', function() {
 
     jasmine.getFixtures().fixturesPath = "base/";
@@ -19,25 +22,23 @@ describe('roller', function() {
             var div1 = document.getElementById('roller1'),
                 div2 = document.getElementById('roller2'),
                 div3 = document.getElementById('roller3'),
-                div4 = document.getElementById('roller4'),
-                div5 = document.getElementById('roller5');
+                div4 = document.getElementById('roller4');
 
-            roller1 = new tui.component.Rolling.Roller({
+            roller1 = new Roller({
                 element: div1,
                 isVariable: true,
                 wrapperTag: 'div.wrap'
-            }, 'data1'),
+            }, 'data1');
 
-
-                roller2 = new tui.component.Rolling.Roller({
-                    element: div2,
-                    direction: 'vertical',
-                    panelTag: 'li',
-                    motion: 'linear'
-                }, 'dd');
+            roller2 = new Roller({
+                element: div2,
+                direction: 'vertical',
+                panelTag: 'li',
+                motion: 'linear'
+            }, 'dd');
 
             // width 300px; height:150px;
-            roller3 = new tui.component.Rolling.Roller({
+            roller3 = new Roller({
                 element: div3,
                 direction: 'horizontal',
                 isVariable: false,
@@ -47,8 +48,9 @@ describe('roller', function() {
                 isDrawn: true,
                 unit: 'page'
             });
+
             // width 150px, height: 300px;
-            roller4 = new tui.component.Rolling.Roller({
+            roller4 = new Roller({
                 element: div4,
                 direction: 'vertical',
                 isVariable: false,
@@ -60,8 +62,9 @@ describe('roller', function() {
                 motion: 'linear',
                 unit: 'item'
             });
+
             // width 150px, height: 300px;
-            roller5 = new tui.component.Rolling.Roller({
+            roller5 = new Roller({
                 element: div4,
                 direction: 'vertical',
                 isVariable: false,
@@ -74,12 +77,14 @@ describe('roller', function() {
                 unit: 'item'
             });
         });
+
         it('defined roller', function() {
             expect(roller1).toBeDefined();
             expect(roller2).toBeDefined();
             expect(roller3).toBeDefined();
             expect(roller4).toBeDefined();
         });
+
         it('option.isDrawn : check itemcount', function() {
             var itemcount3 = roller3._itemcount,
                 itemcount4 = roller4._itemcount;
@@ -103,8 +108,7 @@ describe('roller', function() {
             moveElement,
             beforeCenter,
             moveSet,
-            beforePos1, beforePos2,
-            afterPos1, afterPos2;
+            beforePos1;
 
         it('test move flow (not isDrawn)', function() {
             var panel = roller1.panel;
@@ -168,7 +172,7 @@ describe('roller', function() {
             roller3._rotatePanel('next');
             roller3._setPanel();
 
-            panels = roller3._panels
+            panels = roller3._panels;
             moveset = roller3._movePanelSet;
             expect(moveset.length).toBe(3);
             expect(panels[0]).toBe(moveset[0]);
@@ -220,7 +224,6 @@ describe('roller', function() {
     });
 
     describe('모션 테스트', function() {
-
         var roller1,
             roller2,
             roller3,
@@ -232,20 +235,19 @@ describe('roller', function() {
                 div3 = document.getElementById('roller3'),
                 div4 = document.getElementById('roller4');
 
-            roller1 = new tui.component.Rolling.Roller({
+            roller1 = new Roller({
                 element: div1,
                 isVariable: true,
                 wrapperTag: 'div.wrap'
-            }, 'data1'),
+            }, 'data1');
 
-                roller2 = new tui.component.Rolling.Roller({
-                    element: div2,
-                    direction: 'vertical',
-                    panelTag: 'li'
-                }, 'dd');
+            roller2 = new Roller({
+                element: div2,
+                direction: 'vertical',
+                panelTag: 'li'
+            }, 'dd');
 
-            // width 300px; height:150px;
-            roller3 = new tui.component.Rolling.Roller({
+            roller3 = new Roller({
                 element: div3,
                 direction: 'horizontal',
                 isVariable: false,
@@ -256,7 +258,7 @@ describe('roller', function() {
                 unit: 'page'
             });
             // width 150px, height: 300px;
-            roller4 = new tui.component.Rolling.Roller({
+            roller4 = new Roller({
                 element: div4,
                 direction: 'vertical',
                 isVariable: false,
@@ -270,7 +272,7 @@ describe('roller', function() {
             });
         });
 
-        it('tui.component.Rolling.Roller.movePanelSet move', function() {
+        it('Roller.movePanelSet move', function() {
             var beforePanel = roller2.panel[roller2._flow],
                 nextPanel;
 
@@ -283,25 +285,24 @@ describe('roller', function() {
             beforePanel = roller2.panel['center'];
             roller2.move('eee', 0, 'prev');
             expect(beforePanel).not.toBe(roller2.panel['center']);
-
         });
 
-        it('tui.component.Rolling.Roller.moveContainerSet move', function(done) {
+        it('Roller.moveContainerSet move', function(done) {
             var first = roller4._panels[0].innerHTML,
                 last = roller4._panels[roller4._panels.length - 1].innerHTML;
             roller4.move();
             setTimeout(function() {
                 expect(last).toBe(roller4._panels[0].innerHTML);
                 done();
-            }, 3500);
+            }, 500);
         });
 
-        it('tui.component.Rolling.Roller motion linear', function(done) {
+        it('Roller motion linear', function(done) {
             var finalDelta;
             roller1._animate({
                 delay: 10,
-                duration: 1000,
-                delta: tui.component.Rolling.Roller.motion.linear,
+                duration: 500,
+                delta: motion.linear,
                 step: tui.util.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
@@ -312,12 +313,12 @@ describe('roller', function() {
             });
         });
 
-        it('tui.component.Rolling.Roller motion quad', function(done) {
+        it('Roller motion quad', function(done) {
             var finalDelta, finalDelta2, finalDelta3;
             roller1._animate({
                 delay: 10,
-                duration: 1000,
-                delta: tui.component.Rolling.Roller.motion.quadEaseIn,
+                duration: 500,
+                delta: motion.quadEaseIn,
                 step: tui.util.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
@@ -329,12 +330,12 @@ describe('roller', function() {
             setTimeout(function() {
                 expect(finalDelta).toBe(1);
                 //done();
-            }, 3000);
+            }, 1100);
 
             roller1._animate({
                 delay: 10,
-                duration: 1000,
-                delta: tui.component.Rolling.Roller.motion.quadEaseOut,
+                duration: 400,
+                delta: motion.quadEaseOut,
                 step: tui.util.bind(function(delta) {
                     finalDelta2 = delta;
                 }, roller1),
@@ -345,8 +346,8 @@ describe('roller', function() {
 
             roller1._animate({
                 delay: 10,
-                duration: 1000,
-                delta: tui.component.Rolling.Roller.motion.quadEaseInOut,
+                duration: 400,
+                delta: motion.quadEaseInOut,
                 step: tui.util.bind(function(delta) {
                     finalDelta3 = delta;
                 }, roller1),
@@ -356,19 +357,18 @@ describe('roller', function() {
             });
 
             setTimeout(function() {
-
                 expect(finalDelta2).toBe(1);
                 expect(finalDelta3).toBe(1);
                 done();
-            }, 4000);
+            }, 2000);
         });
 
-        it('tui.component.Rolling.Roller motion circ', function(done) {
+        it('Roller motion circ', function(done) {
             var finalDelta, finalDelta2, finalDelta3;
             roller1._animate({
                 delay: 10,
-                duration: 1000,
-                delta: tui.component.Rolling.Roller.motion.circEaseIn,
+                duration: 100,
+                delta: motion.circEaseIn,
                 step: tui.util.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
@@ -380,8 +380,8 @@ describe('roller', function() {
 
             roller1._animate({
                 delay: 10,
-                duration: 1000,
-                delta: tui.component.Rolling.Roller.motion.circEaseOut,
+                duration: 100,
+                delta: motion.circEaseOut,
                 step: tui.util.bind(function(delta) {
                     finalDelta2 = delta;
                 }, roller1),
@@ -393,8 +393,8 @@ describe('roller', function() {
 
             roller1._animate({
                 delay: 10,
-                duration: 1000,
-                delta: tui.component.Rolling.Roller.motion.circEaseInOut,
+                duration: 100,
+                delta: motion.circEaseInOut,
                 step: tui.util.bind(function(delta) {
                     finalDelta3 = delta;
                 }, roller1),
@@ -408,7 +408,7 @@ describe('roller', function() {
                 expect(finalDelta2).toBe(1);
                 expect(finalDelta3).toBe(1);
                 done();
-            }, 4000);
+            }, 500);
         });
     });
 });

@@ -1,3 +1,5 @@
+var Rolling = require('../src/js/rolling');
+
 describe('rolling 테스트', function() {
 
     jasmine.getFixtures().fixturesPath = "base";
@@ -18,17 +20,19 @@ describe('rolling 테스트', function() {
                 div3 = document.getElementById('rolling3'),
                 div4 = document.getElementById('rolling4');
 
-            rolling1 = new tui.component.Rolling({
+            rolling1 = new Rolling({
                 element: div1,
                 isAuto: true
-            }, ['a1', 'a2', 'a3']),
-                rolling2 = new tui.component.Rolling({
-                    element: div2,
-                    direction: 'vertical',
-                    isVariable: true
-                }, 'initData');
+            }, ['a1', 'a2', 'a3']);
+
+            rolling2 = new Rolling({
+                element: div2,
+                direction: 'vertical',
+                isVariable: true
+            }, 'initData');
+
             // width 300px; height:150px;
-            rolling3 = new tui.component.Rolling({
+            rolling3 = new Rolling({
                 element: div3,
                 direction: 'horizontal',
                 isVariable: false,
@@ -39,7 +43,7 @@ describe('rolling 테스트', function() {
                 unit: 'page'
             });
             // width 150px, height: 300px;
-            rolling4 = new tui.component.Rolling({
+            rolling4 = new Rolling({
                 element: div4,
                 direction: 'vertical',
                 isVariable: false,
@@ -52,12 +56,10 @@ describe('rolling 테스트', function() {
         });
 
         it('롤링 생성', function() {
-
             expect(rolling1).toBeDefined();
             expect(rolling2).toBeDefined();
             expect(rolling3).toBeDefined();
             expect(rolling4).toBeDefined();
-
         });
 
         it('isDrawn 에 따른 모델 존재', function() {
@@ -85,12 +87,12 @@ describe('rolling 테스트', function() {
         });
 
         it('beforeMove, afterMove 이상 확인', function() {
-            var expire = true;
+            var expire = false;
             rolling2.attach('beforeMove', function(data) {
                 return false;
             });
             rolling2.attach('afterMove', function(data) {
-                expire = false;
+                expire = true;
             });
             // 이동하면 beforeMove햐만 실행되어야한다
             rolling2.roll('data1');
@@ -106,7 +108,6 @@ describe('rolling 테스트', function() {
 
             expect(num).toEqual(10);
         });
-
 
         it('moveTo test', function() {
             var error = false;
@@ -156,8 +157,4 @@ describe('rolling 테스트', function() {
             rolling1.roll('data');
         });
     });
-
-
-
-
 });

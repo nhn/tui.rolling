@@ -4,12 +4,9 @@ var gulp = require('gulp');
 var connect = require('gulp-connect');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
-var sourceMap = require('gulp-sourcemaps');
 var buffer = require('vinyl-buffer');
 var karma = require('karma').server;
-var hbsfy = require('hbsfy');
 var uglify = require('gulp-uglify');
-var gutil = require('gulp-util');
 var concat = require('gulp-concat');
 var filename = require('./package.json').name.replace('component-', '');
 
@@ -33,8 +30,7 @@ gulp.task('bundle', function() {
         debug: true
     });
 
-    return b.transform(hbsfy)
-        .bundle()
+    return b.bundle()
         .on('error', function(err) {
             console.log(err.message);
             this.emit('end');

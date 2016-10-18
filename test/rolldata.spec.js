@@ -1,35 +1,36 @@
+var Data = require('../src/js/rolldata');
+
 describe('RollData Test', function() {
     var rollData1 = 'data1',
         rollData2 = ['a', 'b', 'c', 'd', 'e', 'f'],
         rollData3 = [100, 200, 300, 400, 500];
 
-    var model1 = new tui.component.Rolling.Data({
+    var model1 = new Data({
             initNum: 1,
             isVariable: true
         }, rollData1),
-        model2 = new tui.component.Rolling.Data({
+        model2 = new Data({
             isVariable: false,
             isCircular: false
         }, rollData2),
-        model3 = new tui.component.Rolling.Data({
+        model3 = new Data({
             isVariable: false,
             isCircular: true
         }, rollData3);
 
 
     it('define model', function() {
-
         expect(model1).toBeDefined();
         expect(model2).toBeDefined();
         expect(model3).toBeDefined();
-
     });
 
     it('_initData 데이터 초기화', function() {
+        var list1, list2, list3;
 
-        var list1 = model1._initData(rollData1),
-            list2 = model2._initData(rollData2),
-            list3 = model3._initData(rollData3);
+        model1._initData(rollData1);
+        model2._initData(rollData2);
+        model3._initData(rollData3);
 
         list1 = model1._data;
         list2 = model2._datalist;

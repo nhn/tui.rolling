@@ -1,7 +1,7 @@
 /**
  * @fileoverview Rolling component core.
  * @author NHN Ent. FE dev team.<dl_javascript@nhnent.com>
- * @dependency ne-code-snippet
+ * @dependency tui-code-snippet ~v.1.1.0
  */
 
 var Roller = require('./roller');

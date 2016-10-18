@@ -19,7 +19,7 @@ var Roller = tui.util.defineClass(/** @lends Roller.prototype */{
         this._option = option;
         /**
          * A root element
-         * @type {(HTMLelement|String)}
+         * @type {(HTMLElement|String)}
          * @private
          */
         this._element = tui.util.isString(option.element) ? document.getElementById(option.element) : option.element;
@@ -254,7 +254,7 @@ var Roller = tui.util.defineClass(/** @lends Roller.prototype */{
  */
 var movePanelSet = {
     /**
-     * Set rooling container
+     * Set rolling container
      * @private
      */
     _setContainer: function() {
@@ -431,7 +431,7 @@ var movePanelSet = {
          *    // ..... run code
          * });
          */
-        var res = this.fire('beforeMove', { data: data });
+        var res = this.invoke('beforeMove', {data: data});
 
         if (!res) {
             this.status = 'idle';
@@ -482,7 +482,6 @@ var movePanelSet = {
             delta: this._motion,
             step: tui.util.bind(function(delta) {
                 tui.util.forEach(this._targets, function(element, index) {
-
                     var dest = (flow === 'prev') ? distance * delta : -(distance * delta);
                     element.style[range] = start[index] + dest + 'px';
 
@@ -606,13 +605,16 @@ var moveContainerSet = {
             this.status = 'idle';
             return;
         }
+
         if(!this._isCircular && this._isLimitPoint(flow)) {
             this.status = 'idle';
             return;
         }
+
         if (this._isCircular) {
             this._rotatePanel(flow);
         }
+
         if (!this._motion) {
             this._moveWithoutMotion();
         } else {
