@@ -1,6 +1,7 @@
 /**
  * Rolling motion collection 
  * @namespace motion
+ * @ignore
  */
 var motion = (function() {
     var quadEaseIn,

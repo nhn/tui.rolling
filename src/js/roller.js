@@ -9,6 +9,7 @@ var motion = require('./motion');
  *
  * @param {Object} option The option of rolling component
  * @constructor
+ * @ignore
  */
 var Roller = tui.util.defineClass(/** @lends Roller.prototype */{
     init: function(option, initData) {
@@ -251,6 +252,7 @@ var Roller = tui.util.defineClass(/** @lends Roller.prototype */{
  * A roller method set for fixed panel
  * @namespace movePanelSet
  * @static
+ * @ignore
  */
 var movePanelSet = {
     /**
@@ -528,6 +530,7 @@ var movePanelSet = {
  * Container move methods
  * @namespace moveContainerSet
  * @static
+ * @ignore
  */
 var moveContainerSet = {
     /**

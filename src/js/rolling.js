@@ -34,12 +34,9 @@ var Data = require('./rolldata');
  *      motion: 'easeInOut',
  *      duration:2000
  * }, ['<div>data1</div>','<div>data2</div>', '<div>data3</div>']);
- * @constructor
+ * @class
  */
 var Rolling = tui.util.defineClass(/** @lends Rolling.prototype */{
-    /**
-     * Initialize
-     * */
     init: function(option, data) {
         /**
          * Option object

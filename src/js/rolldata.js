@@ -11,6 +11,7 @@
  * @param {Object} option A component options
  * @param {(Array|Object)} data A data of rolling
  * @constructor
+ * @ignore
  */
 var Data = tui.util.defineClass(/** @lends Data.prototype */{
     init: function(option, data) {
@@ -61,6 +62,7 @@ var Data = tui.util.defineClass(/** @lends Data.prototype */{
 /**
  * Static data method set
  * @namespace staticDataMethods
+ * @ignore
  */
 var staticDataMethods = {
     /**
@@ -169,6 +171,7 @@ var staticDataMethods = {
  * Changable data method set
  * @namespace remoteDataMethods
  * @static
+ * @ignore
  */
 var remoteDataMethods = {
     /**
@@ -231,6 +234,7 @@ var remoteDataMethods = {
  * Node for each data panel
  * @namespace Node
  * @param {Object} data node data or html value
+ * @ignore
  * @constructor
  */
 var Node = function(data) {
