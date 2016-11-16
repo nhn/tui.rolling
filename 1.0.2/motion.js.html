@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,56 +51,133 @@
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
     <section>
-        <article class="readme"><h1>Rolling</h1><p>Rolling Component<br>Show data list and move the list items.</p>
-<h2>Feature</h2><ul>
-<li>Circular Rolling, Incircular acyclic rolling</li>
-<li>Move panel each directions(left and right / up and down)</li>
-<li>Set duration</li>
-<li>Move to specific page</li>
-<li>Animation effect</li>
-<li>Custom effect</li>
-</ul>
-<h2>Documentation</h2><ul>
-<li><strong>API</strong> : https://nhnent.github.io/tui.component.rolling/latest</li>
-<li><strong>Tutorial</strong> : https://github.com/nhnent/tui.component.rolling/wiki/Rolling-Tutorial</li>
-<li><strong>Sample</strong> - https://nhnent.github.io/tui.component.rolling/latest/tutorial-sample1.html</li>
-</ul>
-<h2>Dependency</h2><ul>
-<li>tui-code-snippet: ^1.1.0</li>
-</ul>
-<h2>Test environment</h2><ul>
-<li>PC<ul>
-<li>IE8~11</li>
-<li>Chrome</li>
-<li>Firefox</li>
-</ul>
-</li>
-</ul>
-<h2>Download/Install</h2><ul>
-<li>Bower:<ul>
-<li>latest : <code>bower install tui-component-rolling</code></li>
-<li>each version : <code>bower install tui-component-rolling[#tag]</code></li>
-</ul>
-</li>
-<li>Download: https://github.com/nhnent/tui.component.rolling/tree/master/dist</li>
-</ul>
-<h2>LICENSE</h2><p><a href="https://github.com/nhnent/tui.component.rolling/blob/master/LICENSE">MIT LICENSE</a></p></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Rolling motion collection 
+ * @namespace motion
+ * @ignore
+ */
+var motion = (function() {
+    var quadEaseIn,
+        circEaseIn,
+        quadEaseOut,
+        circEaseOut,
+        quadEaseInOut,
+        circEaseInOut;
+
+    /**
+     * easeIn
+     * @param delta
+     * @returns {Function}
+     */
+    function makeEaseIn(delta) {
+        return function(progress) {
+            return delta(progress);
+        };
+    }
+    /**
+     * easeOut
+     * @param delta
+     * @returns {Function}
+     */
+    function makeEaseOut(delta) {
+        return function(progress) {
+            return 1 - delta(1 - progress);
+        };
+    }
+
+    /**
+     * easeInOut
+     * @param delta
+     * @returns {Function}
+     */
+    function makeEaseInOut(delta) {
+        return function(progress) {
+            if (progress &lt; 0.5) {
+                return delta(2 * progress) / 2;
+            } else {
+                return (2 - delta(2 * (1 - progress))) / 2;
+            }
+        };
+    }
+    /**
+     * Linear
+     * @memberof motion
+     * @method linear
+     * @static
+     */
+    function linear(progress) {
+        return progress;
+    }
+    function quad(progress) {
+        return Math.pow(progress, 2);
+    }
+    function circ(progress) {
+        return 1 - Math.sin(Math.acos(progress));
+    }
+
+    /**
+     * qued + easeIn
+     * @memberof motion
+     * @method quadEaseIn
+     * @static
+     */
+    quadEaseIn = makeEaseIn(quad);
+    /**
+     * circ + easeIn
+     * @memberof motion
+     * @method circEaseIn
+     * @static
+     */
+        circEaseIn = makeEaseIn(circ);
+    /**
+     * quad + easeOut
+     * @memberof motion
+     * @method quadEaseOut
+     * @static
+     */
+        quadEaseOut = makeEaseOut(quad);
+    /**
+     * circ + easeOut
+     * @memberof motion
+     * @method circEaseOut
+     * @static
+     */
+    circEaseOut = makeEaseOut(circ);
+    /**
+     * quad + easeInOut
+     * @memberof motion
+     * @method quadEaseInOut
+     * @static
+     */
+    quadEaseInOut = makeEaseInOut(quad);
+    /**
+     * circ + easeInOut
+     * @memberof motion
+     * @method circEaseInOut
+     * @static
+     */
+    circEaseInOut = makeEaseInOut(circ);
+
+    return {
+        linear: linear,
+        easeIn: quadEaseIn,
+        easeOut: quadEaseOut,
+        easeInOut: quadEaseInOut,
+        quadEaseIn: quadEaseIn,
+        quadEaseOut: quadEaseOut,
+        quadEaseInOut: quadEaseInOut,
+        circEaseIn: circEaseIn,
+        circEaseOut: circEaseOut,
+        circEaseInOut: circEaseInOut
+    };
+})();
+
+module.exports = motion;
+</code></pre>
+        </article>
     </section>
-
-
 
 
 
@@ -115,7 +194,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:tui-component-rolling_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var element = document.getElementById(id); // do not use jquery selector
 
         $(element).removeClass('hidden');

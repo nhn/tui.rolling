@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rolling</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 150px">
+        <img src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" width="100%" height="100%">
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Rolling</a></h1>
+        
+            <span class="version">v1.0.2</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Examples</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-sample1.html">Default - Circular</a><div class="hidden" id="sample1_sub"></div></li><li><a href="tutorial-sample2.html">Default - Incircular</a><div class="hidden" id="sample2_sub"></div></li><li><a href="tutorial-sample3.html">Auto rolling</a><div class="hidden" id="sample3_sub"></div></li><li><a href="tutorial-sample4.html">Changable data</a><div class="hidden" id="sample4_sub"></div></li><li><a href="tutorial-sample5.html">Custom events</a><div class="hidden" id="sample5_sub"></div></li><li><a href="tutorial-sample6.html">Effect</a><div class="hidden" id="sample6_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Rolling.html">Rolling</a><div class="hidden" id="Rolling_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Rolling.html#delayTime">delayTime</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Rolling.html#attach">attach</a></li><li><a href="Rolling.html#auto">auto</a></li><li><a href="Rolling.html#fire">fire</a></li><li><a href="Rolling.html#isNegative">isNegative</a></li><li><a href="Rolling.html#moveTo">moveTo</a></li><li><a href="Rolling.html#roll">roll</a></li><li><a href="Rolling.html#setFlow">setFlow</a></li><li><a href="Rolling.html#stop">stop</a></li></ul></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview A data for move
+ * @author NHN Ent. FE dev team.&lt;dl_javascript@nhnent.com>
+ * @dependency ne-code-snippet
+ */
+
+
+
+/** 
+ * Data model for rolling
+ * @param {Object} option A component options
+ * @param {(Array|Object)} data A data of rolling
+ * @constructor
+ * @ignore
+ */
+var Data = tui.util.defineClass(/** @lends Data.prototype */{
+    init: function(option, data) {
+        /**
+         * Whether changable data
+         * @type {Boolean}
+         */
+        this.isVariable = !!option.isVariable;
+        /**
+         * A data list
+         * @type {Array}
+         */
+        this._datalist = null;
+        /**
+         * A data
+         * @type {Node}
+         * @private
+         */
+        this._data = null;
+        /**
+         * A init number
+         * @type {Number}
+         */
+        this._current = option.initNum || 1;
+        /**
+         * Whehter circular
+         * @type {Boolean}
+         * @private
+         */
+        this._isCircular = tui.util.isBoolean(option.isCircular) ? option.isCircular : true;
+        if (this.isVariable) {
+            this.mixin(remoteDataMethods);
+        } else {
+            this.mixin(staticDataMethods);
+        }
+
+        this._initData(data);
+    },
+    /**
+     * Mixin
+     * @param {Object} methods A method set [staticDataMethods|remoteDataMethods]
+     */
+    mixin: function(methods) {
+        tui.util.extend(this, methods);
+    }
+});
+
+/**
+ * Static data method set
+ * @namespace staticDataMethods
+ * @ignore
+ */
+var staticDataMethods = {
+    /**
+     * Initialize data
+     * @param {Array} datalist A list that is not connected with each other
+     * @returns {Array} _datalist
+     * @private
+     */
+    _initData: function(datalist) {
+        var before = null,
+            first,
+            nodelist;
+
+        nodelist = tui.util.map(datalist, function(data, index) {
+
+            var node = new Node(data);
+            node.prev = before;
+
+            if (before) {
+                before.next = node;
+            } else {
+                first = node;
+            }
+            if (index === (datalist.length - 1)) {
+                node.next = first;
+                first.prev = node;
+            }
+
+            before = node;
+
+            return node;
+
+        }, this);
+        nodelist.unshift(null);
+        this._datalist = nodelist;
+    },
+
+    /**
+     * Get index data
+     * @param {Number} index A index to get
+     * @returns {String}
+     */
+    getData: function(index) {
+        return this._datalist[index || this._current].data;
+    },
+
+    /**
+     * Get list length
+     * @returns {Array}
+     */
+    getDataListLength: function() {
+        return this._datalist.length - 1;
+    },
+
+    /**
+     * Get next data
+     * @param {Number} index A next index
+     * @returns {String}
+     * @private
+     */
+    getPrevData: function(index) {
+        return this._datalist[index || this._current].prev.data;
+    },
+
+    /**
+     * Get prev data
+     * @param {Number} index A prev index
+     * @returns {String}
+     * @private
+     */
+    getNextData: function(index) {
+        return this._datalist[index || this._current].next.data;
+    },
+
+    /**
+     * Change current
+     * @param {String} flow A direction
+     * @private
+     */
+    changeCurrent: function(flow) {
+        var length = this.getDataListLength();
+        if (flow === 'prev') {
+            this._current -= 1;
+            if (this._current &lt; 1) {
+                this._current = this._isCircular ? length : 1;
+                return true;
+            }
+        } else {
+            this._current += 1;
+            if (this._current > length) {
+                this._current = this._isCircular ? 1 : length;
+                return true;
+            }
+        }
+    },
+    /**
+     * Get current
+     * @returns {number}
+     */
+    getCurrent: function() {
+        return this._current;
+    }
+};
+
+/**
+ * Changable data method set
+ * @namespace remoteDataMethods
+ * @static
+ * @ignore
+ */
+var remoteDataMethods = {
+    /**
+     * Initialize data
+     * @param {String} data A data to draw
+     * @private
+     */
+    _initData: function(data) {
+        this._data = new Node(data);
+    },
+
+    /**
+     * Get current data or some data by index
+     * @param {Number} index A index of data
+     * @returns {String}
+     */
+    getData: function() {
+        return this._data.data;
+    },
+
+    /**
+     * Set data
+     * @param {String} type ['prev|next'] A data index
+     * @param {String} data A data in rolling component
+     */
+    setData: function(type, data) {
+        this._data[type] = new Node(data);
+    },
+
+    /**
+     * Disconnect data
+     * @param {String} type ['prev|next'] Rewrite data
+     */
+    severLink: function(type) {
+        var data = this._data;
+        this._data = this._data[type];
+        data[type] = null;
+    },
+
+    /**
+     * Get previous Data
+     * @returns {String}
+     * @private
+     */
+    getPrevData: function() {
+        return this._data.prev &amp;&amp; this._data.prev.data;
+    },
+
+    /**
+     * Get next data
+     * @returns {String}
+     * @private
+     */
+    getNextData: function() {
+        return this._data.next &amp;&amp; this._data.next.data;
+    }
+};
+
+/**
+ * Node for each data panel
+ * @namespace Node
+ * @param {Object} data node data or html value
+ * @ignore
+ * @constructor
+ */
+var Node = function(data) {
+
+    this.prev = null;
+    this.next = null;
+    this.data = data;
+
+};
+
+module.exports = Data;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" style="width: 150px">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var element = document.getElementById(id); // do not use jquery selector
+
+        $(element).removeClass('hidden');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
