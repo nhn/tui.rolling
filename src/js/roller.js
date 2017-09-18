@@ -1,252 +1,13 @@
 /**
- * @fileoverview Roller 
+ * @fileoverview Roller
  * @author NHN Ent. FE dev team.<dl_javascript@nhnent.com>
- * @dependency ne-code-snippet
  */
+
+'use strict';
+
+var snippet = require('tui-code-snippet');
+
 var motion = require('./motion');
-/**
- * Roller that move rolling panel
- *
- * @param {Object} option The option of rolling component
- * @constructor
- * @ignore
- */
-var Roller = tui.util.defineClass(/** @lends Roller.prototype */{
-    init: function(option, initData) {
-        /**
-         * A options
-         * @type {Object}
-         */
-        this._option = option;
-        /**
-         * A root element
-         * @type {(HTMLElement|String)}
-         * @private
-         */
-        this._element = tui.util.isString(option.element) ? document.getElementById(option.element) : option.element;
-        /**
-         * A direction of rolling (vertical|horizontal)
-         * @type {String}
-         * @private
-         */
-        this._direction = option.direction || 'horizontal';
-        /**
-         * A style attribute to move('left | top')
-         * @type {string}
-         * @private
-         */
-        this._range = this._direction === 'horizontal' ? 'left' : 'top';
-        /**
-         * A function that is used to move
-         * @type {Function}
-         */
-        this._motion = motion[option.motion || 'noeffect'];
-        /**
-         * A rolling unit
-         * @type {Number}
-         * @private
-         */
-        this._rollunit = option.unit || 'page';
-        /**
-         * Whether html is drawn or not
-         * @type {boolean}
-         * @private
-         */
-        this._isDrawn = !!option.isDrawn;
-        /**
-         * A item per page
-         * @type {boolean}
-         * @private
-         */
-        this._itemcount = option.itemcount;
-        /**
-         * A direction to next rolling
-         * @type {String|string}
-         * @private
-         */
-        this._flow = option.flow || 'next';
-        /**
-         * A animation duration
-         * @type {*|number}
-         * @private
-         */
-        this._duration = option.duration || 1000;
-        /**
-         * Whether circular or not
-         * @type {Boolean}
-         * @private
-         */
-        this._isCircular = tui.util.isExisty(option.isCircular) ? option.isCircular : true;
-        /**
-         * A roller state
-         * @type {String}
-         */
-        this.status = 'idle';
-        /**
-         * A container that will be moved
-         * @type {HTMLElement}
-         * @private
-         */
-        this._container = null;
-        /**
-         * Changable data panel
-         * @type {Object}
-         */
-        this.panel = { prev: null, center: null, next: null };
-        /**
-         * Fixed roller panels, that have node list by array
-         * @type {Array}
-         */
-        this._panels = [];
-        /**
-         * Base element 
-         * @type {HTMLElement}
-         */
-        this._basis = null;
-        /**
-         * Root element width, if move unit is page this is move width
-         * @type {number}
-         * @private
-         */
-        this._distance = 0;
-        /**
-         * Moved panel target
-         * @type {Array}
-         * @private
-         */
-        this._targets = [];
-        /**
-         * Queue for order that is requested during moving 
-         * @type {Array}
-         * @private
-         */
-        this._queue = [];
-        /**
-         * A move unit count
-         * @type {number}
-         * @private
-         */
-        this._unitCount = option.rollunit === 'page' ? 1 : (option.unitCount || 1);
-        /**
-         * Custom event
-         * @type {Object}
-         * @private
-         */
-        this._events = {};
-
-        if (!this._isDrawn) {
-            this.mixin(movePanelSet);
-        } else {
-            this.mixin(moveContainerSet);
-        }
-        this._setContainer();
-        this._masking();
-        this._setUnitDistance();
-
-        if (this._isDrawn) {
-            this._initPanel();
-        }
-        this._setPanel(initData);
-    },
-
-    /**
-     * Mixin
-     * @param {Object} methods A method set [staticDataMethods|remoteDataMethods]
-     */
-    mixin: function(methods) {
-        tui.util.extend(this, methods);
-    },
-
-    /**
-     * Masking 
-     * @method
-     * @private
-     */
-    _masking: function() {
-        var element = this._element,
-            elementStyle = element.style;
-        elementStyle.position = 'relative';
-        elementStyle.overflow = 'hidden';
-        elementStyle.width = elementStyle.width || (element.clientWidth + 'px');
-        elementStyle.height = elementStyle.height || (element.clientHeight + 'px');
-    },
-
-    /**
-     * Get unit move distance
-     * @private
-     */
-    _setUnitDistance: function() {
-
-        var dist,
-            elementStyle = this._element.style;
-
-        if (this._direction === 'horizontal') {
-            dist = elementStyle.width.replace('px', '');
-        } else {
-            dist = elementStyle.height.replace('px', '');
-        }
-
-        if (this._rollunit !== 'page' && this._isDrawn) {
-            dist = Math.ceil(dist / this._itemcount);
-        }
-        this._distance = parseInt(dist, 10);
-    },
-
-    /**
-     * Queue move order    
-     * @param {String} data A page data
-     * @param {Number} duration A duartion
-     * @param {String} flow A direction to move
-     * @private
-     */
-    _queueing: function(data, duration, flow) {
-        this._queue.push({
-            data: data,
-            duration: duration,
-            flow: flow
-        });
-    },
-
-    /**
-     * A default direction
-     * @param {String} flow A flow that will be defualt value
-     */
-    setFlow: function(flow) {
-        this._flow = flow || this._flow || 'next';
-    },
-
-    /**
-     * change animation effect
-     * @param {String} type A name of effect
-     */
-    changeMotion: function(type) {
-        this._motion = motion[type];
-    },
-
-    /**
-     * Animate
-     * @param {Object} option A options for animating
-     */
-    _animate: function(option) {
-        var start = new Date(),
-            id = window.setInterval(function() {
-                var timePassed = new Date() - start,
-                    progress = timePassed / option.duration,
-                    delta;
-                if (progress > 1) {
-                    progress = 1;
-                }
-                delta = option.delta(progress);
-
-                option.step(delta);
-
-                if (progress === 1) {
-                    window.clearInterval(id);
-                    option.complete();
-                }
-            }, option.delay || 10);
-    }
-});
 
 /**
  * A roller method set for fixed panel
@@ -260,29 +21,27 @@ var movePanelSet = {
      * @private
      */
     _setContainer: function() {
-        var option = this._option,
-            element = this._element,
-            firstChild = element.firstChild,
-            wrap,
-            next,
-            tag,
-            className;
+        var options = this._options;
+        var element = this._element;
+        var firstChild = element.firstChild;
+        var wrap, next, tag, className;
 
-        if (option.wrapperTag) {
-            tag = option.wrapperTag && option.wrapperTag.split('.')[0];
-            className = option.wrapperTag && option.wrapperTag.split('.')[1] || '';
+        if (options.wrapperTag) {
+            tag = options.wrapperTag && options.wrapperTag.split('.')[0];
+            className = (options.wrapperTag && options.wrapperTag.split('.')[1]) || '';
             wrap = document.createElement(tag);
+
             if (className) {
-            wrap.className = className;
+                wrap.className = className;
             }
             this._element.innerHTML = '';
             this._element.appendChild(wrap);
         } else {
-            if (tui.util.isHTMLTag(firstChild)) {
+            if (snippet.isHTMLTag(firstChild)) {
                 wrap = firstChild;
             }
             next = firstChild && firstChild.nextSibling;
-            if (tui.util.isHTMLTag(next)) {
+            if (snippet.isHTMLTag(next)) {
                 wrap = next;
             } else {
                 wrap = document.createElement('ul');
@@ -291,55 +50,70 @@ var movePanelSet = {
         }
         this._container = wrap;
     },
+
     /**
      * Make rolling panel
+     * @param {object} initData - Data
      * @private
      */
     _setPanel: function(initData) {
-        var panel = this._container.firstChild,
-            panelSet = this.panel,
-            option = this._option,
-            tag,
-            className,
-            key;
-
-        if (tui.util.isString(option.panelTag)) {
-            tag = (option.panelTag).split('.')[0];
-            className = (option.panelTag).split('.')[1] || '';
-        } else {
-            if (!tui.util.isHTMLTag(panel)) {
-                panel = panel && panel.nextSibling;
-            }
-            tag = tui.util.isHTMLTag(panel) ? panel.tagName : 'li';
-            className = (panel && panel.className) || '';
-        }
+        var panelSet = this.panel;
+        var info = this._getElementInfo();
 
         this._container.innerHTML = '';
 
-        for (key in panelSet) {
-            panelSet[key] = this._makeElement(tag, className, key);
-        }
+        snippet.forEach(panelSet, function(value, key) {
+            panelSet[key] = this._makeElement(info.tag, info.className, key);
+        }, this);
 
         panelSet.center.innerHTML = initData;
         this._container.appendChild(panelSet.center);
-
     },
+
     /**
-     * Make HTML Element     
+     * Get element info
+     * @returns {object} Element info
+     * @private
+     */
+    _getElementInfo: function() {
+        var panel = this._container.firstChild;
+        var options = this._options;
+        var tag, className;
+
+        if (snippet.isString(options.panelTag)) {
+            tag = (options.panelTag).split('.')[0];
+            className = (options.panelTag).split('.')[1] || '';
+        } else {
+            if (!snippet.isHTMLTag(panel)) {
+                panel = panel && panel.nextSibling;
+            }
+            tag = snippet.isHTMLTag(panel) ? panel.tagName : 'li';
+            className = (panel && panel.className) || '';
+        }
+
+        return {
+            tag: tag,
+            className: className
+        };
+    },
+
+    /**
+     * Make HTML Element
      * @param {String} tag A tag name
      * @param {String} className A class name
-     * @param {String} key A class key name
      * @returns {HTMLElement}
      * @private
      */
-    _makeElement: function(tag, className, key) {
+    _makeElement: function(tag, className) {
         var element = document.createElement(tag);
+
         element.className = className;
         element.style.position = 'absolute';
         element.style.width = '100%';
         element.style.height = '100%';
         element.style.left = '0px';
         element.style.top = '0px';
+
         return element;
     },
 
@@ -375,11 +149,15 @@ var movePanelSet = {
      */
     _getMoveSet: function() {
         var flow = this._flow;
+        var result;
+
         if (flow === 'prev') {
-            return [0, this._distance];
+            result = [0, this._distance];
         } else {
-            return [-this._distance, 0];
+            result = [-this._distance, 0];
         }
+
+        return result;
     },
 
     /**
@@ -388,12 +166,13 @@ var movePanelSet = {
      * @private
      */
     _getStartSet: function() {
-        var panel = this.panel,
-            flow = this._flow,
-            range = this._range,
-            isPrev = flow === 'prev',
-            first = isPrev ? panel['prev'] : panel['center'],
-            second = isPrev ? panel['center'] : panel['next'];
+        var panel = this.panel;
+        var flow = this._flow;
+        var range = this._range;
+        var isPrev = flow === 'prev';
+        var first = isPrev ? panel.prev : panel.center;
+        var second = isPrev ? panel.center : panel.next;
+
         return [parseInt(first.style[range], 10), parseInt(second.style[range], 10)];
     },
 
@@ -403,40 +182,50 @@ var movePanelSet = {
      * @private
      */
     _setTarget: function(flow) {
-        this._targets = [this.panel['center']];
+        this._targets = [this.panel.center];
+
         if (flow === 'prev') {
             this._targets.unshift(this.panel[flow]);
         } else {
             this._targets.push(this.panel[flow]);
         }
-
     },
+
     /**
      * A panel move
-     * @param {Object} data A data to update panel
+     * @param {Object} data - A data to update panel
+     * @param {Number} duration - Idle time
+     * @param {String} flow - A direction to next rolling
      */
     move: function(data, duration, flow) {
+        var result;
+
         flow = flow || this._flow;
+
         if (this.status === 'idle') {
             this.status = 'run';
         } else {
             this._queueing(data, duration, flow);
+
             return;
         }
 
         /**
-         * Before move custom event fire
-         * @fires beforeMove
-         * @param {String} data Inner HTML
+         * @event Rolling#beforeMove
+         * @param {object} ev - Custom event object
+         *     @param {String} ev.data - Inner HTML
          * @example
-         * tui.component.RollingInstance.attach('beforeMove', function(data) {
-         *    // ..... run code
+         * instance.on('beforeMove', function(ev) {
+         *     console.log(ev.data)
          * });
          */
-        var res = this.invoke('beforeMove', {data: data});
+        result = this._rolling.invoke('beforeMove', {
+            data: data
+        });
 
-        if (!res) {
+        if (!result) {
             this.status = 'idle';
+
             return;
         }
 
@@ -457,24 +246,26 @@ var movePanelSet = {
      * @private
      */
     _moveWithoutMotion: function() {
-        var flow = this._flow,
-            pos = this._getMoveSet(flow),
-            range = this._range;
-        tui.util.forEach(this._targets, function(element, index) {
+        var pos = this._getMoveSet();
+        var range = this._range;
+
+        snippet.forEach(this._targets, function(element, index) {
             element.style[range] = pos[index] + 'px';
         });
+
         this.complete();
     },
 
     /**
      * Run animation
+     * @param {Number} duration - Idle time
      * @private
      */
     _moveWithMotion: function(duration) {
-        var flow = this._flow,
-            start = this._getStartSet(flow),
-            distance = this._distance,
-            range = this._range;
+        var flow = this._flow;
+        var start = this._getStartSet(flow);
+        var distance = this._distance;
+        var range = this._range;
 
         duration = duration || this._duration;
 
@@ -482,14 +273,13 @@ var movePanelSet = {
             delay: 10,
             duration: duration || 1000,
             delta: this._motion,
-            step: tui.util.bind(function(delta) {
-                tui.util.forEach(this._targets, function(element, index) {
+            step: snippet.bind(function(delta) {
+                snippet.forEach(this._targets, function(element, index) {
                     var dest = (flow === 'prev') ? distance * delta : -(distance * delta);
                     element.style[range] = start[index] + dest + 'px';
-
                 });
             }, this),
-            complete: tui.util.bind(this.complete, this)
+            complete: snippet.bind(this.complete, this)
         });
     },
 
@@ -497,31 +287,30 @@ var movePanelSet = {
      * Complate callback
      */
     complete: function() {
-        var panel = this.panel,
-            tempPanel,
-            flow = this._flow;
+        var panel = this.panel;
+        var flow = this._flow;
+        var tempPanel, first;
 
-        tempPanel = panel['center'];
-        panel['center'] = panel[flow];
+        tempPanel = panel.center;
+        panel.center = panel[flow];
         panel[flow] = tempPanel;
 
         this._targets = null;
         this._container.removeChild(tempPanel);
         this.status = 'idle';
 
-        if (tui.util.isNotEmpty(this._queue)) {
-            var first = this._queue.shift();
+        if (snippet.isNotEmpty(this._queue)) {
+            first = this._queue.shift();
             this.move(first.data, first.duration, first.flow);
         } else {
             /**
-             * After custom event run
-             * @fires afterMove
+             * @event Rolling#afterMove
              * @example
-             * tui.component.RollingInstance.attach('afterMove', function() {
-             *    // ..... run code
+             * instance.on('afterMove', function() {
+             *     // code
              * });
              */
-            this.fire('afterMove');
+            this._rolling.fire('afterMove');
         }
     }
 };
@@ -542,7 +331,7 @@ var moveContainerSet = {
             firstChild = element.firstChild,
             wrap;
         if (this._isDrawn) {
-            wrap = tui.util.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
+            wrap = snippet.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
             this._container = wrap;
             this._container.style[this._range] = 0;
         }
@@ -557,23 +346,20 @@ var moveContainerSet = {
      */
     _isLimitPoint: function(flow) {
         var moved = this._getCurrentPosition();
+        var result;
+
         if (flow === 'next') {
-            if (this.limit > -moved) {
-                return false;
-            } else {
-                return true;
-            }
+            result = !(this.limit > -moved);
         } else {
-            if(moved < 0) {
-                return false;
-            } else {
-                return true;
-            }
+            result = !(moved < 0);
         }
+
+        return result;
     },
 
     /**
      * Get current position
+     * @returns {Number} Current position;
      * @private
      */
     _getCurrentPosition: function() {
@@ -582,35 +368,34 @@ var moveContainerSet = {
 
     /**
      * Move panels
-     * @param {Object} data A data to update panel
+     * @param {Number} duration - Idle time
+     * @param {String} flow - A direction to next rolling
      */
+    /* eslint-disable complexity */
     move: function(duration, flow) {
+        var result;
+
         flow = flow || this._flow;
 
         if (this.status === 'idle') {
             this.status = 'run';
         } else {
             this._queueing(duration, flow);
+
             return;
         }
 
-        /**
-         * Fire before custom event
-         * @fires beforeMove
-         * @param {String} data inner HTML
-         * @example
-         * tui.component.RollingInstance.attach('beforeMove', function(data) {
-         *    // ..... run code
-         * });
-         */
-        var res = this.invoke('beforeMove');
-        if (!res) {
+        result = this._rolling.invoke('beforeMove');
+
+        if (!result) {
             this.status = 'idle';
+
             return;
         }
 
-        if(!this._isCircular && this._isLimitPoint(flow)) {
+        if (!this._isCircular && this._isLimitPoint(flow)) {
             this.status = 'idle';
+
             return;
         }
 
@@ -624,6 +409,8 @@ var moveContainerSet = {
             this._moveWithMotion(duration);
         }
     },
+    /* eslint-enable complexity */
+
     /**
      * Fix panels
      */
@@ -641,19 +428,23 @@ var moveContainerSet = {
      * @private
      */
     _getMoveDistance: function(flow) {
-        var moved = this._getCurrentPosition(),
-            castDist = this._distance * this._unitCount;
+        var moved = this._getCurrentPosition();
+        var castDist = this._distance * this._unitCount;
+        var result;
+
         if (flow === 'prev') {
             if (this._isCircular) {
                 return this._distance;
             }
-            return (moved + castDist) > 0 ? -moved : castDist;
+            result = (moved + castDist) > 0 ? -moved : castDist;
         } else {
             if (this._isCircular) {
                 return -this._distance;
             }
-            return castDist > (this.limit + moved)? (-this.limit - moved) : -castDist;
+            result = castDist > (this.limit + moved) ? (-this.limit - moved) : -castDist;
         }
+
+        return result;
     },
 
     /**
@@ -661,35 +452,38 @@ var moveContainerSet = {
      * @private
      */
     _moveWithoutMotion: function() {
-        var flow = this._flow,
-            pos = this._getMoveDistance(flow),
-            range = this._range,
-            start = parseInt(this._container.style[range], 10);
+        var flow = this._flow;
+        var pos = this._getMoveDistance(flow);
+        var range = this._range;
+        var start = parseInt(this._container.style[range], 10);
+
         this._container.style[range] = start + pos + 'px';
         this.complete();
     },
 
     /**
      * Run animation
+     * @param {Number} duration - Idle time
      * @private
      */
     _moveWithMotion: function(duration) {
-        var flow = this._flow,
-            container = this._container,
-            range = this._range,
-            start = parseInt(container.style[range], 10),
-            distance = this._getMoveDistance(flow);
+        var flow = this._flow;
+        var container = this._container;
+        var range = this._range;
+        var start = parseInt(container.style[range], 10);
+        var distance = this._getMoveDistance(flow);
+
         duration = duration || this._duration;
 
         this._animate({
             delay: 10,
             duration: duration || 1000,
             delta: this._motion,
-            step: tui.util.bind(function(delta) {
+            step: snippet.bind(function(delta) {
                 var dest = distance * delta;
                 container.style[range] = start + dest + 'px';
             }, this),
-            complete: tui.util.bind(this.complete, this)
+            complete: snippet.bind(this.complete, this)
         });
     },
 
@@ -699,16 +493,12 @@ var moveContainerSet = {
      * @private
      */
     _rotatePanel: function(flow) {
+        var range = this._range;
+        var isPrev = flow === 'prev';
+        var basis = this._basis;
+        var standard, moveset, movesetLength, containerMoveDist;
 
         flow = flow || this._flow;
-
-        var standard,
-            moveset,
-            movesetLength,
-            range = this._range,
-            containerMoveDist,
-            isPrev = flow === 'prev',
-            basis = this._basis;
 
         this._setPartOfPanels(flow);
 
@@ -718,15 +508,17 @@ var moveContainerSet = {
 
         if (this._isInclude(this._panels[this._basis], moveset)) {
             this._basis = isPrev ? basis - movesetLength : basis + movesetLength;
+
             return;
         }
+
         if (isPrev) {
             standard = this._panels[0];
-            tui.util.forEach(moveset, function(element) {
+            snippet.forEach(moveset, function(element) {
                 this._container.insertBefore(element, standard);
             }, this);
         } else {
-            tui.util.forEach(moveset, function(element) {
+            snippet.forEach(moveset, function(element) {
                 this._container.appendChild(element);
             }, this);
         }
@@ -741,13 +533,18 @@ var moveContainerSet = {
      * @private
      */
     _isInclude: function(item, colleciton) {
-        var i,
-            len;
-        for(i = 0, len = colleciton.length; i < len; i++) {
+        var i = 0;
+        var length = colleciton.length;
+        var result = false;
+
+        for (; i < length; i += 1) {
             if (colleciton[i] === item) {
-                return true;
+                result = true;
+                break;
             }
         }
+
+        return result;
     },
 
     /**
@@ -756,11 +553,11 @@ var moveContainerSet = {
      * @private
      */
     _setPartOfPanels: function(flow) {
-        var itemcount = this._itemcount,
-            isPrev = (flow === 'prev'),
-            count = (this._rollunit !== 'page') ? 1 : itemcount,
-            dist = isPrev ? -count : count,
-            point = isPrev ? [dist] : [0, dist];
+        var itemcount = this._itemcount;
+        var isPrev = (flow === 'prev');
+        var count = (this._rollunit !== 'page') ? 1 : itemcount;
+        var dist = isPrev ? -count : count;
+        var point = isPrev ? [dist] : [0, dist];
 
         this._movePanelSet = this._panels.slice.apply(this._panels, point);
     },
@@ -770,14 +567,14 @@ var moveContainerSet = {
      * @private
      */
     _setItemCount: function() {
-        var element = this._element,
-            elementStyle = element.style,
-            elementWidth = parseInt(elementStyle.width || element.clientWidth, 10),
-            elementHeight = parseInt(elementStyle.height || element.clientHeight, 10),
-            item = this._element.getElementsByTagName('li')[0], // 마크업은 li로 픽스
-            itemStyle = item.style,
-            itemWidth = parseInt(itemStyle.width || item.clientWidth, 10),
-            itemHeight = parseInt(itemStyle.height || item.clientHeight, 10);
+        var element = this._element;
+        var elementStyle = element.style;
+        var elementWidth = parseInt(elementStyle.width || element.clientWidth, 10);
+        var elementHeight = parseInt(elementStyle.height || element.clientHeight, 10);
+        var item = this._element.getElementsByTagName('li')[0];
+        var itemStyle = item.style;
+        var itemWidth = parseInt(itemStyle.width || item.clientWidth, 10);
+        var itemHeight = parseInt(itemStyle.height || item.clientHeight, 10);
 
         if (this._range === 'left') {
             this._itemcount = Math.round(elementWidth / itemWidth);
@@ -787,21 +584,19 @@ var moveContainerSet = {
     },
 
     /**
-     * Initalize panels 
+     * Initalize panels
      * @private
      */
     _initPanel: function() {
-        var container = this._container,
-            panels = container.childNodes,
-            i,
-            arr;
+        var container = this._container;
+        var panels = container.childNodes;
 
-        panels = tui.util.toArray(panels);
+        panels = snippet.toArray(panels);
 
-        this._panels = tui.util.filter(panels, function(element) {
-            return tui.util.isHTMLTag(element);
+        this._panels = snippet.filter(panels, function(element) {
+            return snippet.isHTMLTag(element);
         });
-        tui.util.forEach(this._panels, function(panel, index) {
+        snippet.forEach(this._panels, function(panel, index) {
             panel.className += ' __index' + index + '__';
         });
     },
@@ -811,15 +606,13 @@ var moveContainerSet = {
      * @private
      */
     _setPanel: function() {
-        var container = this._container,
-            panels = container.childNodes,
-            i,
-            arr;
+        var container = this._container;
+        var panels = container.childNodes;
 
-        panels = tui.util.toArray(panels);
+        panels = snippet.toArray(panels);
 
-        this._panels = tui.util.filter(panels, function(element) {
-            return tui.util.isHTMLTag(element);
+        this._panels = snippet.filter(panels, function(element) {
+            return snippet.isHTMLTag(element);
         });
         this._basis = this._basis || 0;
         this._setBoundary();
@@ -827,17 +620,16 @@ var moveContainerSet = {
 
     /**
      * Set fixed area incircular rolling
-     * @param {String} flow A direction
-     * @returns {Boolean}
      * @private
      */
     _setBoundary: function() {
-        var panels = this._panels,
-            distance = this._distance,
-            range = this._range,
-            rangeDistance = parseInt(this._element.style[range === 'left' ? 'width' : 'height'], 10),
-            wrapArea = this._rollunit === 'page' ? (distance / this._itemcount) : distance * panels.length,
-            limitDist = wrapArea - rangeDistance;
+        var panels = this._panels;
+        var distance = this._distance;
+        var range = this._range;
+        var rangeDistance = parseInt(this._element.style[range === 'left' ? 'width' : 'height'], 10);
+        var wrapArea = this._rollunit === 'page' ? (distance / this._itemcount) : distance * panels.length;
+        var limitDist = wrapArea - rangeDistance;
+
         this.limit = limitDist;
     },
 
@@ -848,15 +640,17 @@ var moveContainerSet = {
      * @private
      */
     _checkPagePosition: function(page) {
-        var dist = null,
-            panels = this._panels;
-        tui.util.forEach(panels, function(panel, index) {
+        var dist = null;
+        var panels = this._panels;
+
+        snippet.forEach(panels, function(panel, index) {
             if (panel.className.indexOf('__index' + page) !== -1) {
-                if (!tui.util.isExisty(dist)) {
+                if (!snippet.isExisty(dist)) {
                     dist = index;
                 }
             }
         });
+
         return dist;
     },
 
@@ -865,15 +659,17 @@ var moveContainerSet = {
      * @param {Number} page A number of panel
      */
     moveTo: function(page) {
+        var itemCount = this._itemcount;
+        var panelCount = this._panels.length;
+        var distance = this._distance;
+        var pos, itemDist, unitDist;
+
         page = Math.max(page, 0);
         page = Math.min(page, this._panels.length - 1);
 
-        var pos = this._checkPagePosition(page),
-            itemCount = this._itemcount,
-            panelCount = this._panels.length,
-            distance = this._distance,
-            itemDist = this._rollunit === 'page' ? distance / itemCount : distance,
-            unitDist = -pos * itemDist;
+        pos = this._checkPagePosition(page);
+        itemDist = (this._rollunit === 'page') ? distance / itemCount : distance;
+        unitDist = -pos * itemDist;
 
         if (!this._isCircular) {
             unitDist = Math.max(unitDist, -this.limit);
@@ -882,9 +678,282 @@ var moveContainerSet = {
             this._basis = pos;
             this._setPanel();
         }
+
         this._container.style[this._range] = unitDist + 'px';
     }
 };
 
-tui.util.CustomEvents.mixin(Roller);
+/**
+ * Roller that move rolling panel
+ * @param {Object} options - The options of rolling component
+ * @param {Object} initData - Data to set panels
+ * @param {Rolling} Rolling - Rolling object to bind custom event
+ * @constructor
+ * @ignore
+ */
+var Roller = snippet.defineClass(/** @lends Roller.prototype */{
+    /* eslint-disable complexity */
+    init: function(options, initData, rolling) {
+        /**
+         * A options
+         * @type {Object}
+         * @private
+         */
+        this._options = options;
+
+        /**
+         * A root element
+         * @type {(HTMLElement|String)}
+         * @private
+         */
+        this._element = snippet.isString(options.element) ? document.getElementById(options.element) : options.element;
+
+        /**
+         * A direction of rolling (vertical|horizontal)
+         * @type {String}
+         * @private
+         */
+        this._direction = options.direction || 'horizontal';
+
+        /**
+         * A style attribute to move('left | top')
+         * @type {string}
+         * @private
+         */
+        this._range = this._direction === 'horizontal' ? 'left' : 'top';
+
+        /**
+         * A function that is used to move
+         * @type {Function}
+         */
+        this._motion = motion[options.motion || 'noeffect'];
+
+        /**
+         * A rolling unit
+         * @type {Number}
+         * @private
+         */
+        this._rollunit = options.unit || 'page';
+
+        /**
+         * Whether html is drawn or not
+         * @type {boolean}
+         * @private
+         */
+        this._isDrawn = !!options.isDrawn;
+
+        /**
+         * A item per page
+         * @type {boolean}
+         * @private
+         */
+        this._itemcount = options.itemcount;
+
+        /**
+         * A direction to next rolling
+         * @type {string}
+         * @private
+         */
+        this._flow = options.flow || 'next';
+
+        /**
+         * A animation duration
+         * @type {*|number}
+         * @private
+         */
+        this._duration = options.duration || 1000;
+
+        /**
+         * Whether circular or not
+         * @type {Boolean}
+         * @private
+         */
+        this._isCircular = snippet.isExisty(options.isCircular) ? options.isCircular : true;
+
+        /**
+         * A roller state
+         * @type {String}
+         */
+        this.status = 'idle';
+
+        /**
+         * A container that will be moved
+         * @type {HTMLElement}
+         * @private
+         */
+        this._container = null;
+
+        /**
+         * Changable data panel
+         * @type {Object}
+         */
+        this.panel = {
+            prev: null,
+            center: null,
+            next: null
+        };
+
+        /**
+         * Fixed roller panels, that have node list by array
+         * @type {Array}
+         */
+        this._panels = [];
+
+        /**
+         * Base element
+         * @type {HTMLElement}
+         */
+        this._basis = null;
+
+        /**
+         * Root element width, if move unit is page this is move width
+         * @type {number}
+         * @private
+         */
+        this._distance = 0;
+
+        /**
+         * Moved panel target
+         * @type {Array}
+         * @private
+         */
+        this._targets = [];
+
+        /**
+         * Queue for order that is requested during moving
+         * @type {Array}
+         * @private
+         */
+        this._queue = [];
+
+        /**
+         * A move unit count
+         * @type {number}
+         * @private
+         */
+        this._unitCount = options.rollunit === 'page' ? 1 : (options.unitCount || 1);
+
+        /**
+         * Rolling object
+         * @type {Rolling}
+         * @private
+         */
+        this._rolling = rolling;
+
+        if (!this._isDrawn) {
+            this.mixin(movePanelSet);
+        } else {
+            this.mixin(moveContainerSet);
+        }
+
+        this._setContainer();
+        this._masking();
+        this._setUnitDistance();
+
+        if (this._isDrawn) {
+            this._initPanel();
+        }
+        this._setPanel(initData);
+    },
+    /* eslint-enable complexity */
+
+    /**
+     * Mixin
+     * @param {Object} methods A method set [staticDataMethods|remoteDataMethods]
+     */
+    mixin: function(methods) {
+        snippet.extend(this, methods);
+    },
+
+    /**
+     * Masking
+     * @method
+     * @private
+     */
+    _masking: function() {
+        var element = this._element;
+        var elementStyle = element.style;
+
+        elementStyle.position = 'relative';
+        elementStyle.overflow = 'hidden';
+        elementStyle.width = elementStyle.width || (element.clientWidth + 'px');
+        elementStyle.height = elementStyle.height || (element.clientHeight + 'px');
+    },
+
+    /**
+     * Get unit move distance
+     * @private
+     */
+    _setUnitDistance: function() {
+        var elementStyle = this._element.style;
+        var dist;
+
+        if (this._direction === 'horizontal') {
+            dist = elementStyle.width.replace('px', '');
+        } else {
+            dist = elementStyle.height.replace('px', '');
+        }
+
+        if (this._rollunit !== 'page' && this._isDrawn) {
+            dist = Math.ceil(dist / this._itemcount);
+        }
+        this._distance = parseInt(dist, 10);
+    },
+
+    /**
+     * Queue move order
+     * @param {String} data A page data
+     * @param {Number} duration A duartion
+     * @param {String} flow A direction to move
+     * @private
+     */
+    _queueing: function(data, duration, flow) {
+        this._queue.push({
+            data: data,
+            duration: duration,
+            flow: flow
+        });
+    },
+
+    /**
+     * A default direction
+     * @param {String} flow A flow that will be defualt value
+     */
+    setFlow: function(flow) {
+        this._flow = flow || this._flow || 'next';
+    },
+
+    /**
+     * change animation effect
+     * @param {String} type A name of effect
+     */
+    changeMotion: function(type) {
+        this._motion = motion[type];
+    },
+
+    /**
+     * Animate
+     * @param {Object} options A options for animating
+     */
+    _animate: function(options) {
+        var start = new Date(),
+            id = window.setInterval(function() {
+                var timePassed = new Date() - start,
+                    progress = timePassed / options.duration,
+                    delta;
+                if (progress > 1) {
+                    progress = 1;
+                }
+                delta = options.delta(progress);
+
+                options.step(delta);
+
+                if (progress === 1) {
+                    window.clearInterval(id);
+                    options.complete();
+                }
+            }, options.delay || 10);
+    }
+});
+
 module.exports = Roller;

@@ -1,63 +1,24 @@
 /**
  * @fileoverview A data for move
  * @author NHN Ent. FE dev team.<dl_javascript@nhnent.com>
- * @dependency ne-code-snippet
  */
 
+'use strict';
 
+var snippet = require('tui-code-snippet');
 
-/** 
- * Data model for rolling
- * @param {Object} option A component options
- * @param {(Array|Object)} data A data of rolling
- * @constructor
+/**
+ * Node for each data panel
+ * @namespace Node
+ * @param {Object} data node data or html value
  * @ignore
+ * @constructor
  */
-var Data = tui.util.defineClass(/** @lends Data.prototype */{
-    init: function(option, data) {
-        /**
-         * Whether changable data
-         * @type {Boolean}
-         */
-        this.isVariable = !!option.isVariable;
-        /**
-         * A data list
-         * @type {Array}
-         */
-        this._datalist = null;
-        /**
-         * A data
-         * @type {Node}
-         * @private
-         */
-        this._data = null;
-        /**
-         * A init number
-         * @type {Number}
-         */
-        this._current = option.initNum || 1;
-        /**
-         * Whehter circular
-         * @type {Boolean}
-         * @private
-         */
-        this._isCircular = tui.util.isBoolean(option.isCircular) ? option.isCircular : true;
-        if (this.isVariable) {
-            this.mixin(remoteDataMethods);
-        } else {
-            this.mixin(staticDataMethods);
-        }
-
-        this._initData(data);
-    },
-    /**
-     * Mixin
-     * @param {Object} methods A method set [staticDataMethods|remoteDataMethods]
-     */
-    mixin: function(methods) {
-        tui.util.extend(this, methods);
-    }
-});
+var Node = function(data) {
+    this.prev = null;
+    this.next = null;
+    this.data = data;
+};
 
 /**
  * Static data method set
@@ -68,16 +29,13 @@ var staticDataMethods = {
     /**
      * Initialize data
      * @param {Array} datalist A list that is not connected with each other
-     * @returns {Array} _datalist
      * @private
      */
     _initData: function(datalist) {
-        var before = null,
-            first,
-            nodelist;
+        var before = null;
+        var first, nodelist;
 
-        nodelist = tui.util.map(datalist, function(data, index) {
-
+        nodelist = snippet.map(datalist, function(data, index) {
             var node = new Node(data);
             node.prev = before;
 
@@ -94,9 +52,10 @@ var staticDataMethods = {
             before = node;
 
             return node;
-
         }, this);
+
         nodelist.unshift(null);
+
         this._datalist = nodelist;
     },
 
@@ -140,27 +99,34 @@ var staticDataMethods = {
     /**
      * Change current
      * @param {String} flow A direction
+     * @returns {Boolean} Current state
      * @private
      */
     changeCurrent: function(flow) {
         var length = this.getDataListLength();
+
         if (flow === 'prev') {
             this._current -= 1;
             if (this._current < 1) {
                 this._current = this._isCircular ? length : 1;
+
                 return true;
             }
         } else {
             this._current += 1;
             if (this._current > length) {
                 this._current = this._isCircular ? 1 : length;
+
                 return true;
             }
         }
+
+        return false;
     },
+
     /**
      * Get current
-     * @returns {number}
+     * @returns {Number}
      */
     getCurrent: function() {
         return this._current;
@@ -231,18 +197,62 @@ var remoteDataMethods = {
 };
 
 /**
- * Node for each data panel
- * @namespace Node
- * @param {Object} data node data or html value
- * @ignore
+ * Data model for rolling
+ * @param {Object} options A component options
+ * @param {(Array|Object)} data A data of rolling
  * @constructor
+ * @ignore
  */
-var Node = function(data) {
+var Data = snippet.defineClass(/** @lends Data.prototype */{
+    init: function(options, data) {
+        /**
+         * Whether changable data
+         * @type {Boolean}
+         */
+        this.isVariable = !!options.isVariable;
 
-    this.prev = null;
-    this.next = null;
-    this.data = data;
+        /**
+         * A data list
+         * @type {Array}
+         */
+        this._datalist = null;
 
-};
+        /**
+         * A data
+         * @type {Node}
+         * @private
+         */
+        this._data = null;
+
+        /**
+         * A init number
+         * @type {Number}
+         */
+        this._current = options.initNum || 1;
+
+        /**
+         * Whehter circular
+         * @type {Boolean}
+         * @private
+         */
+        this._isCircular = snippet.isBoolean(options.isCircular) ? options.isCircular : true;
+
+        if (this.isVariable) {
+            this.mixin(remoteDataMethods);
+        } else {
+            this.mixin(staticDataMethods);
+        }
+
+        this._initData(data);
+    },
+
+    /**
+     * Mixin
+     * @param {Object} methods A method set [staticDataMethods|remoteDataMethods]
+     */
+    mixin: function(methods) {
+        snippet.extend(this, methods);
+    }
+});
 
 module.exports = Data;

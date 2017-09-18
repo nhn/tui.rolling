@@ -1,14 +1,17 @@
+'use strict';
+
+var snippet = require('tui-code-snippet');
+
 var Roller = require('../src/js/roller');
 var motion = require('../src/js/motion');
 
 describe('roller', function() {
-
-    jasmine.getFixtures().fixturesPath = "base/";
-    jasmine.getStyleFixtures().fixturesPath = "base/";
+    jasmine.getFixtures().fixturesPath = 'base/';
+    jasmine.getStyleFixtures().fixturesPath = 'base/';
 
     beforeEach(function() {
-        loadFixtures("test/fixture/roller.html");
-        loadStyleFixtures('test/fixture/fixedhtml.css');
+        loadFixtures('test/fixtures/roller.html');
+        loadStyleFixtures('test/fixtures/fixedhtml.css');
     });
 
     describe('생성 및 확인', function() {
@@ -17,6 +20,11 @@ describe('roller', function() {
             roller3,
             roller4,
             roller5;
+        var data = 'JsonCompare Nightmare',
+            type = 'next',
+            moveElement,
+            beforeCenter,
+            moveSet;
 
         beforeEach(function() {
             var div1 = document.getElementById('roller1'),
@@ -28,7 +36,10 @@ describe('roller', function() {
                 element: div1,
                 isVariable: true,
                 wrapperTag: 'div.wrap'
-            }, 'data1');
+            }, 'data1', {
+                invoke: function() {},
+                fire: function() {}
+            });
 
             roller2 = new Roller({
                 element: div2,
@@ -85,7 +96,7 @@ describe('roller', function() {
             expect(roller4).toBeDefined();
         });
 
-        it('option.isDrawn : check itemcount', function() {
+        it('options.isDrawn : check itemcount', function() {
             var itemcount3 = roller3._itemcount,
                 itemcount4 = roller4._itemcount;
             expect(itemcount3).toBe(3);
@@ -103,15 +114,9 @@ describe('roller', function() {
             expect(distance4).toBe(100);
         });
 
-        var data = 'JsonCompare Nightmare',
-            type = 'next',
-            moveElement,
-            beforeCenter,
-            moveSet,
-            beforePos1;
-
         it('test move flow (not isDrawn)', function() {
             var panel = roller1.panel;
+
             // roller1._getMoveSet
             moveSet = roller1._getMoveSet();
             expect(moveSet[0]).toBe(-roller1._distance);
@@ -131,13 +136,12 @@ describe('roller', function() {
             // roller1._appendMoveData(type);
             roller1._appendMoveData(type);
             moveElement = roller1.movePanel;
-            beforeCenter = panel['center'].nextSibling;
+            beforeCenter = panel.center.nextSibling;
             expect(moveElement).toBe(panel[type]);
             expect(moveElement).toBe(beforeCenter);
 
             // 상태 초기화 후 무브 수행;
             roller1.move(data, type);
-            beforePos1 = parseInt(panel['center'].style.left);
         });
 
         it('getStartSet 시작점을 구해온다.', function() {
@@ -154,7 +158,7 @@ describe('roller', function() {
         it('_getMoveDistance 이동거리를 구한다.', function() {
             var distance = roller5._getMoveDistance('prev');
             expect(distance).toBe(0);
-            var distance = roller5._getMoveDistance('next');
+            distance = roller5._getMoveDistance('next');
             expect(distance).toBe(-(roller5._distance * roller5._unitCount));
         });
 
@@ -176,30 +180,12 @@ describe('roller', function() {
             moveset = roller3._movePanelSet;
             expect(moveset.length).toBe(3);
             expect(panels[0]).toBe(moveset[0]);
-
-        });
-
-        it('Custom Event mixin', function() {
-            expect(roller1.on).toBeDefined();
-            expect(roller2.on).toBeDefined();
-        });
-
-        it('Custom Event test', function() {
-            var a = 0;
-            roller1.on('move', function() {
-                a++;
-                checkCustom();
-            });
-            roller1.fire('move');
-            function checkCustom() {
-                expect(a).toBe(1);
-            }
         });
 
         it('changeMotion', function() {
-            var motion = roller4._motion;
+            var roller = roller4._motion;
             roller4.changeMotion('easeIn');
-            expect(motion).not.toBe(roller4._motion);
+            expect(roller).not.toBe(roller4._motion);
         });
 
         it('_isLimitPoint', function() {
@@ -220,19 +206,16 @@ describe('roller', function() {
             expect(before).not.toBe(roller1._basis);
             expect(dist2).toBe(4);
         });
-
     });
 
     describe('모션 테스트', function() {
         var roller1,
             roller2,
-            roller3,
             roller4;
 
         beforeEach(function() {
             var div1 = document.getElementById('roller1'),
                 div2 = document.getElementById('roller2'),
-                div3 = document.getElementById('roller3'),
                 div4 = document.getElementById('roller4');
 
             roller1 = new Roller({
@@ -245,18 +228,11 @@ describe('roller', function() {
                 element: div2,
                 direction: 'vertical',
                 panelTag: 'li'
-            }, 'dd');
-
-            roller3 = new Roller({
-                element: div3,
-                direction: 'horizontal',
-                isVariable: false,
-                isAuto: false,
-                duration: 400,
-                isCircular: true,
-                isDrawn: true,
-                unit: 'page'
+            }, 'dd', {
+                invoke: function() {},
+                fire: function() {}
             });
+
             // width 150px, height: 300px;
             roller4 = new Roller({
                 element: div4,
@@ -269,32 +245,38 @@ describe('roller', function() {
                 flow: 'prev',
                 motion: 'linear',
                 unit: 'item'
+            }, '', {
+                invoke: function() {},
+                fire: function() {}
             });
         });
 
         it('Roller.movePanelSet move', function() {
-            var beforePanel = roller2.panel[roller2._flow],
-                nextPanel;
+            var beforePanel = roller2.panel[roller2._flow];
 
-            beforePanel = roller2.panel['center'];
-            nextPanel = roller2.panel[roller2._flow];
+            spyOn(roller2._rolling, 'invoke').and.returnValue(true);
+
+            beforePanel = roller2.panel.center;
             roller2.move('eee');
-            expect(beforePanel).not.toBe(roller2.panel['center']);
+            expect(beforePanel).not.toBe(roller2.panel.center);
 
-
-            beforePanel = roller2.panel['center'];
+            beforePanel = roller2.panel.center;
             roller2.move('eee', 0, 'prev');
-            expect(beforePanel).not.toBe(roller2.panel['center']);
+            expect(beforePanel).not.toBe(roller2.panel.center);
         });
 
         it('Roller.moveContainerSet move', function(done) {
-            var first = roller4._panels[0].innerHTML,
-                last = roller4._panels[roller4._panels.length - 1].innerHTML;
-            roller4.move();
-            setTimeout(function() {
+            var last = roller4._panels[roller4._panels.length - 1].innerHTML;
+            var callback = function() {
                 expect(last).toBe(roller4._panels[0].innerHTML);
                 done();
-            }, 500);
+            };
+
+            spyOn(roller4._rolling, 'invoke').and.returnValue(true);
+
+            roller4.move();
+
+            setTimeout(callback, 500);
         });
 
         it('Roller motion linear', function(done) {
@@ -303,7 +285,7 @@ describe('roller', function() {
                 delay: 10,
                 duration: 500,
                 delta: motion.linear,
-                step: tui.util.bind(function(delta) {
+                step: snippet.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
                 complete: function() {
@@ -319,7 +301,7 @@ describe('roller', function() {
                 delay: 10,
                 duration: 500,
                 delta: motion.quadEaseIn,
-                step: tui.util.bind(function(delta) {
+                step: snippet.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
                 complete: function() {
@@ -329,14 +311,14 @@ describe('roller', function() {
 
             setTimeout(function() {
                 expect(finalDelta).toBe(1);
-                //done();
+                // done();
             }, 1100);
 
             roller1._animate({
                 delay: 10,
                 duration: 400,
                 delta: motion.quadEaseOut,
-                step: tui.util.bind(function(delta) {
+                step: snippet.bind(function(delta) {
                     finalDelta2 = delta;
                 }, roller1),
                 complete: function() {
@@ -348,7 +330,7 @@ describe('roller', function() {
                 delay: 10,
                 duration: 400,
                 delta: motion.quadEaseInOut,
-                step: tui.util.bind(function(delta) {
+                step: snippet.bind(function(delta) {
                     finalDelta3 = delta;
                 }, roller1),
                 complete: function() {
@@ -369,7 +351,7 @@ describe('roller', function() {
                 delay: 10,
                 duration: 100,
                 delta: motion.circEaseIn,
-                step: tui.util.bind(function(delta) {
+                step: snippet.bind(function(delta) {
                     finalDelta = delta;
                 }, roller1),
                 complete: function() {
@@ -377,12 +359,11 @@ describe('roller', function() {
                 }
             });
 
-
             roller1._animate({
                 delay: 10,
                 duration: 100,
                 delta: motion.circEaseOut,
-                step: tui.util.bind(function(delta) {
+                step: snippet.bind(function(delta) {
                     finalDelta2 = delta;
                 }, roller1),
                 complete: function() {
@@ -390,12 +371,11 @@ describe('roller', function() {
                 }
             });
 
-
             roller1._animate({
                 delay: 10,
                 duration: 100,
                 delta: motion.circEaseInOut,
-                step: tui.util.bind(function(delta) {
+                step: snippet.bind(function(delta) {
                     finalDelta3 = delta;
                 }, roller1),
                 complete: function() {

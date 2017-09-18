@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>3. Auto Rolling</title>
+        <link rel="stylesheet" href="css/common.css" />
+        <style>
+            ul, ol, li { list-style:none }
+            .rolling { width: 502px; height:150px;margin:30px auto;}
+            .panel span { width:100px; float:left; height:150px; background-color: #6d676b; color:#fff;}
+        </style>
+    </head>
+
+    <body>
+        <div class="code-html">
+            <div class="panel panel-primary">
+                <div class="example">
+                    <div id="rolling" class="rolling">
+                        <ul>
+                            <li class="panel"></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group" id="control">
+                        <button class="stop">stop</button>
+                        <button class="play">play</button>
+                    </div>
+                    <div class="btn-group" id="control2">
+                        <button class="prev">prev</button>
+                        <button class="next">next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://cdn.rawgit.com/nhnent/tui.code-snippet/v1.2.5/dist/tui-code-snippet.js"></script>
+        <script type="text/javascript" src="../dist/tui-rolling.js"></script>
+        <script class="code-js">
+
+            var htmlData = [
+                '<span>panel1-1</span><span>panel1-2</span><span>panel1-3</span><span>panel1-4</span><span>panel1-5</span>',
+                '<span>panel2-1</span><span>panel2-2</span><span>panel2-3</span><span>panel2-4</span><span>panel2-5</span>',
+                '<span>panel3-1</span><span>panel3-2</span><span>panel3-3</span><span>panel3-4</span><span>panel3-5</span>',
+                '<span>panel4-1</span><span>panel4-2</span><span>panel4-3</span><span>panel4-4</span><span>panel4-5</span>',
+                '<span>panel5-1</span><span>panel5-2</span><span>panel5-3</span><span>panel5-4</span><span>panel5-5</span>',
+                '<span>panel6-1</span><span>panel6-2</span><span>panel6-3</span><span>panel6-4</span><span>panel6-5</span>'
+            ];
+
+            var rolling1 = new tui.Rolling({
+                element: document.getElementById('rolling'),
+                direction: 'horizontal',
+                isVariable: false,
+                duration: 400,
+                motion:'linear',
+                isAuto: true,
+                initNum: 3,
+                isCircular: false
+            }, htmlData);
+
+            var control = document.getElementById('control');
+
+            control.onclick = function(e) {
+                var e = e || window.event;
+                var target = e.target || e.srcElement;
+                var className;
+
+                if (target.tagName.toLowerCase() !== 'button') {
+                    return;
+                }
+
+                className = target.className;
+
+                if (className.indexOf('stop') > -1) {
+                    rolling1.stop();
+                } else {
+                    rolling1.auto();
+                }
+            };
+
+            var control = document.getElementById('control2');
+
+            control.onclick = function(e) {
+                var e = e || window.event;
+                var target = e.target || e.srcElement;
+                var className;
+
+                if (target.tagName.toLowerCase() !== 'button') {
+                    return;
+                }
+
+                className = target.className;
+
+                if (className.indexOf('prev') > -1) {
+                    rolling1.roll(null, 'prev');
+                } else if (className.indexOf('next') > -1) {
+                    rolling1.roll(null, 'next');
+                }
+            };
+
+        </script>
+    </body>
+</html>

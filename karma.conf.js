@@ -1,87 +1,24 @@
-var package = require('./package.json');
+/**
+ * Config file for testing
+ * @author NHN Ent. FE Development Lab <dl_javascript@nhnent.com>
+ */
 
-function setConfig(configDefault, server) {
-    var webdriverConfig = {
-        hostname: 'fe.nhnent.com',
-        port: 4444,
-        remoteHost: true
-    };
-    if (server === 'bs') {
-        configDefault.browsers = [
-            'bs_ie8',
-            'bs_ie9',
-            'bs_ie10',
-            'bs_ie11',
-            'bs_edge',
-            'bs_chrome_mac',
-            'bs_firefox_mac'
-        ];
-        configDefault.customLaunchers = {
-            bs_ie8: {
-                base: 'BrowserStack',
-                os: 'Windows',
-                os_version: 'XP',
-                browser_version: '8.0',
-                browser: 'ie'
-            },
-            bs_ie9: {
-                base: 'BrowserStack',
-                os: 'Windows',
-                os_version: '7',
-                browser_version: '9.0',
-                browser: 'ie'
-            },
-            bs_ie10: {
-                base: 'BrowserStack',
-                os: 'Windows',
-                os_version: '7',
-                browser_version: '10.0',
-                browser: 'ie'
-            },
-            bs_ie11: {
-                base: 'BrowserStack',
-                os: 'Windows',
-                os_version: '7',
-                browser_version: '11.0',
-                browser: 'ie'
-            },
-            bs_edge: {
-                base: 'BrowserStack',
-                os: 'Windows',
-                os_version: '10',
-                browser: 'edge',
-                browser_version: '12.0'
-            },
-            bs_chrome_mac: {
-                base: 'BrowserStack',
-                os: 'OS X',
-                os_version: 'El Capitan',
-                browser: 'chrome',
-                browser_version: '47.0'
-            },
-            bs_firefox_mac: {
-                base: 'BrowserStack',
-                os: 'OS X',
-                os_version: 'El Capitan',
-                browser: 'firefox',
-                browser_version: '43.0'
-            }
-        };
-        configDefault.browserStack = {
-            username: process.env.BROWSER_STACK_USERNAME,
-            accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
-            project: package.name
-        };
-    } else if (server === 'ne') {
-        configDefault.browsers = [
-            'IE8',
-            'IE9',
-            'IE10',
-            'IE11',
-            'Chrome-WebDriver',
-            'Firefox-WebDriver'
-        ];
-        configDefault.customLaunchers = {
+'use strict';
+
+var webdriverConfig = {
+    hostname: 'fe.nhnent.com',
+    port: 4444,
+    remoteHost: true
+};
+
+/**
+ * Set config by environment
+ * @param {object} defaultConfig - default config
+ * @param {string} server - server type ('ne' or local)
+ */
+function setConfig(defaultConfig, server) {
+    if (server === 'ne') {
+        defaultConfig.customLaunchers = {
             'IE8': {
                 base: 'WebDriver',
                 config: webdriverConfig,
@@ -106,6 +43,11 @@ function setConfig(configDefault, server) {
                 browserName: 'internet explorer',
                 version: '11'
             },
+            'Edge': {
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'MicrosoftEdge'
+            },
             'Chrome-WebDriver': {
                 base: 'WebDriver',
                 config: webdriverConfig,
@@ -115,46 +57,27 @@ function setConfig(configDefault, server) {
                 base: 'WebDriver',
                 config: webdriverConfig,
                 browserName: 'firefox'
+            },
+            'Safari-WebDriver': {
+                base: 'WebDriver',
+                config: webdriverConfig,
+                browserName: 'safari'
             }
         };
-    } else {
-        configDefault.browsers = [
-            'PhantomJS',
-            'Chrome'
+        defaultConfig.browsers = [
+            'IE8',
+            'IE9',
+            'IE10',
+            'IE11',
+            'Edge',
+            'Chrome-WebDriver',
+            'Firefox-WebDriver'
+            // 'Safari-WebDriver' // active only when safari test is needed
         ];
-    }
-}
-
-module.exports = function(config) {
-    var defaultConfig = {
-        basePath: './',
-        frameworks: ['browserify', 'jasmine'],
-        reporters: [
-            'dots',
-            'coverage',
-            'junit'
-        ],
-        files: [
-            'bower_components/jquery/jquery.js',
-            'bower_components/tui-code-snippet/dist/tui-code-snippet.js',
-            'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
-            'src/**/*.js',
-            'test/**/*.spec.js',
-            {
-                pattern: 'test/fixture/**/*.html',
-                included: false
-            },
-            {
-                pattern: 'test/fixture/**/*.css',
-                included: false
-            }
-        ],
-        preprocessors: {
-            'test/**/*.spec.js': ['browserify'],
-            'src/**/*.js': ['browserify', 'coverage']
-        },
-        coverageReporter: {
-            dir : 'report/coverage/',
+        defaultConfig.reporters.push('coverage');
+        defaultConfig.reporters.push('junit');
+        defaultConfig.coverageReporter = {
+            dir: 'report/coverage/',
             reporters: [
                 {
                     type: 'html',
@@ -170,10 +93,64 @@ module.exports = function(config) {
                     file: 'cobertura.txt'
                 }
             ]
-        },
-        junitReporter: {
+        };
+        defaultConfig.junitReporter = {
             outputDir: 'report',
             suite: ''
+        };
+    } else {
+        defaultConfig.browsers = [
+            'ChromeHeadless'
+        ];
+    }
+}
+
+module.exports = function(config) {
+    var defaultConfig = {
+        basePath: './',
+        frameworks: [
+            'jquery-1.11.0',
+            'jasmine',
+            'es5-shim'
+        ],
+        files: [
+            // reason for not using karma-jasmine-jquery framework is that including older jasmine-karma file
+            // included jasmine-karma version is 2.0.5 and this version don't support ie8
+            {
+                pattern: 'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
+                watched: false
+            },
+            {
+                pattern: 'test/fixtures/*.html',
+                included: false
+            },
+            {
+                pattern: 'test/fixtures/*.css',
+                included: false
+            },
+
+            'test/index.js'
+        ],
+        preprocessors: {
+            'test/index.js': ['webpack', 'sourcemap']
+        },
+        reporters: ['dots'],
+        webpack: {
+            devtool: 'inline-source-map',
+            module: {
+                preLoaders: [
+                    {
+                        test: /\.js$/,
+                        exclude: /(test|bower_components|node_modules)/,
+                        loader: 'istanbul-instrumenter'
+                    },
+                    {
+                        test: /\.js$/,
+                        exclude: /(bower_components|node_modules)/,
+                        loader: 'eslint-loader'
+                    }
+                ]
+            }
         },
         port: 9876,
         colors: true,
@@ -182,6 +159,7 @@ module.exports = function(config) {
         singleRun: true
     };
 
+    /* eslint-disable */
     setConfig(defaultConfig, process.env.KARMA_SERVER);
     config.set(defaultConfig);
 };

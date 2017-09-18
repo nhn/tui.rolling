@@ -1,11 +1,12 @@
+'use strict';
+
 var Rolling = require('../src/js/rolling');
 
 describe('rolling 테스트', function() {
-
-    jasmine.getFixtures().fixturesPath = "base";
+    jasmine.getFixtures().fixturesPath = 'base';
 
     beforeEach(function() {
-        loadFixtures("test/fixture/rolling.html");
+        loadFixtures('test/fixtures/rolling.html');
     });
 
     describe('생성 및 동작 테스트', function() {
@@ -79,34 +80,12 @@ describe('rolling 테스트', function() {
         });
 
         it('roll , 롤링 작동확인 (!isDrwan)', function() {
-            var rollNum1, rollNum2,
-                rollNum1 = rolling1._model.getCurrent();
+            var rollNum1 = rolling1._model.getCurrent();
+            var rollNum2;
+
             rolling1.roll();
             rollNum2 = rolling1._model.getCurrent();
             expect(rollNum1).not.toBe(rollNum2);
-        });
-
-        it('beforeMove, afterMove 이상 확인', function() {
-            var expire = false;
-            rolling2.attach('beforeMove', function(data) {
-                return false;
-            });
-            rolling2.attach('afterMove', function(data) {
-                expire = true;
-            });
-            // 이동하면 beforeMove햐만 실행되어야한다
-            rolling2.roll('data1');
-            expect(expire).toBeFalsy();
-        });
-
-        it('attach, fire 커스텀 등록/발생 테스트', function() {
-            var num = 1;
-            rolling1.attach('testEvent', function(data) {
-                num = data.dist;
-            });
-            rolling1.fire('testEvent', {dist : 10});
-
-            expect(num).toEqual(10);
         });
 
         it('moveTo test', function() {
@@ -115,16 +94,16 @@ describe('rolling 테스트', function() {
             expect(rolling1._model.getCurrent()).toBe(3);
             try {
                 rolling1.moveTo();
-            } catch(e) {
+            } catch (e) {
                 error = e.toString();
             }
             expect(error).not.toBeFalsy();
             error = false;
             try {
-                rolling1._option.isVariable = true;
+                rolling1._options.isVariable = true;
                 rolling1.moveTo(3);
-            } catch(e) {
-                rolling1._option.isVariable = false;
+            } catch (e) {
+                rolling1._options.isVariable = false;
                 error = e.toString();
             }
             expect(error).not.toBeFalsy();
@@ -136,25 +115,44 @@ describe('rolling 테스트', function() {
         });
 
         it('roll - not idle', function() {
-            var move = false,
-                error = false;
-            rolling1.attach('beforeMove', function() {
+            var move = false;
+            var error = false;
+            var handler = function() {
                 move = true;
-            });
+            };
+            rolling1.on('beforeMove', handler);
             rolling1._roller.status = 'run';
             rolling1.roll();
             expect(move).toBeFalsy();
 
             rolling1._roller.status = 'idle';
-            rolling1._option.isVariable = true;
+            rolling1._options.isVariable = true;
             try {
                 rolling1.roll();
-            } catch(e) {
+            } catch (e) {
                 error = e.toString();
             }
             expect(error).not.toBeFalsy();
 
             rolling1.roll('data');
+        });
+
+        it('Custom Event mixin', function() {
+            expect(rolling1.on).toBeDefined();
+            expect(rolling2.on).toBeDefined();
+        });
+
+        it('Custom Event test', function() {
+            var beforeMoveHandler = jasmine.createSpy('before move event handler');
+            var afterMoveHandler = jasmine.createSpy('after move event handler');
+
+            rolling1.on('beforeMove', beforeMoveHandler);
+            rolling1.on('afterMove', afterMoveHandler);
+
+            rolling1.roll('data');
+
+            expect(beforeMoveHandler).toHaveBeenCalled();
+            expect(afterMoveHandler).toHaveBeenCalled();
         });
     });
 });

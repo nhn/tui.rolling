@@ -1,5 +1,12 @@
 /**
- * Rolling motion collection 
+ * @fileoverview Module of motions
+ * @author NHN Ent. FE dev team.<dl_javascript@nhnent.com>
+ */
+
+'use strict';
+
+/**
+ * Rolling motion collection
  * @namespace motion
  * @ignore
  */
@@ -13,7 +20,7 @@ var motion = (function() {
 
     /**
      * easeIn
-     * @param delta
+     * @param {Number} delta - Delta value
      * @returns {Function}
      */
     function makeEaseIn(delta) {
@@ -21,9 +28,10 @@ var motion = (function() {
             return delta(progress);
         };
     }
+
     /**
      * easeOut
-     * @param delta
+     * @param {Number} delta - Delta value
      * @returns {Function}
      */
     function makeEaseOut(delta) {
@@ -34,20 +42,27 @@ var motion = (function() {
 
     /**
      * easeInOut
-     * @param delta
+     * @param {Number} delta - Delta value
      * @returns {Function}
      */
     function makeEaseInOut(delta) {
         return function(progress) {
+            var result;
+
             if (progress < 0.5) {
-                return delta(2 * progress) / 2;
+                result = delta(2 * progress) / 2;
             } else {
-                return (2 - delta(2 * (1 - progress))) / 2;
+                result = (2 - delta(2 * (1 - progress))) / 2;
             }
+
+            return result;
         };
     }
+
     /**
      * Linear
+     * @param {Number} progress - Progress value
+     * @returns {Number}
      * @memberof motion
      * @method linear
      * @static
@@ -55,9 +70,27 @@ var motion = (function() {
     function linear(progress) {
         return progress;
     }
+
+    /**
+     * Quad
+     * @param {Number} progress - Progress value
+     * @returns {Number}
+     * @memberof motion
+     * @method quad
+     * @static
+     */
     function quad(progress) {
         return Math.pow(progress, 2);
     }
+
+    /**
+     * Circle
+     * @param {Number} progress - Progress value
+     * @returns {Number}
+     * @memberof motion
+     * @method circ
+     * @static
+     */
     function circ(progress) {
         return 1 - Math.sin(Math.acos(progress));
     }
@@ -69,20 +102,23 @@ var motion = (function() {
      * @static
      */
     quadEaseIn = makeEaseIn(quad);
+
     /**
      * circ + easeIn
      * @memberof motion
      * @method circEaseIn
      * @static
      */
-        circEaseIn = makeEaseIn(circ);
+    circEaseIn = makeEaseIn(circ);
+
     /**
      * quad + easeOut
      * @memberof motion
      * @method quadEaseOut
      * @static
      */
-        quadEaseOut = makeEaseOut(quad);
+    quadEaseOut = makeEaseOut(quad);
+
     /**
      * circ + easeOut
      * @memberof motion
@@ -90,6 +126,7 @@ var motion = (function() {
      * @static
      */
     circEaseOut = makeEaseOut(circ);
+
     /**
      * quad + easeInOut
      * @memberof motion
@@ -97,6 +134,7 @@ var motion = (function() {
      * @static
      */
     quadEaseInOut = makeEaseInOut(quad);
+
     /**
      * circ + easeInOut
      * @memberof motion

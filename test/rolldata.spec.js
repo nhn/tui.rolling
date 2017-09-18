@@ -1,3 +1,5 @@
+'use strict';
+
 var Data = require('../src/js/rolldata');
 
 describe('RollData Test', function() {
@@ -17,7 +19,6 @@ describe('RollData Test', function() {
             isVariable: false,
             isCircular: true
         }, rollData3);
-
 
     it('define model', function() {
         expect(model1).toBeDefined();
@@ -55,7 +56,7 @@ describe('RollData Test', function() {
         expect(value1).toBe('data1');
         expect(value2).toBe(10);
 
-        //링크를 끊고, 대상을 데이터에 넣는다
+        // 링크를 끊고, 대상을 데이터에 넣는다
         model1.severLink('next');
         value3 = model1.getData();
 
@@ -67,7 +68,6 @@ describe('RollData Test', function() {
         value4 = model1.getData();
 
         expect(value4).toBe(100);
-
     });
 
     it('getNextData, getPrevData, getData 비가변 데이터', function() {
@@ -80,17 +80,17 @@ describe('RollData Test', function() {
         value2 = model2.getNextData();
         value3 = model2.getPrevData();
 
-        expect(value1).toBe(/*rollData2[0]*/'a');
-        expect(value2).toBe(/*rollData2[1]*/'b');
-        expect(value3).toBe(/*rollData2[rollData2.length - 1]*/'f');
+        expect(value1).toBe('a'); // rollData2[0]
+        expect(value2).toBe('b'); // rollData2[1]
+        expect(value3).toBe('f'); // rollData2[rollData2.length - 1]
 
         value1 = model3.getData(4);
         value2 = model3.getNextData(4);
         value3 = model3.getPrevData(4);
 
-        expect(value1).toBe(/*rollData3[3]*/400);
-        expect(value2).toBe(/*rollData3[4]*/500);
-        expect(value3).toBe(/*rollData3[2]*/300);
+        expect(value1).toBe(400); // rollData3[3]
+        expect(value2).toBe(500); // rollData3[4]
+        expect(value3).toBe(300); // rollData3[2]
     });
 
     it('changeCurrent 순환 비순환 테스트', function() {
