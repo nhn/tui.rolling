@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: 3. Auto Rolling | Rolling</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 150px; height: 13px">
+        
+            <a href="https://github.com/nhnent/tui.jsdoc-template" rel="noopener noreferrer" target="_blank">
+                <img src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Rolling</a></h1>
+        
+            <span class="version">v2.0.0</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Examples</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-example01-basic.html">1. Basic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example01-basic_sub"></div></li><li><a href="tutorial-example02-non-circular.html">2. Non-circular</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example02-non-circular_sub"></div></li><li><a href="tutorial-example03-auto-rolling.html">3. Auto Rolling</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example03-auto-rolling_sub"></div></li><li><a href="tutorial-example04-changable-data.html">4. Changable Data</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example04-changable-data_sub"></div></li><li><a href="tutorial-example05-custom-event.html">5. Custom Event</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example05-custom-event_sub"></div></li><li><a href="tutorial-example06-effect.html">6. Effect</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example06-effect_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Rolling.html">Rolling</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Rolling_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Rolling.html#auto">auto</a></li><li><a href="Rolling.html#moveTo">moveTo</a></li><li><a href="Rolling.html#roll">roll</a></li><li><a href="Rolling.html#setFlow">setFlow</a></li><li><a href="Rolling.html#stop">stop</a></li></ul><div class="member-type">Events</div><ul class="inner"><li><a href="Rolling.html#event:afterMove">afterMove</a></li><li><a href="Rolling.html#event:beforeMove">beforeMove</a></li></ul></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+<section>
+    <header>
+        
+
+        <h2>3. Auto Rolling</h2>
+    </header>
+
+    
+        
+
+        <ul id="example-nav" class="nav nav-tabs">
+            <li role="presentation" id="example-result-btn" class="active" onclick="showResult()">
+                <a href="#">Result</a>
+            </li>
+            <li role="presentation" id="example-js-btn" class="" onclick="showJs()">
+                <a href="#">JS</a>
+            </li>
+            <li role="presentation" id="example-html-btn" class="" onclick="showHtml()">
+                <a href="#">HTML</a>
+            </li>
+        </ul>
+        <article>
+            
+            <iframe id="example-result" width="100%" height="800" frameborder="0" src=tutorials/example03-auto-rolling.html></iframe>
+            <div id="example-js" class="hidden"><pre class="prettyprint source">
+
+            var htmlData = [
+                '&lt;span>panel1-1&lt;/span>&lt;span>panel1-2&lt;/span>&lt;span>panel1-3&lt;/span>&lt;span>panel1-4&lt;/span>&lt;span>panel1-5&lt;/span>',
+                '&lt;span>panel2-1&lt;/span>&lt;span>panel2-2&lt;/span>&lt;span>panel2-3&lt;/span>&lt;span>panel2-4&lt;/span>&lt;span>panel2-5&lt;/span>',
+                '&lt;span>panel3-1&lt;/span>&lt;span>panel3-2&lt;/span>&lt;span>panel3-3&lt;/span>&lt;span>panel3-4&lt;/span>&lt;span>panel3-5&lt;/span>',
+                '&lt;span>panel4-1&lt;/span>&lt;span>panel4-2&lt;/span>&lt;span>panel4-3&lt;/span>&lt;span>panel4-4&lt;/span>&lt;span>panel4-5&lt;/span>',
+                '&lt;span>panel5-1&lt;/span>&lt;span>panel5-2&lt;/span>&lt;span>panel5-3&lt;/span>&lt;span>panel5-4&lt;/span>&lt;span>panel5-5&lt;/span>',
+                '&lt;span>panel6-1&lt;/span>&lt;span>panel6-2&lt;/span>&lt;span>panel6-3&lt;/span>&lt;span>panel6-4&lt;/span>&lt;span>panel6-5&lt;/span>'
+            ];
+
+            var rolling1 = new tui.Rolling({
+                element: document.getElementById('rolling'),
+                direction: 'horizontal',
+                isVariable: false,
+                duration: 400,
+                motion:'linear',
+                isAuto: true,
+                initNum: 3,
+                isCircular: false
+            }, htmlData);
+
+            var control = document.getElementById('control');
+
+            control.onclick = function(e) {
+                var e = e || window.event;
+                var target = e.target || e.srcElement;
+                var className;
+
+                if (target.tagName.toLowerCase() !== 'button') {
+                    return;
+                }
+
+                className = target.className;
+
+                if (className.indexOf('stop') > -1) {
+                    rolling1.stop();
+                } else {
+                    rolling1.auto();
+                }
+            };
+
+            var control = document.getElementById('control2');
+
+            control.onclick = function(e) {
+                var e = e || window.event;
+                var target = e.target || e.srcElement;
+                var className;
+
+                if (target.tagName.toLowerCase() !== 'button') {
+                    return;
+                }
+
+                className = target.className;
+
+                if (className.indexOf('prev') > -1) {
+                    rolling1.roll(null, 'prev');
+                } else if (className.indexOf('next') > -1) {
+                    rolling1.roll(null, 'next');
+                }
+            };
+
+        </pre></div>
+            <div id="example-html" class="hidden"><pre class="prettyprint source">
+            &lt;div class="panel panel-primary">
+                &lt;div class="example">
+                    &lt;div id="rolling" class="rolling">
+                        &lt;ul>
+                            &lt;li class="panel">&lt;/li>
+                        &lt;/ul>
+                    &lt;/div>
+                    &lt;div class="btn-group" id="control">
+                        &lt;button class="stop">stop&lt;/button>
+                        &lt;button class="play">play&lt;/button>
+                    &lt;/div>
+                    &lt;div class="btn-group" id="control2">
+                        &lt;button class="prev">prev&lt;/button>
+                        &lt;button class="next">next&lt;/button>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        </pre></div>
+        </article>
+    
+</section>
+
+
+    <script>
+        var exampleResult = document.getElementById('example-result');
+        var exampleJs = document.getElementById('example-js');
+        var exampleHtml = document.getElementById('example-html');
+        var exampleResultBtn = document.getElementById('example-result-btn');
+        var exampleJsBtn = document.getElementById('example-js-btn');
+        var exampleHtmlBtn = document.getElementById('example-html-btn');
+
+        function setActive(el) {
+            el.className += ' active';
+        }
+
+        function setInactive(el) {
+            el.className = el.className.replace(/\s*active\s*/g, '');
+        }
+
+        function show(el) {
+            el.className = el.className.replace(/\s*hidden\s*/g, '');
+        }
+
+        function hide(el) {
+            el.className += ' hidden';
+        }
+
+        function showJs() {
+            hide(exampleHtml);
+            hide(exampleResult);
+            setInactive(exampleHtmlBtn);
+            setInactive(exampleResultBtn);
+
+            show(exampleJs);
+            setActive(exampleJsBtn);
+        }
+
+        function showHtml() {
+            hide(exampleJs);
+            hide(exampleResult);
+            setInactive(exampleJsBtn);
+            setInactive(exampleResultBtn);
+
+            show(exampleHtml);
+            setActive(exampleHtmlBtn);
+        }
+
+        function showResult() {
+            hide(exampleJs);
+            hide(exampleHtml);
+            setInactive(exampleJsBtn);
+            setInactive(exampleHtmlBtn);
+
+            show(exampleResult);
+            setActive(exampleResultBtn);
+        }
+    </script>
+
+
+</div>
+
+<footer>
+    <img class="logo" src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" style="width: 150px; height: 13px">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        showLnbExamples();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: 6. Effect | Rolling</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 150px; height: 13px">
+        
+            <a href="https://github.com/nhnent/tui.jsdoc-template" rel="noopener noreferrer" target="_blank">
+                <img src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Rolling</a></h1>
+        
+            <span class="version">v2.0.0</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Examples</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-example01-basic.html">1. Basic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example01-basic_sub"></div></li><li><a href="tutorial-example02-non-circular.html">2. Non-circular</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example02-non-circular_sub"></div></li><li><a href="tutorial-example03-auto-rolling.html">3. Auto Rolling</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example03-auto-rolling_sub"></div></li><li><a href="tutorial-example04-changable-data.html">4. Changable Data</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example04-changable-data_sub"></div></li><li><a href="tutorial-example05-custom-event.html">5. Custom Event</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example05-custom-event_sub"></div></li><li><a href="tutorial-example06-effect.html">6. Effect</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="example06-effect_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Rolling.html">Rolling</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Rolling_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Rolling.html#auto">auto</a></li><li><a href="Rolling.html#moveTo">moveTo</a></li><li><a href="Rolling.html#roll">roll</a></li><li><a href="Rolling.html#setFlow">setFlow</a></li><li><a href="Rolling.html#stop">stop</a></li></ul><div class="member-type">Events</div><ul class="inner"><li><a href="Rolling.html#event:afterMove">afterMove</a></li><li><a href="Rolling.html#event:beforeMove">beforeMove</a></li></ul></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+<section>
+    <header>
+        
+
+        <h2>6. Effect</h2>
+    </header>
+
+    
+        
+
+        <ul id="example-nav" class="nav nav-tabs">
+            <li role="presentation" id="example-result-btn" class="active" onclick="showResult()">
+                <a href="#">Result</a>
+            </li>
+            <li role="presentation" id="example-js-btn" class="" onclick="showJs()">
+                <a href="#">JS</a>
+            </li>
+            <li role="presentation" id="example-html-btn" class="" onclick="showHtml()">
+                <a href="#">HTML</a>
+            </li>
+        </ul>
+        <article>
+            
+            <iframe id="example-result" width="100%" height="800" frameborder="0" src=tutorials/example06-effect.html></iframe>
+            <div id="example-js" class="hidden"><pre class="prettyprint source">
+
+            var htmlData = [
+                '&lt;div class="panel-heading pan1">data1&lt;/div>',
+                '&lt;div class="panel-heading pan2">data2&lt;/div>',
+                '&lt;div class="panel-heading pan3">data3&lt;/div>',
+                '&lt;div class="panel-heading pan4">data4&lt;/div>',
+                '&lt;div class="panel-heading pan5">data5&lt;/div>'
+            ];
+
+            var rolling1 = new tui.Rolling({
+                element: document.getElementById('rolling'),
+                direction: 'horizontal',
+                isVariable: false,
+                isAuto: true,
+                duration: 400,
+                motion: 'linear',
+                flow: 'prev',
+                isCircle: true
+            }, htmlData);
+
+            var rolling2 = new tui.Rolling({
+                element: document.getElementById('rolling1'),
+                direction: 'horizontal',
+                isVariable: false,
+                isAuto: true,
+                duration: 400,
+                motion: 'easeIn',
+                flow: 'prev',
+                isCircle: true
+            }, htmlData);
+
+            var rolling3 = new tui.Rolling({
+                element: document.getElementById('rolling2'),
+                direction: 'horizontal',
+                isVariable: false,
+                isAuto: true,
+                duration: 400,
+                motion: 'easeOut',
+                isCircle: true
+            }, htmlData);
+
+            var rolling4 = new tui.Rolling({
+                element: document.getElementById('rolling3'),
+                direction: 'horizontal',
+                isVariable: false,
+                isAuto: true,
+                duration: 400,
+                motion: 'easeInOut',
+                isCircle: true
+            }, htmlData);
+
+        </pre></div>
+            <div id="example-html" class="hidden"><pre class="prettyprint source">
+            &lt;div class="panel panel-primary">
+                &lt;div id="rolling" class="rolling">
+                    &lt;ul>
+                        &lt;li class="panel">&lt;/li>
+                    &lt;/ul>
+                &lt;/div>
+                &lt;div id="rolling1" class="rolling">
+                    &lt;ul>
+                        &lt;li class="panel">&lt;/li>
+                    &lt;/ul>
+                &lt;/div>
+                &lt;div id="rolling2" class="rolling">
+                    &lt;ul>
+                        &lt;li class="panel">&lt;/li>
+                    &lt;/ul>
+                &lt;/div>
+                &lt;div id="rolling3" class="rolling">
+                    &lt;ul>
+                        &lt;li class="panel">&lt;/li>
+                    &lt;/ul>
+                &lt;/div>
+            &lt;/div>
+        </pre></div>
+        </article>
+    
+</section>
+
+
+    <script>
+        var exampleResult = document.getElementById('example-result');
+        var exampleJs = document.getElementById('example-js');
+        var exampleHtml = document.getElementById('example-html');
+        var exampleResultBtn = document.getElementById('example-result-btn');
+        var exampleJsBtn = document.getElementById('example-js-btn');
+        var exampleHtmlBtn = document.getElementById('example-html-btn');
+
+        function setActive(el) {
+            el.className += ' active';
+        }
+
+        function setInactive(el) {
+            el.className = el.className.replace(/\s*active\s*/g, '');
+        }
+
+        function show(el) {
+            el.className = el.className.replace(/\s*hidden\s*/g, '');
+        }
+
+        function hide(el) {
+            el.className += ' hidden';
+        }
+
+        function showJs() {
+            hide(exampleHtml);
+            hide(exampleResult);
+            setInactive(exampleHtmlBtn);
+            setInactive(exampleResultBtn);
+
+            show(exampleJs);
+            setActive(exampleJsBtn);
+        }
+
+        function showHtml() {
+            hide(exampleJs);
+            hide(exampleResult);
+            setInactive(exampleJsBtn);
+            setInactive(exampleResultBtn);
+
+            show(exampleHtml);
+            setActive(exampleHtmlBtn);
+        }
+
+        function showResult() {
+            hide(exampleJs);
+            hide(exampleHtml);
+            setInactive(exampleJsBtn);
+            setInactive(exampleHtmlBtn);
+
+            show(exampleResult);
+            setActive(exampleResultBtn);
+        }
+    </script>
+
+
+</div>
+
+<footer>
+    <img class="logo" src="https://cloud.githubusercontent.com/assets/12269563/20029815/01133928-a39a-11e6-80f3-12500a91c755.png" style="width: 150px; height: 13px">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        showLnbExamples();
+    </script>
+
+</body>
+</html>
