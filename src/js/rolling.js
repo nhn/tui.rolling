@@ -41,7 +41,7 @@ var Data = require('./rolldata');
  * }, ['<div>data1</div>','<div>data2</div>', '<div>data3</div>']);
  */
 var Rolling = snippet.defineClass(/** @lends Rolling.prototype */{
-    init: function(options, data) {
+    init: function(options, data) { // eslint-disable-line complexity
         var isAuto = !!options.isAuto;
 
         /**
