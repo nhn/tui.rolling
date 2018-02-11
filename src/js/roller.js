@@ -20,7 +20,7 @@ var movePanelSet = {
      * Set rolling container
      * @private
      */
-    _setContainer: function() {
+    _setContainer: function() { // eslint-disable-line complexity
         var options = this._options;
         var element = this._element;
         var firstChild = element.firstChild;
@@ -75,7 +75,7 @@ var movePanelSet = {
      * @returns {object} Element info
      * @private
      */
-    _getElementInfo: function() {
+    _getElementInfo: function() { // eslint-disable-line complexity
         var panel = this._container.firstChild;
         var options = this._options;
         var tag, className;
