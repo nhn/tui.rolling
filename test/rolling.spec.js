@@ -155,4 +155,34 @@ describe('rolling 테스트', function() {
             expect(afterMoveHandler).toHaveBeenCalled();
         });
     });
+
+    describe('usageStatistics', function() {
+        beforeEach(function() {
+            document.body.innerHTML = '';
+            loadFixtures('test/fixtures/rolling.html');
+        });
+
+        it('without usageStatistics option, image ping should occur.', function() {
+            var div1 = document.getElementById('rolling1');
+            var rolling = new Rolling({
+                element: div1,
+                isAuto: true
+            }, ['a1', 'a2', 'a3']);
+
+            rolling.roll();
+            expect(document.querySelector('.ga-tracking')).not.toBeNull();
+        });
+
+        it('usageStatistics is false, then image ping should not occur.', function() {
+            var div1 = document.getElementById('rolling1');
+            var rolling = new Rolling({
+                element: div1,
+                isAuto: true,
+                usageStatistics: false
+            }, ['a1', 'a2', 'a3']);
+
+            rolling.roll();
+            expect(document.querySelector('.ga-tracking')).toBeNull();
+        });
+    });
 });
