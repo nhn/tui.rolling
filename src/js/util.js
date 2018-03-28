@@ -16,32 +16,20 @@ var util = (function() {
     /**
      * send host name
      * @ignore
+     * @returns {Boolean}
      */
     function sendHostName() {
-        var trackingUrl = 'https://www.google-analytics.com/collect';
-        var trackingID = 'UA-115377265-7';
-        var hitType = 'event';
         var hostname = location.hostname;
-        var params = {
+        var imgElement = snippet.imagePing('https://www.google-analytics.com/collect', {
             v: 1,
-            t: hitType,
-            tid: trackingID,
+            t: 'event',
+            tid: 'UA-115377265-7',
             cid: hostname,
             dp: hostname,
             dh: hostname
-        };
-        var queryString = snippet.map(snippet.keys(params), function(key, index) {
-            var startWith = index === 0 ? '' : '&';
+        });
 
-            return startWith + key + '=' + params[key];
-        }).join('');
-        var trackingElement = document.createElement('img');
-        trackingElement.className = 'ga-tracking';
-
-        trackingElement.src = trackingUrl + '?' + queryString;
-        trackingElement.style.display = 'none';
-
-        document.body.appendChild(trackingElement);
+        return !!imgElement;
     }
 
     return {
