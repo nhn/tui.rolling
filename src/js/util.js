@@ -16,20 +16,17 @@ var util = (function() {
     /**
      * send host name
      * @ignore
-     * @returns {Boolean}
      */
     function sendHostName() {
         var hostname = location.hostname;
-        var imgElement = snippet.imagePing('https://www.google-analytics.com/collect', {
+        snippet.imagePing('https://www.google-analytics.com/collect', {
             v: 1,
             t: 'event',
-            tid: 'UA-115377265-7',
+            tid: 'UA-115377265-9',
             cid: hostname,
             dp: hostname,
-            dh: hostname
+            dh: 'rolling'
         });
-
-        return !!imgElement;
     }
 
     return {

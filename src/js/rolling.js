@@ -110,7 +110,9 @@ var Rolling = snippet.defineClass(/** @lends Rolling.prototype */{
             this.auto();
         }
 
-        this.isSendHostName = (usageStatistics) ? util.sendHostName() : false;
+        if (usageStatistics) {
+            util.sendHostName();
+        }
     },
 
     /* eslint-disable complexity */
