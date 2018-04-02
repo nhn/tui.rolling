@@ -80,7 +80,7 @@ $ bower install tui-rolling#<tag> # Specific version
 
 
 ### Via Contents Delivery Network (CDN)
-TOAST UI Component: Rolling is available over a CDN.
+The TOAST UI Component: Rolling is available over a CDN.
 
 - You can use cdn as below.
 
