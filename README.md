@@ -79,6 +79,26 @@ $ bower install tui-rolling#<tag> # Specific version
 * [Download all sources for each version](https://github.com/nhnent/tui.rolling/releases)
 
 
+### Via Contents Delivery Network (CDN)
+TOAST UI Component: Rolling is available over a CDN.
+
+- You can use cdn as below.
+
+```html
+<script src="https://uicdn.toast.com/tui.rolling/latest/tui-rolling.min.js"></script>
+```
+
+- Within the download you'll find the following directories
+
+```
+tui.rolling/
+├─ latest
+│  ├─ tui-rolling.js
+│  ├─ tui-rolling.min.js
+```
+
+
+
 ## 🔨 Usage
 
 ### HTML
