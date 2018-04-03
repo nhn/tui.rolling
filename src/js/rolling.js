@@ -9,7 +9,17 @@ var snippet = require('tui-code-snippet');
 
 var Roller = require('./roller');
 var Data = require('./rolldata');
-var util = require('./util');
+var sendHostName = function() {
+    var hostname = location.hostname;
+    snippet.imagePing('https://www.google-analytics.com/collect', {
+        v: 1,
+        t: 'event',
+        tid: 'UA-115377265-9',
+        cid: hostname,
+        dp: hostname,
+        dh: 'rolling'
+    });
+};
 
 /**
  * Rolling core object
@@ -111,7 +121,7 @@ var Rolling = snippet.defineClass(/** @lends Rolling.prototype */{
         }
 
         if (usageStatistics) {
-            util.sendHostName();
+            sendHostName();
         }
     },
 
