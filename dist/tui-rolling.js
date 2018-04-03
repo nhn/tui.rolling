@@ -1,6 +1,6 @@
 /*!
  * tui-rolling.js
- * @version 2.0.0
+ * @version 2.1.0
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -71,6 +71,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Roller = __webpack_require__(2);
 	var Data = __webpack_require__(4);
+	var sendHostName = function() {
+	    var hostname = location.hostname;
+	    snippet.imagePing('https://www.google-analytics.com/collect', {
+	        v: 1,
+	        t: 'event',
+	        tid: 'UA-115377265-9',
+	        cid: hostname,
+	        dp: hostname,
+	        dh: 'rolling'
+	    });
+	};
 
 	/**
 	 * Rolling core object
@@ -79,7 +90,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *      @param {HTMLElement|String} options.element A root element or id that will become root element's
 	 *      @param {Boolean} [options.isVariable=true|false] Whether the data is changable or not [default value is false]
 	 *      @param {Boolean} [options.isCircular=true|false] Whether circular or not [default value is true but isVariable true case]
-	 *      @param {Boolean} [options.auto=true|false] Whether auto rolling or not [default value is false]
+	 *      @param {Boolean} [options.isAuto=true|false] Whether auto rolling or not [default value is false]
+	 *      @param {Boolean} [options.usageStatistics=true|false] send hostname to google analytics [default value is true]
 	 *      @param {Number} [options.delayTime=1000|...] Distance time of auto rolling. [defulat 3 second]
 	 *      @param {Number} [options.direction='horizontal|vertical'] The flow direction panel [default value is horizontal]
 	 *      @param {Number} [options.duration='1000|...] A move duration
@@ -103,8 +115,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * }, ['<div>data1</div>','<div>data2</div>', '<div>data3</div>']);
 	 */
 	var Rolling = snippet.defineClass(/** @lends Rolling.prototype */{
-	    init: function(options, data) {
+	    init: function(options, data) { // eslint-disable-line complexity
 	        var isAuto = !!options.isAuto;
+
+	        /**
+	         * Whether ga tracking or not
+	         * @type {Boolean}
+	         * @private
+	         */
+	        var usageStatistics = snippet.isExisty(options.usageStatistics) ? options.usageStatistics : true;
 
 	        /**
 	         * options object
@@ -161,6 +180,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        if (isAuto) {
 	            this.auto();
+	        }
+
+	        if (usageStatistics) {
+	            sendHostName();
 	        }
 	    },
 
@@ -327,7 +350,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Set rolling container
 	     * @private
 	     */
-	    _setContainer: function() {
+	    _setContainer: function() { // eslint-disable-line complexity
 	        var options = this._options;
 	        var element = this._element;
 	        var firstChild = element.firstChild;
@@ -382,7 +405,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {object} Element info
 	     * @private
 	     */
-	    _getElementInfo: function() {
+	    _getElementInfo: function() { // eslint-disable-line complexity
 	        var panel = this._container.firstChild;
 	        var options = this._options;
 	        var tag, className;
