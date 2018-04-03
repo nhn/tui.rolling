@@ -1,5 +1,6 @@
 'use strict';
 
+var snippet = require('tui-code-snippet');
 var Rolling = require('../src/js/rolling');
 
 describe('rolling 테스트', function() {
@@ -153,6 +154,37 @@ describe('rolling 테스트', function() {
 
             expect(beforeMoveHandler).toHaveBeenCalled();
             expect(afterMoveHandler).toHaveBeenCalled();
+        });
+    });
+
+    describe('usageStatistics', function() {
+        it('without usageStatistics option, sendHostName should occur.', function() {
+            var rolling;
+            var div1 = document.getElementById('rolling1');
+            spyOn(snippet, 'imagePing');
+
+            rolling = new Rolling({
+                element: div1,
+                isAuto: true
+            }, ['a1', 'a2', 'a3']);
+            rolling.roll('data');
+
+            expect(snippet.imagePing).toHaveBeenCalled();
+        });
+
+        it('usageStatistics is false, then sendHostName should not occur.', function() {
+            var rolling;
+            var div1 = document.getElementById('rolling1');
+            spyOn(snippet, 'imagePing');
+
+            rolling = new Rolling({
+                element: div1,
+                isAuto: true,
+                usageStatistics: false
+            }, ['a1', 'a2', 'a3']);
+            rolling.roll('data');
+
+            expect(snippet.imagePing).not.toHaveBeenCalled();
         });
     });
 });
