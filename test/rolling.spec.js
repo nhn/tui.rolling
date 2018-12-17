@@ -161,7 +161,7 @@ describe('rolling 테스트', function() {
         it('without usageStatistics option, sendHostName should occur.', function() {
             var rolling;
             var div1 = document.getElementById('rolling1');
-            spyOn(snippet, 'imagePing');
+            spyOn(snippet, 'sendHostname');
 
             rolling = new Rolling({
                 element: div1,
@@ -169,13 +169,13 @@ describe('rolling 테스트', function() {
             }, ['a1', 'a2', 'a3']);
             rolling.roll('data');
 
-            expect(snippet.imagePing).toHaveBeenCalled();
+            expect(snippet.sendHostname).toHaveBeenCalled();
         });
 
         it('usageStatistics is false, then sendHostName should not occur.', function() {
             var rolling;
             var div1 = document.getElementById('rolling1');
-            spyOn(snippet, 'imagePing');
+            spyOn(snippet, 'sendHostname');
 
             rolling = new Rolling({
                 element: div1,
@@ -184,7 +184,7 @@ describe('rolling 테스트', function() {
             }, ['a1', 'a2', 'a3']);
             rolling.roll('data');
 
-            expect(snippet.imagePing).not.toHaveBeenCalled();
+            expect(snippet.sendHostname).not.toHaveBeenCalled();
         });
     });
 });
