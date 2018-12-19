@@ -1,6 +1,6 @@
 {
   "name": "tui-rolling",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "dist/tui-rolling",
   "scripts": {
     "test": "karma start --no-single-run",
@@ -50,6 +50,6 @@
     "webpack-dev-server": "^1.11.0"
   },
   "dependencies": {
-    "tui-code-snippet": "^1.3.0"
+    "tui-code-snippet": "^1.5.0"
   }
 }
