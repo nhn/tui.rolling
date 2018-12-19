@@ -1,6 +1,6 @@
 {
   "name": "tui-rolling",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "dist/tui-rolling",
   "scripts": {
     "test": "karma start --no-single-run",
