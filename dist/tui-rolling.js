@@ -1,6 +1,6 @@
 /*!
  * tui-rolling.js
- * @version 2.1.0
+ * @version 2.2.0
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -71,17 +71,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Roller = __webpack_require__(2);
 	var Data = __webpack_require__(4);
-	var sendHostName = function() {
-	    var hostname = location.hostname;
-	    snippet.imagePing('https://www.google-analytics.com/collect', {
-	        v: 1,
-	        t: 'event',
-	        tid: 'UA-115377265-9',
-	        cid: hostname,
-	        dp: hostname,
-	        dh: 'rolling'
-	    });
-	};
 
 	/**
 	 * Rolling core object
@@ -183,7 +172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        if (usageStatistics) {
-	            sendHostName();
+	            snippet.sendHostname('rolling', 'UA-129987462-1');
 	        }
 	    },
 
