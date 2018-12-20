@@ -149,7 +149,7 @@ var Rolling = require('tui-rolling'); /* CommonJS */
 ```
 
 ``` javascript
-import {Rolling} from 'tui-rolling'; /* ES6 */
+import Rolling from 'tui-rolling'; /* ES6 */
 ```
 
 You can create an instance with [options](https://nhnent.github.io/tui.gesture-reader/latest/Reader.html) and call various APIs after creating an instance.
