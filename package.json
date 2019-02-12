@@ -1,15 +1,18 @@
 {
   "name": "tui-rolling",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "main": "dist/tui-rolling",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "karma start --no-single-run",
     "test:ne": "KARMA_SERVER=ne karma start",
     "bundle": "webpack && webpack -p",
     "serve": "webpack-dev-server --inline --hot -d",
     "serve:ie8": "webpack-dev-server -d",
-    "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
-    "doc": "jsdoc -c jsdoc.conf.json && npm run cpy-dist2doc"
+    "doc:dev": "tuidoc --dev",
+    "doc": "tuidoc"
   },
   "description": "TOAST UI Component: Rolling",
   "repository": {
@@ -32,7 +35,6 @@
     "istanbul-instrumenter-loader": "^1.0.0",
     "jasmine-core": "^2.4.1",
     "jasmine-jquery": "^2.1.0",
-    "jsdoc": "^3.5.4",
     "karma": "1.3.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",

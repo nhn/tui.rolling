@@ -212,8 +212,8 @@ var movePanelSet = {
 
         /**
          * @event Rolling#beforeMove
-         * @param {object} ev - Custom event object
-         *     @param {String} ev.data - Inner HTML
+         * @type {object} ev - Custom event object
+         * @property {String} data - Inner HTML
          * @example
          * instance.on('beforeMove', function(ev) {
          *     console.log(ev.data)
