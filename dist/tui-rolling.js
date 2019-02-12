@@ -1,6 +1,6 @@
 /*!
  * tui-rolling.js
- * @version 2.2.0
+ * @version 2.2.1
  * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
  * @license MIT
  */
@@ -531,8 +531,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        /**
 	         * @event Rolling#beforeMove
-	         * @param {object} ev - Custom event object
-	         *     @param {String} ev.data - Inner HTML
+	         * @type {object} ev - Custom event object
+	         * @property {String} data - Inner HTML
 	         * @example
 	         * instance.on('beforeMove', function(ev) {
 	         *     console.log(ev.data)
