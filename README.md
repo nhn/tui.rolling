@@ -66,8 +66,8 @@ tui.usageStatistics = false;
 
 
 ## 🐾 Examples
-* [Basic](https://nhnent.github.io/tui.rolling/latest/tutorial-example01-basic.html) : Example of using default options.
-* [Using animation](https://nhnent.github.io/tui.rolling/latest/tutorial-example06-effect.html) : Example of applying easing animation to rolling items.
+* [Basic](https://nhnent.github.io/tui.rolling/latest/tutorial-example01-basic) : Example of using default options.
+* [Using animation](https://nhnent.github.io/tui.rolling/latest/tutorial-example06-effect) : Example of applying easing animation to rolling items.
 
 More examples can be found on the left sidebar of each example page, and have fun with it.
 
@@ -131,7 +131,7 @@ tui.rolling/
 ### HTML
 
 Add the container element with children elements to create the component.
-See [here](https://nhnent.github.io/tui.rolling/latest/tutorial-example01-basic.html#) for information about the added element.
+See [here](https://nhnent.github.io/tui.rolling/latest/tutorial-example01-basic) for information about the added element.
 
 ### JavaScript
 
@@ -152,7 +152,7 @@ var Rolling = require('tui-rolling'); /* CommonJS */
 import Rolling from 'tui-rolling'; /* ES6 */
 ```
 
-You can create an instance with [options](https://nhnent.github.io/tui.gesture-reader/latest/Reader.html) and call various APIs after creating an instance.
+You can create an instance with [options](https://nhnent.github.io/tui.rolling/latest/Rolling) and call various APIs after creating an instance.
 
 ``` javascript
 var instance = new Rolling({
@@ -163,7 +163,7 @@ var instance = new Rolling({
 instance.roll( ... );
 ```
 
-For more information about the API, please see [here](https://nhnent.github.io/tui.rolling/latest/Rolling.html).
+For more information about the API, please see [here](https://nhnent.github.io/tui.rolling/latest/Rolling).
 
 
 ## 🔧 Pull Request Steps
