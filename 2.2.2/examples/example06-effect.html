@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>6. Effect</title>
+        <link rel="stylesheet" type="text/css" href="./css/tui-example-style.css" />
+        <link rel="stylesheet" type="text/css" href="./css/common.css" />
+        <style>
+            ul, ol, li { list-style:none }
+            .rolling { width: 300px; height:80px;margin:30px auto;}
+            .pan1 { background-color: #9381ff; }
+            .pan2 { background-color: #f1ff4a; }
+            .pan3 { background-color: #ff9c69; }
+            .pan4 { background-color: #7effcb; }
+            .pan5 { background-color: #e781ff; }
+            .panel-heading {width:100%;height:100%;}
+        </style>
+    </head>
+
+    <body>
+        <div class="code-html">
+            <div class="panel panel-primary">
+                <div id="rolling" class="rolling">
+                    <ul>
+                        <li class="panel"></li>
+                    </ul>
+                </div>
+                <div id="rolling1" class="rolling">
+                    <ul>
+                        <li class="panel"></li>
+                    </ul>
+                </div>
+                <div id="rolling2" class="rolling">
+                    <ul>
+                        <li class="panel"></li>
+                    </ul>
+                </div>
+                <div id="rolling3" class="rolling">
+                    <ul>
+                        <li class="panel"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js"></script>
+        <script type="text/javascript" src="../dist/tui-rolling.js"></script>
+        <script class="code-js">
+
+            var htmlData = [
+                '<div class="panel-heading pan1">data1</div>',
+                '<div class="panel-heading pan2">data2</div>',
+                '<div class="panel-heading pan3">data3</div>',
+                '<div class="panel-heading pan4">data4</div>',
+                '<div class="panel-heading pan5">data5</div>'
+            ];
+
+            var rolling1 = new tui.Rolling({
+                element: document.getElementById('rolling'),
+                direction: 'horizontal',
+                isVariable: false,
+                isAuto: true,
+                duration: 400,
+                motion: 'linear',
+                flow: 'prev',
+                isCircle: true
+            }, htmlData);
+
+            var rolling2 = new tui.Rolling({
+                element: document.getElementById('rolling1'),
+                direction: 'horizontal',
+                isVariable: false,
+                isAuto: true,
+                duration: 400,
+                motion: 'easeIn',
+                flow: 'prev',
+                isCircle: true
+            }, htmlData);
+
+            var rolling3 = new tui.Rolling({
+                element: document.getElementById('rolling2'),
+                direction: 'horizontal',
+                isVariable: false,
+                isAuto: true,
+                duration: 400,
+                motion: 'easeOut',
+                isCircle: true
+            }, htmlData);
+
+            var rolling4 = new tui.Rolling({
+                element: document.getElementById('rolling3'),
+                direction: 'horizontal',
+                isVariable: false,
+                isAuto: true,
+                duration: 400,
+                motion: 'easeInOut',
+                isCircle: true
+            }, htmlData);
+
+        </script>
+    </body>
+</html>

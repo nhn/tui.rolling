@@ -1,7 +1,7 @@
 /*!
  * tui-rolling.js
- * @version 2.2.1
- * @author NHNEnt FE Development Lab <dl_javascript@nhnent.com>
+ * @version 2.2.2
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -62,7 +62,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * @fileoverview Rolling component core.
-	 * @author NHN Ent. FE dev team.<dl_javascript@nhnent.com>
+	 * @author NHN. FE dev Lab.<dl_javascript@nhn.com>
 	 */
 
 	'use strict';
@@ -319,7 +319,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * @fileoverview Roller
-	 * @author NHN Ent. FE dev team.<dl_javascript@nhnent.com>
+	 * @author NHN. FE dev Lab.<dl_javascript@nhn.com>
 	 */
 
 	'use strict';
@@ -1284,7 +1284,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * @fileoverview Module of motions
-	 * @author NHN Ent. FE dev team.<dl_javascript@nhnent.com>
+	 * @author NHN. FE dev Lab.<dl_javascript@nhn.com>
 	 */
 
 	'use strict';
@@ -1450,7 +1450,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * @fileoverview A data for move
-	 * @author NHN Ent. FE dev team.<dl_javascript@nhnent.com>
+	 * @author NHN. FE dev Lab.<dl_javascript@nhn.com>
 	 */
 
 	'use strict';

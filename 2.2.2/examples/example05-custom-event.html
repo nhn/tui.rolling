@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>5. Custom Event</title>
+        <link rel="stylesheet" type="text/css" href="./css/tui-example-style.css" />
+        <link rel="stylesheet" type="text/css" href="./css/common.css" />
+        <style>
+            ul, ol, li { list-style:none }
+            .rolling { width: 300px; height:150px;margin:30px auto;}
+            .panel-heading.pan {width:100%;height:100%;background-color: #6d676b; color:#fff}
+        </style>
+    </head>
+
+    <body>
+        <div class="code-html">
+            <div class="panel panel-primary">
+                <div class="example">
+                    <div id="rolling" class="rolling">
+                        <ul>
+                            <li class="panel"></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group" id="control">
+                        <button class="prev">prev</button>
+                        <button class="next">next</button>
+                    </div>
+                </div>
+                <div id="status" class="status">status : init</div>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js"></script>
+        <script type="text/javascript" src="../dist/tui-rolling.js"></script>
+        <script class="code-js">
+
+            var htmlData = '<div class="panel-heading pan">default content</div>';
+            var nextData = '<div class="panel-heading pan">next data</div>';
+            var prevData = '<div class="panel-heading pan">previous data</div>';
+
+            var rolling1 = new tui.Rolling({
+                element: document.getElementById('rolling'),
+                initNum: 0,
+                direction: 'horizontal',
+                isVariable: true,
+                duration: 400,
+                motion: 'linear',
+                isCircle: false
+            }, htmlData);
+
+            var control = document.getElementById('control');
+
+            control.onclick = function(e) {
+                var e = e || window.event;
+                var target = e.target || e.srcElement;
+                var className;
+
+                if (target.tagName.toLowerCase() !== 'button') {
+                    return;
+                }
+
+                className = target.className;
+
+                if (className.indexOf('prev') > -1) {
+                    rolling1.roll(nextData, 'prev');
+                } else {
+                    rolling1.roll(prevData, 'next');
+                }
+            };
+
+            var statusElement = document.getElementById('status');
+
+            rolling1.on('beforeMove', function() {
+                statusElement.style.backgroundColor = 'yellow';
+                statusElement.innerHTML = 'status : before moving';
+            });
+
+            rolling1.on('afterMove', function() {
+                statusElement.style.backgroundColor = 'green';
+                statusElement.innerHTML = 'stauts : after moving';
+            });
+
+        </script>
+    </body>
+</html>
