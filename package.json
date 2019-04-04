@@ -20,12 +20,13 @@
     "url": "https://github.com/nhnent/tui.rolling"
   },
   "keywords": [
+    "nhn",
     "nhnent",
     "tui",
     "component",
     "rolling"
   ],
-  "author": "NHNEnt FE Development Lab <dl_javascript@nhnent.com>",
+  "author": "NHN FE Development Lab <dl_javascript@nhn.com>",
   "license": "MIT",
   "devDependencies": {
     "es5-shim": "^4.5.9",
