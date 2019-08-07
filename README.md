@@ -1,11 +1,11 @@
 # TOAST UI Component : Rolling
 > Components that rotates and displays items such as a slideshow.
 
-[![GitHub release](https://img.shields.io/github/release/nhnent/tui.rolling.svg)](https://github.com/nhnent/tui.rolling/releases/latest)
+[![GitHub release](https://img.shields.io/github/release/nhn/tui.rolling.svg)](https://github.com/nhn/tui.rolling/releases/latest)
 [![npm](https://img.shields.io/npm/v/tui-rolling.svg)](https://www.npmjs.com/package/tui-rolling)
-[![GitHub license](https://img.shields.io/github/license/nhnent/tui.rolling.svg)](https://github.com/nhnent/tui.rolling/blob/production/LICENSE)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhnent/tui.project-name/labels/help%20wanted)
-[![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN-ff1414.svg)](https://github.com/nhnent)
+[![GitHub license](https://img.shields.io/github/license/nhn/tui.rolling.svg)](https://github.com/nhn/tui.rolling/blob/production/LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.project-name/labels/help%20wanted)
+[![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN-ff1414.svg)](https://github.com/nhn)
 
 
 ## 🚩 Table of Contents
@@ -45,7 +45,7 @@ var options = {
 var instance = new Rolling(options);
 ```
 
-Or, include [`tui-code-snippet`](https://github.com/nhnent/tui.code-snippet)(**v1.5.0** or **later**) and then immediately write the options as follows:
+Or, include [`tui-code-snippet`](https://github.com/nhn/tui.code-snippet)(**v1.5.0** or **later**) and then immediately write the options as follows:
 
 ```js
 tui.usageStatistics = false;
@@ -66,8 +66,8 @@ tui.usageStatistics = false;
 
 
 ## 🐾 Examples
-* [Basic](https://nhnent.github.io/tui.rolling/latest/tutorial-example01-basic) : Example of using default options.
-* [Using animation](https://nhnent.github.io/tui.rolling/latest/tutorial-example06-effect) : Example of applying easing animation to rolling items.
+* [Basic](https://nhn.github.io/tui.rolling/latest/tutorial-example01-basic) : Example of using default options.
+* [Using animation](https://nhn.github.io/tui.rolling/latest/tutorial-example06-effect) : Example of applying easing animation to rolling items.
 
 More examples can be found on the left sidebar of each example page, and have fun with it.
 
@@ -121,8 +121,8 @@ tui.rolling/
 
 
 ### Download Source Files
-* [Download bundle files](https://github.com/nhnent/tui.rolling/tree/production/dist)
-* [Download all sources for each version](https://github.com/nhnent/tui.rolling/releases)
+* [Download bundle files](https://github.com/nhn/tui.rolling/tree/production/dist)
+* [Download all sources for each version](https://github.com/nhn/tui.rolling/releases)
 
 
 
@@ -131,7 +131,7 @@ tui.rolling/
 ### HTML
 
 Add the container element with children elements to create the component.
-See [here](https://nhnent.github.io/tui.rolling/latest/tutorial-example01-basic) for information about the added element.
+See [here](https://nhn.github.io/tui.rolling/latest/tutorial-example01-basic) for information about the added element.
 
 ### JavaScript
 
@@ -152,7 +152,7 @@ var Rolling = require('tui-rolling'); /* CommonJS */
 import Rolling from 'tui-rolling'; /* ES6 */
 ```
 
-You can create an instance with [options](https://nhnent.github.io/tui.rolling/latest/Rolling) and call various APIs after creating an instance.
+You can create an instance with [options](https://nhn.github.io/tui.rolling/latest/Rolling) and call various APIs after creating an instance.
 
 ``` javascript
 var instance = new Rolling({
@@ -163,7 +163,7 @@ var instance = new Rolling({
 instance.roll( ... );
 ```
 
-For more information about the API, please see [here](https://nhnent.github.io/tui.rolling/latest/Rolling).
+For more information about the API, please see [here](https://nhn.github.io/tui.rolling/latest/Rolling).
 
 
 ## 🔧 Pull Request Steps
@@ -212,24 +212,24 @@ For more information on PR's step, please see links of Contributing section.
 
 
 ## 📙 Documents
-* [Getting Started](https://github.com/nhnent/tui.rolling/blob/production/docs/getting-started.md)
-* [Tutorials](https://github.com/nhnent/tui.rolling/tree/production/docs)
-* [APIs](https://nhnent.github.io/tui.rolling/latest)
+* [Getting Started](https://github.com/nhn/tui.rolling/blob/production/docs/getting-started.md)
+* [Tutorials](https://github.com/nhn/tui.rolling/tree/production/docs)
+* [APIs](https://nhn.github.io/tui.rolling/latest)
 
-You can also see the older versions of API page on the [releases page](https://github.com/nhnent/tui.rolling/releases).
+You can also see the older versions of API page on the [releases page](https://github.com/nhn/tui.rolling/releases).
 
 
 ## 💬 Contributing
-* [Code of Conduct](https://github.com/nhnent/tui.rolling/blob/production/CODE_OF_CONDUCT.md)
-* [Contributing guideline](https://github.com/nhnent/tui.rolling/blob/production/CONTRIBUTING.md)
-* [Issue guideline](https://github.com/nhnent/tui.rolling/blob/production/docs/ISSUE_TEMPLATE.md)
-* [Commit convention](https://github.com/nhnent/tui.rolling/blob/production/docs/COMMIT_MESSAGE_CONVENTION.md)
+* [Code of Conduct](https://github.com/nhn/tui.rolling/blob/production/CODE_OF_CONDUCT.md)
+* [Contributing guideline](https://github.com/nhn/tui.rolling/blob/production/CONTRIBUTING.md)
+* [Issue guideline](https://github.com/nhn/tui.rolling/blob/production/docs/ISSUE_TEMPLATE.md)
+* [Commit convention](https://github.com/nhn/tui.rolling/blob/production/docs/COMMIT_MESSAGE_CONVENTION.md)
 
 
 ## 🔩 Dependency
-* [tui-code-snippet](https://github.com/nhnent/tui.code-snippet) >=1.5.0
+* [tui-code-snippet](https://github.com/nhn/tui.code-snippet) >=1.5.0
 
 
 ## 📜 License
 
-This software is licensed under the [MIT](https://github.com/nhnent/tui.rolling/blob/production/LICENSE) © [NHN](https://github.com/nhnent).
+This software is licensed under the [MIT](https://github.com/nhn/tui.rolling/blob/production/LICENSE) © [NHN](https://github.com/nhn).
