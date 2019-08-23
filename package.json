@@ -1,6 +1,6 @@
 {
   "name": "tui-rolling",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "main": "dist/tui-rolling",
   "files": [
     "dist"
@@ -11,7 +11,8 @@
     "bundle": "webpack && webpack -p",
     "serve": "webpack-dev-server --inline --hot -d",
     "serve:ie8": "webpack-dev-server -d",
-    "doc": "tuidoc && tuidoc --serv"
+    "doc:serve": "tuidoc --serv",
+    "doc": "tuidoc"
   },
   "description": "TOAST UI Component: Rolling",
   "repository": {
@@ -46,7 +47,6 @@
     "karma-webdriver-launcher": "git+https://github.com/nhn/karma-webdriver-launcher.git#v1.2.0",
     "karma-webpack": "^1.8.0",
     "safe-umd-webpack-plugin": "^0.0.1",
-    "tui-jsdoc-template": "^1.1.0",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.11.0"
   },
