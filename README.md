@@ -8,7 +8,7 @@
 [![code with hearth by NHN](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN-ff1414.svg)](https://github.com/nhn)
 
 
-<p><a href="https://nhn.github.io/tui.pagination/latest/"><img src="https://user-images.githubusercontent.com/8615506/64505560-33e31100-d30f-11e9-89ea-f2af6bb71da6.gif" /></a></p>
+<p><a href="https://nhn.github.io/tui.rolling/latest/"><img src="https://user-images.githubusercontent.com/8615506/64505560-33e31100-d30f-11e9-89ea-f2af6bb71da6.gif" /></a></p>
 
 
 ## 🚩 Table of Contents
