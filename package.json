@@ -1,6 +1,6 @@
 {
   "name": "tui-rolling",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "main": "dist/tui-rolling",
   "files": [
     "dist"
