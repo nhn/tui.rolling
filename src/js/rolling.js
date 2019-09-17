@@ -41,77 +41,81 @@ var Data = require('./rolldata');
  *      duration: 2000
  * }, ['<div>data1</div>','<div>data2</div>', '<div>data3</div>']);
  */
-var Rolling = snippet.defineClass(/** @lends Rolling.prototype */{
-    init: function(options, data) { // eslint-disable-line complexity
-        var isAuto = !!options.isAuto;
+var Rolling = snippet.defineClass(
+  /** @lends Rolling.prototype */ {
+    // eslint-disable-next-line complexity
+    init: function(options, data) {
+      var isAuto = !!options.isAuto;
 
-        /**
-         * Whether ga tracking or not
-         * @type {Boolean}
-         * @private
-         */
-        var usageStatistics = snippet.isExisty(options.usageStatistics) ? options.usageStatistics : true;
+      /**
+       * Whether ga tracking or not
+       * @type {Boolean}
+       * @private
+       */
+      var usageStatistics = snippet.isExisty(options.usageStatistics)
+        ? options.usageStatistics
+        : true;
 
-        /**
-         * options object
-         * @type {Object}
-         * @private
-         */
-        this._options = options;
+      /**
+       * options object
+       * @type {Object}
+       * @private
+       */
+      this._options = options;
 
-        /**
-         * The flow of next move
-         * @type {String|string}
-         * @private
-         */
-        this._flow = options.flow || 'next';
+      /**
+       * The flow of next move
+       * @type {String|string}
+       * @private
+       */
+      this._flow = options.flow || 'next';
 
-        /**
-         * Whether html is drawn or not
-         * @type {boolean}
-         * @private
-         */
-        this._isDrawn = !!options.isDrawn;
+      /**
+       * Whether html is drawn or not
+       * @type {boolean}
+       * @private
+       */
+      this._isDrawn = !!options.isDrawn;
 
-        /**
-         * Auto rolling timer
-         * @type {null}
-         * @private
-         */
-        this._timer = null;
+      /**
+       * Auto rolling timer
+       * @type {null}
+       * @private
+       */
+      this._timer = null;
 
-        /**
-         * Auto rolling delay time
-         * @type {Number}
-         * @private
-         */
-        this._delayTime = options.delayTime || 3000;
+      /**
+       * Auto rolling delay time
+       * @type {Number}
+       * @private
+       */
+      this._delayTime = options.delayTime || 3000;
 
-        /**
-         * A model for rolling data
-         * @type {Data}
-         * @private
-         */
-        this._model = !options.isDrawn ? new Data(options, data) : null;
+      /**
+       * A model for rolling data
+       * @type {Data}
+       * @private
+       */
+      this._model = !options.isDrawn ? new Data(options, data) : null;
 
-        /**
-         * A rolling action object
-         * @type {Roller}
-         * @private
-         */
-        this._roller = new Roller(options, this._model && this._model.getData(), this);
+      /**
+       * A rolling action object
+       * @type {Roller}
+       * @private
+       */
+      this._roller = new Roller(options, this._model && this._model.getData(), this);
 
-        if (options.initNum) {
-            this.moveTo(options.initNum);
-        }
+      if (options.initNum) {
+        this.moveTo(options.initNum);
+      }
 
-        if (isAuto) {
-            this.auto();
-        }
+      if (isAuto) {
+        this.auto();
+      }
 
-        if (usageStatistics) {
-            snippet.sendHostname('rolling', 'UA-129987462-1');
-        }
+      if (usageStatistics) {
+        snippet.sendHostname('rolling', 'UA-129987462-1');
+      }
     },
 
     /* eslint-disable complexity */
@@ -123,33 +127,33 @@ var Rolling = snippet.defineClass(/** @lends Rolling.prototype */{
      * rolling.roll('<div>data</div>', 'horizontal');
      */
     roll: function(data, flow) {
-        var overBoundary;
+      var overBoundary;
 
-        flow = flow || this._flow;
+      flow = flow || this._flow;
 
-        // If rolling status is not idle, return
-        if (this._roller.status !== 'idle') {
-            return;
+      // If rolling status is not idle, return
+      if (this._roller.status !== 'idle') {
+        return;
+      }
+
+      if (this._options.isVariable) {
+        if (!data) {
+          throw new Error('roll must run with data');
         }
 
-        if (this._options.isVariable) {
-            if (!data) {
-                throw new Error('roll must run with data');
-            }
+        this.setFlow(flow);
+        this._roller.move(data);
+      } else {
+        this.setFlow(flow);
 
-            this.setFlow(flow);
-            this._roller.move(data);
-        } else {
-            this.setFlow(flow);
-
-            if (this._model) {
-                overBoundary = this._model.changeCurrent(flow);
-                data = this._model.getData();
-            }
-            if (!overBoundary) {
-                this._roller.move(data);
-            }
+        if (this._model) {
+          overBoundary = this._model.changeCurrent(flow);
+          data = this._model.getData();
         }
+        if (!overBoundary) {
+          this._roller.move(data);
+        }
+      }
     },
     /* eslint-enable complexity */
 
@@ -160,8 +164,8 @@ var Rolling = snippet.defineClass(/** @lends Rolling.prototype */{
      * rolling.setFlow('horizontal');
      */
     setFlow: function(flow) {
-        this._flow = flow;
-        this._roller.setFlow(flow);
+      this._flow = flow;
+      this._roller.setFlow(flow);
     },
 
     /* eslint-disable complexity */
@@ -172,40 +176,40 @@ var Rolling = snippet.defineClass(/** @lends Rolling.prototype */{
      * rolling.moveTo(3);
      */
     moveTo: function(page) {
-        var len, max, min, current;
-        var duration, absInterval, isPrev, flow, i;
+      var len, max, min, current;
+      var duration, absInterval, isPrev, flow, i;
 
-        if (this._isDrawn) {
-            this._roller.moveTo(page);
+      if (this._isDrawn) {
+        this._roller.moveTo(page);
 
-            return;
-        }
+        return;
+      }
 
-        len = this._model.getDataListLength();
-        max = Math.min(len, page);
-        min = Math.max(1, page);
-        current = this._model.getCurrent();
+      len = this._model.getDataListLength();
+      max = Math.min(len, page);
+      min = Math.max(1, page);
+      current = this._model.getCurrent();
 
-        if (isNaN(Number(page))) {
-            throw new Error('#PageError moveTo method have to run with page');
-        }
+      if (isNaN(Number(page))) {
+        throw new Error('#PageError moveTo method have to run with page');
+      }
 
-        if (this._options.isVariable) {
-            throw new Error('#DataError : Variable Rolling can\'t use moveTo');
-        }
+      if (this._options.isVariable) {
+        throw new Error("#DataError : Variable Rolling can't use moveTo");
+      }
 
-        isPrev = this.isNegative(page - current);
-        page = isPrev ? min : max;
-        flow = isPrev ? 'prev' : 'next';
-        absInterval = Math.abs(page - current);
-        duration = this._options.duration / absInterval;
+      isPrev = this.isNegative(page - current);
+      page = isPrev ? min : max;
+      flow = isPrev ? 'prev' : 'next';
+      absInterval = Math.abs(page - current);
+      duration = this._options.duration / absInterval;
 
-        this.setFlow(flow);
+      this.setFlow(flow);
 
-        for (i = 0; i < absInterval; i += 1) {
-            this._model.changeCurrent(flow);
-            this._roller.move(this._model.getData(), duration);
-        }
+      for (i = 0; i < absInterval; i += 1) {
+        this._model.changeCurrent(flow);
+        this._roller.move(this._model.getData(), duration);
+      }
     },
     /* eslint-enable complexity */
 
@@ -216,14 +220,14 @@ var Rolling = snippet.defineClass(/** @lends Rolling.prototype */{
      * @private
      */
     isNegative: function(number) {
-        return !isNaN(number) && number < 0;
+      return !isNaN(number) && number < 0;
     },
 
     /**
      * Stop auto rolling
      */
     stop: function() {
-        window.clearInterval(this._timer);
+      window.clearInterval(this._timer);
     },
 
     /**
@@ -232,13 +236,17 @@ var Rolling = snippet.defineClass(/** @lends Rolling.prototype */{
      * rolling.auto();
      */
     auto: function() {
-        this.stop();
-        this._timer = window.setInterval(snippet.bind(function() {
-            this._model.changeCurrent(this._flow);
-            this._roller.move(this._model.getData());
-        }, this), this._delayTime);
+      this.stop();
+      this._timer = window.setInterval(
+        snippet.bind(function() {
+          this._model.changeCurrent(this._flow);
+          this._roller.move(this._model.getData());
+        }, this),
+        this._delayTime
+      );
     }
-});
+  }
+);
 
 snippet.CustomEvents.mixin(Rolling);
 
