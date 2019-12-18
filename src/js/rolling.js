@@ -5,7 +5,10 @@
 
 'use strict';
 
-var snippet = require('tui-code-snippet');
+var CustomEvents = require('tui-code-snippet/customEvents/customEvents');
+var defineClass = require('tui-code-snippet/defineClass/defineClass');
+var isExisty = require('tui-code-snippet/type/isExisty');
+var util = require('./util');
 
 var Roller = require('./roller');
 var Data = require('./rolldata');
@@ -41,7 +44,7 @@ var Data = require('./rolldata');
  *      duration: 2000
  * }, ['<div>data1</div>','<div>data2</div>', '<div>data3</div>']);
  */
-var Rolling = snippet.defineClass(
+var Rolling = defineClass(
   /** @lends Rolling.prototype */ {
     // eslint-disable-next-line complexity
     init: function(options, data) {
@@ -52,7 +55,7 @@ var Rolling = snippet.defineClass(
        * @type {Boolean}
        * @private
        */
-      var usageStatistics = snippet.isExisty(options.usageStatistics)
+      var usageStatistics = isExisty(options.usageStatistics)
         ? options.usageStatistics
         : true;
 
@@ -114,7 +117,7 @@ var Rolling = snippet.defineClass(
       }
 
       if (usageStatistics) {
-        snippet.sendHostname('rolling', 'UA-129987462-1');
+        util.sendHostName();
       }
     },
 
@@ -238,7 +241,7 @@ var Rolling = snippet.defineClass(
     auto: function() {
       this.stop();
       this._timer = window.setInterval(
-        snippet.bind(function() {
+        util.bind(function() {
           this._model.changeCurrent(this._flow);
           this._roller.move(this._model.getData());
         }, this),
@@ -248,6 +251,6 @@ var Rolling = snippet.defineClass(
   }
 );
 
-snippet.CustomEvents.mixin(Rolling);
+CustomEvents.mixin(Rolling);
 
 module.exports = Rolling;

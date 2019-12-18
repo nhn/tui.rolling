@@ -1,7 +1,6 @@
 ### Load required files
 ```html
 ...
-<script type="text/javascript" src="tui-code-snippet.js"></script>
 <script type="text/javascript" src="tui-rolling.js"></script>
 ...
 ```

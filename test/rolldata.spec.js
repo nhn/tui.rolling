@@ -2,7 +2,7 @@
 
 var Data = require('../src/js/rolldata');
 
-describe('RollData Test', function() {
+describe('RollData', function() {
   var rollData1 = 'data1',
     rollData2 = ['a', 'b', 'c', 'd', 'e', 'f'],
     rollData3 = [100, 200, 300, 400, 500];
@@ -29,13 +29,13 @@ describe('RollData Test', function() {
       rollData3
     );
 
-  it('define model', function() {
+  it('should define a model.', function() {
     expect(model1).toBeDefined();
     expect(model2).toBeDefined();
     expect(model3).toBeDefined();
   });
 
-  it('_initData 데이터 초기화', function() {
+  it('should initialize data by _initData.', function() {
     var list1, list2, list3;
 
     model1._initData(rollData1);
@@ -51,24 +51,24 @@ describe('RollData Test', function() {
     expect(list3[2].data).toBe(rollData3[1]);
   });
 
-  it('setData, getData 가변데이터', function() {
+  it('should set and get data (handle changeable data).', function() {
     var value1, value2, value3, value4;
 
     value1 = model1.getData();
-    // 다음데이터 세팅
+    // Set next data
     model1.setData('next', 10);
     value2 = model1.getNextData();
 
     expect(value1).toBe('data1');
     expect(value2).toBe(10);
 
-    // 링크를 끊고, 대상을 데이터에 넣는다
+    // Disconnect the link
     model1.severLink('next');
     value3 = model1.getData();
 
     expect(value3).toBe(10);
 
-    // 이전데이터를 세팅하고 링크를 끊음
+    // Set previous data and disconnect the link
     model1.setData('prev', 100);
     model1.severLink('prev');
     value4 = model1.getData();
@@ -76,8 +76,8 @@ describe('RollData Test', function() {
     expect(value4).toBe(100);
   });
 
-  it('getNextData, getPrevData, getData 비가변 데이터', function() {
-    // 설정하지 않으면 initNum으로 들어간 값을 기준으로 선택됨 현재 list1의 initNum은 1
+  it('should get next, previous data (handle unchangeable data).', function() {
+    // list1's initNum = 1
     var value1, value2, value3;
 
     value1 = model2.getData();
@@ -97,7 +97,7 @@ describe('RollData Test', function() {
     expect(value3).toBe(300); // rollData3[2]
   });
 
-  it('changeCurrent 순환 비순환 테스트', function() {
+  it('should rotate by changeCurrent.', function() {
     var b1, b2, r1, r2;
     b1 = model2.getCurrent();
     b2 = model3.getCurrent();
@@ -108,9 +108,9 @@ describe('RollData Test', function() {
     r1 = model2.getCurrent();
     r2 = model3.getCurrent();
 
-    // 순환되지 않아 처음과 같은값
+    // initial value because it does not rotate
     expect(r1).toBe(b1);
-    // 순환되어 값이 달라진다
+    // value changes becuase it rotates
     expect(r2).not.toBe(b2);
   });
 
