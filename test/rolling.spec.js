@@ -60,14 +60,7 @@ describe('Rolling', function() {
       });
     });
 
-    it('should be defined.', function() {
-      expect(rolling1).toBeDefined();
-      expect(rolling2).toBeDefined();
-      expect(rolling3).toBeDefined();
-      expect(rolling4).toBeDefined();
-    });
-
-    it('should have a model depending on isDrawn (if isDrawn is true, it has a model).', function() {
+    it('should have a model depending on isDrawn (if isDrawn is true, it has a model)', function() {
       // !isDrawn
       expect(rolling1._model).toBeDefined();
       expect(rolling2._model).toBeDefined();
@@ -76,14 +69,14 @@ describe('Rolling', function() {
       expect(rolling4._model).toBe(null);
     });
 
-    it('should have a roller.', function() {
+    it('should have a roller', function() {
       expect(rolling1._roller).toBeDefined();
       expect(rolling2._roller).toBeDefined();
       expect(rolling3._roller).toBeDefined();
       expect(rolling4._roller).toBeDefined();
     });
 
-    it('should roll even if isDrawn is false.', function() {
+    it('should roll even if isDrawn is false', function() {
       var rollNum1 = rolling1._model.getCurrent();
       var rollNum2;
 
@@ -92,7 +85,7 @@ describe('Rolling', function() {
       expect(rollNum1).not.toBe(rollNum2);
     });
 
-    it('should move to the specific page.', function() {
+    it('should move to the specific page', function() {
       var error = false;
       rolling1.moveTo(3);
       expect(rolling1._model.getCurrent()).toBe(3);
@@ -113,12 +106,12 @@ describe('Rolling', function() {
       expect(error).not.toBeFalsy();
     });
 
-    it('should have a timer to stop and run if setting auto.', function() {
+    it('should have a timer to stop and run if setting auto', function() {
       rolling1.auto();
       expect(rolling1._timer).toBeDefined();
     });
 
-    it('should not set idle after calling roll.', function() {
+    it('should not set idle after calling roll', function() {
       var move = false;
       var error = false;
       var handler = function() {
@@ -141,12 +134,12 @@ describe('Rolling', function() {
       rolling1.roll('data');
     });
 
-    it('should be a Custom Event mixin.', function() {
+    it('should be a Custom Event mixin', function() {
       expect(rolling1.on).toBeDefined();
       expect(rolling2.on).toBeDefined();
     });
 
-    it('should bind custom events.', function() {
+    it('should bind custom events', function() {
       var beforeMoveHandler = jasmine.createSpy('before move event handler');
       var afterMoveHandler = jasmine.createSpy('after move event handler');
 
@@ -165,7 +158,7 @@ describe('Rolling', function() {
       spyOn(util, 'sendHostName');
     });
 
-    it('should send a hostname by default.', function() {
+    it('should send a hostname by default', function() {
       var rolling = new Rolling(
         {
           element: document.getElementById('rolling1'),
@@ -178,7 +171,7 @@ describe('Rolling', function() {
       expect(util.sendHostName).toHaveBeenCalled();
     });
 
-    it('should not send a hostname when usageStatistics option is false.', function() {
+    it('should not send a hostname when usageStatistics option is false', function() {
       var rolling = new Rolling(
         {
           element: document.getElementById('rolling1'),

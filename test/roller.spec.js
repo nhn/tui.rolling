@@ -92,21 +92,14 @@ describe('Roller', function() {
       });
     });
 
-    it('should define Roller.', function() {
-      expect(roller1).toBeDefined();
-      expect(roller2).toBeDefined();
-      expect(roller3).toBeDefined();
-      expect(roller4).toBeDefined();
-    });
-
-    it('can calculate itemcount when options.isDrawn is true.', function() {
+    it('should calculate itemcount when options.isDrawn is true', function() {
       var itemcount3 = roller3._itemcount,
         itemcount4 = roller4._itemcount;
       expect(itemcount3).toBe(3);
       expect(itemcount4).toBe(3);
     });
 
-    it('should return the distance without an unit.', function() {
+    it('should return the distance without an unit', function() {
       var distance1 = roller1._distance,
         distance2 = roller2._distance,
         distance3 = roller3._distance,
@@ -117,7 +110,7 @@ describe('Roller', function() {
       expect(distance4).toBe(100);
     });
 
-    it('should move when isDrawn is false.', function() {
+    it('should move when isDrawn is false', function() {
       var panel = roller1.panel;
 
       // roller1._getMoveSet
@@ -147,7 +140,7 @@ describe('Roller', function() {
       roller1.move(data, type);
     });
 
-    it('can get a starting point by getStartSet.', function() {
+    it('should get a starting point by getStartSet', function() {
       var startPoint = roller1._getStartSet(),
         panels = roller1.panel,
         set1 = panels[roller1._flow === 'prev' ? 'prev' : 'center'],
@@ -158,20 +151,20 @@ describe('Roller', function() {
       expect(startPoint[1]).toBe(set2);
     });
 
-    it('can get the distance to travel by _getMoveDistance.', function() {
+    it('should get the distance to travel by _getMoveDistance', function() {
       var distance = roller5._getMoveDistance('prev');
       expect(distance).toBe(0);
       distance = roller5._getMoveDistance('next');
       expect(distance).toBe(-(roller5._distance * roller5._unitCount));
     });
 
-    it('should change the position after executing _moveWithoutMotion.', function() {
+    it('should change the position after executing _moveWithoutMotion', function() {
       var before = roller5._container.style[roller5._range];
       roller5._moveWithoutMotion();
       expect(before).not.toBe(roller5._container.style[roller5._range]);
     });
 
-    it('should move when isDrawn is true.', function() {
+    it('should move when isDrawn is true', function() {
       var panels, moveset;
 
       // roller1._rotatePanel(type);
@@ -184,20 +177,20 @@ describe('Roller', function() {
       expect(panels[0]).toBe(moveset[0]);
     });
 
-    it('should change the animation effect by changeMotion.', function() {
+    it('should change the animation effect by changeMotion', function() {
       var roller = roller4._motion;
       roller4.changeMotion('easeIn');
       expect(roller).not.toBe(roller4._motion);
     });
 
-    it('should distinguish whether a flow is inside of the area or not.', function() {
+    it('should distinguish whether a flow is inside of the area or not', function() {
       var prev = roller5._isLimitPoint('prev'),
         next = roller5._isLimitPoint('next');
       expect(prev).toBeTruthy();
       expect(next).toBeFalsy();
     });
 
-    it('should get the distance between current index and selected page by _checkPagePosition and move a panel by moveTo.', function() {
+    it('should get the distance between current index and selected page by _checkPagePosition and move a panel by moveTo', function() {
       var before = roller4._basis,
         dist1 = roller4._checkPagePosition(8),
         dist2 = roller5._checkPagePosition(4);
@@ -261,7 +254,7 @@ describe('Roller', function() {
       );
     });
 
-    it('should move fixed panel by Roller.movePanelSet.', function() {
+    it('should move fixed panel by Roller.movePanelSet', function() {
       var beforePanel = roller2.panel[roller2._flow];
 
       spyOn(roller2._rolling, 'invoke').and.returnValue(true);
@@ -275,7 +268,7 @@ describe('Roller', function() {
       expect(beforePanel).not.toBe(roller2.panel.center);
     });
 
-    it('should move the container by Roller.moveContainerSet.', function(done) {
+    it('should move the container by Roller.moveContainerSet', function(done) {
       var last = roller4._panels[roller4._panels.length - 1].innerHTML;
       var callback = function() {
         expect(last).toBe(roller4._panels[0].innerHTML);
@@ -289,7 +282,7 @@ describe('Roller', function() {
       setTimeout(callback, 500);
     });
 
-    it('should move with no acceleration or deceleration (=linear).', function(done) {
+    it('should move with no acceleration or deceleration (=linear)', function(done) {
       var finalDelta;
       roller1._animate({
         delay: 10,
@@ -305,7 +298,7 @@ describe('Roller', function() {
       });
     });
 
-    it('should move with a power of 1 (=quad).', function(done) {
+    it('should move with a power of 1 (=quad)', function(done) {
       var finalDelta, finalDelta2, finalDelta3;
       roller1._animate({
         delay: 10,
@@ -349,7 +342,7 @@ describe('Roller', function() {
       }, 2000);
     });
 
-    it('should move with an abrupt change in velocity (=circ).', function(done) {
+    it('should move with an abrupt change in velocity (=circ)', function(done) {
       var finalDelta, finalDelta2, finalDelta3;
       roller1._animate({
         delay: 10,

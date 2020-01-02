@@ -29,13 +29,7 @@ describe('RollData', function() {
       rollData3
     );
 
-  it('should define a model.', function() {
-    expect(model1).toBeDefined();
-    expect(model2).toBeDefined();
-    expect(model3).toBeDefined();
-  });
-
-  it('should initialize data by _initData.', function() {
+  it('should initialize data by _initData', function() {
     var list1, list2, list3;
 
     model1._initData(rollData1);
@@ -51,7 +45,7 @@ describe('RollData', function() {
     expect(list3[2].data).toBe(rollData3[1]);
   });
 
-  it('should set and get data (handle changeable data).', function() {
+  it('should set and get data (handle changeable data)', function() {
     var value1, value2, value3, value4;
 
     value1 = model1.getData();
@@ -76,7 +70,7 @@ describe('RollData', function() {
     expect(value4).toBe(100);
   });
 
-  it('should get next, previous data (handle unchangeable data).', function() {
+  it('should get next, previous data (handle unchangeable data)', function() {
     // list1's initNum = 1
     var value1, value2, value3;
 
@@ -97,7 +91,7 @@ describe('RollData', function() {
     expect(value3).toBe(300); // rollData3[2]
   });
 
-  it('should rotate by changeCurrent.', function() {
+  it('should rotate by changeCurrent', function() {
     var b1, b2, r1, r2;
     b1 = model2.getCurrent();
     b2 = model3.getCurrent();
@@ -114,7 +108,7 @@ describe('RollData', function() {
     expect(r2).not.toBe(b2);
   });
 
-  it('getDataListLength', function() {
+  it('should get the length of data list', function() {
     var length = model2.getDataListLength();
     expect(length).toEqual(6);
   });
