@@ -1,7 +1,7 @@
 'use strict';
 
-var Rolling = require('../src/js/rolling');
-var util = require('../src/js/util');
+var Rolling = require('@/rolling');
+var util = require('@/util');
 
 describe('Rolling', function() {
   jasmine.getFixtures().fixturesPath = 'base';
@@ -14,10 +14,10 @@ describe('Rolling', function() {
     var rolling1, rolling2, rolling3, rolling4;
 
     beforeEach(function() {
-      var div1 = document.getElementById('rolling1'),
-        div2 = document.getElementById('rolling2'),
-        div3 = document.getElementById('rolling3'),
-        div4 = document.getElementById('rolling4');
+      var div1 = document.getElementById('rolling1');
+      var div2 = document.getElementById('rolling2');
+      var div3 = document.getElementById('rolling3');
+      var div4 = document.getElementById('rolling4');
 
       rolling1 = new Rolling(
         {

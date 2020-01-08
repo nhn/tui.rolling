@@ -55,9 +55,7 @@ var Rolling = defineClass(
        * @type {Boolean}
        * @private
        */
-      var usageStatistics = isExisty(options.usageStatistics)
-        ? options.usageStatistics
-        : true;
+      var usageStatistics = isExisty(options.usageStatistics) ? options.usageStatistics : true;
 
       /**
        * options object

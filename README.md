@@ -33,9 +33,9 @@ It also serves as important index to determine the future course of projects.
 
 ```js
 const options = {
-    element: document.getElementById('rolling'),
-    //...
-    usageStatistics: false
+  element: document.getElementById('rolling'),
+  //...
+  usageStatistics: false
 }
 
 const instance = new Rolling(options);
@@ -153,8 +153,8 @@ You can create an instance with [options](https://nhn.github.io/tui.rolling/late
 
 ``` javascript
 const instance = new Rolling({
-    element: document.getElementById('rolling'),
-    ...
+  element: document.getElementById('rolling'),
+  ...
 });
 
 instance.roll( ... );

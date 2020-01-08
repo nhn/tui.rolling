@@ -1,7 +1,6 @@
 ## Install
 
 ``` sh
-# npm
 $ npm install --save tui-rolling # Latest version
 $ npm install --save tui-rolling@<version> # Specific version
 ```
@@ -13,7 +12,6 @@ It can also be installed by using bower or downloaded by CDN. Please refer to th
 ### Import a component
 
 ```javascript
-// ES6
 import Rolling from 'tui-rolling';
 ```
 
@@ -27,27 +25,27 @@ It can also be used by namespace or CommonJS module. Please refer to the [🔨 U
 
 ```html
 <div id="rolling">
-    <ul>
-        <li class="panel">data1</li>
-        <li class="panel">data2</li>
-        <li class="panel">data3</li>
-        ...
-    </ul>
+  <ul>
+    <li class="panel">data1</li>
+    <li class="panel">data2</li>
+    <li class="panel">data3</li>
+    ...
+  </ul>
 </div>
 ```
 
 ```javascript
 const rolling = new Rolling({
-    element: document.getElementById('rolling'),
-    direction: 'horizontal',
-    isVariable: false,
-    isAuto: false,
-    duration: 400,
-    isCircular: true,
-    isDrawn: true,
-    initNum: 3,
-    motion: 'linear',
-    unit: 'page'
+  element: document.getElementById('rolling'),
+  direction: 'horizontal',
+  isVariable: false,
+  isAuto: false,
+  duration: 400,
+  isCircular: true,
+  isDrawn: true,
+  initNum: 3,
+  motion: 'linear',
+  unit: 'page'
 });
 ```
 
@@ -61,21 +59,21 @@ const rolling = new Rolling({
 
 ```javascript
 const htmlData = [
-    '<div class="panel">data1</div>',
-    '<div class="panel">data2</div>',
-    '<div class="panel">data3</div>',
-    ...
+  '<div class="panel">data1</div>',
+  '<div class="panel">data2</div>',
+  '<div class="panel">data3</div>',
+  ...
 ];
 
 const rolling = new Rolling({
-    element: document.getElementById('rolling'),
-    direction: 'horizontal',
-    isVariable: false,
-    duration: 400,
-    motion:'linear',
-    isAuto: true,
-    initNum: 3,
-    isCircular: false
+  element: document.getElementById('rolling'),
+  direction: 'horizontal',
+  isVariable: false,
+  duration: 400,
+  motion:'linear',
+  isAuto: true,
+  initNum: 3,
+  isCircular: false
 }, htmlData);
 ```
 
@@ -103,44 +101,44 @@ To control the rolling component movement by buttons, please refer to the follow
 
 ```html
 <div class="btn-group" id="control-play">
-    <button class="stop">Stop</button>
-    <button class="play">Play</button>
+  <button class="stop">Stop</button>
+  <button class="play">Play</button>
 </div>
 <div class="btn-group" id="control-move">
-    <button class="left">Previous</button>
-    <button class="right">Next</button>
+  <button class="left">Previous</button>
+  <button class="right">Next</button>
 </div>
 ```
 
 ```javascript
 const controlPlay = document.getElementById('control-play');
-controlPlay.onclick = function(ev) {
-    const {target} = ev;
-    if (target.tagName.toLowerCase() !== 'button') {
-        return;
-    }
-    
-    const {className} = target;
-    if (className.indexOf('stop') > -1) {
-        rolling.stop();
-    } else {
-        rolling.auto();
-    }
+controlPlay.onclick = ev => {
+  const {target} = ev;
+  if (target.tagName.toLowerCase() !== 'button') {
+    return;
+  }
+  
+  const {className} = target;
+  if (className.indexOf('stop') > -1) {
+    rolling.stop();
+  } else {
+    rolling.auto();
+  }
 };
 
 const controlMove = document.getElementById('control-move');
-controlMove.onclick = function(e) {
-    const {target} = ev;
-    if (target.tagName.toLowerCase() !== 'button') {
-        return;
-    }
-    
-    const {className} = target;
-    if (className.indexOf('left') > -1) {
-        rolling.roll(null, 'prev');
-    } else if (className.indexOf('right') > -1) {
-        rolling.roll(null, 'next');
-    }
+controlMove.onclick = ev => {
+  const { target } = ev;
+  if (target.tagName.toLowerCase() !== 'button') {
+    return;
+  }
+
+  const {className} = target;
+  if (className.indexOf('left') > -1) {
+    rolling.roll(null, 'prev');
+  } else if (className.indexOf('right') > -1) {
+    rolling.roll(null, 'next');
+  }
 };
 ```
 
@@ -152,15 +150,15 @@ You can add your custom events to invoke before and after moving the rolling com
 // Before apply this code, you should add a status element in HTML
 const statusElement = document.getElementById('status');
 rolling.on('beforeMove', function() {
-    statusElement.style.backgroundColor = 'yellow';
-    statusElement.innerHTML = 'state : move';
+  statusElement.style.backgroundColor = 'yellow';
+  statusElement.innerHTML = 'state : move';
 });
 rolling.on('afterMove', function() {
-    statusElement.style.backgroundColor = 'green';
-    statusElement.innerHTML = 'state : move end';
+  statusElement.style.backgroundColor = 'green';
+  statusElement.innerHTML = 'state : move end';
 });
 ```
 
 ## Notice
 
-* If `isVariable` is `true`, `isCircular` attribute could be ignored.
+* If `isVariable` sets to `true`, `isCircular` attribute could be ignored.

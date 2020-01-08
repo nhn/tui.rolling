@@ -1,11 +1,11 @@
 'use strict';
 
-var Data = require('../src/js/rolldata');
+var Data = require('@/rolldata');
 
 describe('RollData', function() {
-  var rollData1 = 'data1',
-    rollData2 = ['a', 'b', 'c', 'd', 'e', 'f'],
-    rollData3 = [100, 200, 300, 400, 500];
+  var rollData1 = 'data1';
+  var rollData2 = ['a', 'b', 'c', 'd', 'e', 'f'];
+  var rollData3 = [100, 200, 300, 400, 500];
 
   var model1 = new Data(
       {

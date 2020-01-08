@@ -145,10 +145,10 @@ var movePanelSet = {
    * @private
    */
   _appendMoveData: function() {
-    var flow = this._flow,
-      movePanel = this.panel[flow],
-      style = movePanel.style,
-      dest = (flow === 'prev' ? -this._distance : this._distance) + 'px';
+    var flow = this._flow;
+    var movePanel = this.panel[flow];
+    var style = movePanel.style;
+    var dest = (flow === 'prev' ? -this._distance : this._distance) + 'px';
 
     style[this._range] = dest;
 
@@ -341,9 +341,9 @@ var moveContainerSet = {
    * @private
    */
   _setContainer: function() {
-    var element = this._element,
-      firstChild = element.firstChild,
-      wrap;
+    var element = this._element;
+    var firstChild = element.firstChild;
+    var wrap;
     if (this._isDrawn) {
       wrap = isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
       this._container = wrap;
@@ -961,23 +961,24 @@ var Roller = defineClass(
      * @param {Object} options A options for animating
      */
     _animate: function(options) {
-      var start = new Date(),
-        id = window.setInterval(function() {
-          var timePassed = new Date() - start,
-            progress = timePassed / options.duration,
-            delta;
-          if (progress > 1) {
-            progress = 1;
-          }
-          delta = options.delta(progress);
+      var start = new Date();
+      var id = window.setInterval(function() {
+        var timePassed = new Date() - start;
+        var progress = timePassed / options.duration;
+        var delta;
 
-          options.step(delta);
+        if (progress > 1) {
+          progress = 1;
+        }
+        delta = options.delta(progress);
 
-          if (progress === 1) {
-            window.clearInterval(id);
-            options.complete();
-          }
-        }, options.delay || 10);
+        options.step(delta);
+
+        if (progress === 1) {
+          window.clearInterval(id);
+          options.complete();
+        }
+      }, options.delay || 10);
     }
   }
 );

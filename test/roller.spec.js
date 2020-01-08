@@ -1,9 +1,9 @@
 'use strict';
 
-var bind = require('../src/js/util').bind;
+var bind = require('@/util').bind;
 
-var Roller = require('../src/js/roller');
-var motion = require('../src/js/motion');
+var Roller = require('@/roller');
+var motion = require('@/motion');
 
 describe('Roller', function() {
   jasmine.getFixtures().fixturesPath = 'base/';
@@ -16,17 +16,15 @@ describe('Roller', function() {
 
   describe('instance', function() {
     var roller1, roller2, roller3, roller4, roller5;
-    var data = 'JsonCompare Nightmare',
-      type = 'next',
-      moveElement,
-      beforeCenter,
-      moveSet;
+    var data = 'JsonCompare Nightmare';
+    var type = 'next';
+    var moveElement, beforeCenter, moveSet;
 
     beforeEach(function() {
-      var div1 = document.getElementById('roller1'),
-        div2 = document.getElementById('roller2'),
-        div3 = document.getElementById('roller3'),
-        div4 = document.getElementById('roller4');
+      var div1 = document.getElementById('roller1');
+      var div2 = document.getElementById('roller2');
+      var div3 = document.getElementById('roller3');
+      var div4 = document.getElementById('roller4');
 
       roller1 = new Roller(
         {
@@ -93,21 +91,15 @@ describe('Roller', function() {
     });
 
     it('should calculate itemcount when options.isDrawn is true', function() {
-      var itemcount3 = roller3._itemcount,
-        itemcount4 = roller4._itemcount;
-      expect(itemcount3).toBe(3);
-      expect(itemcount4).toBe(3);
+      expect(roller3._itemcount).toBe(3);
+      expect(roller4._itemcount).toBe(3);
     });
 
     it('should return the distance without an unit', function() {
-      var distance1 = roller1._distance,
-        distance2 = roller2._distance,
-        distance3 = roller3._distance,
-        distance4 = roller4._distance;
-      expect(distance1).toBe(300);
-      expect(distance2).toBe(100);
-      expect(distance3).toBe(300);
-      expect(distance4).toBe(100);
+      expect(roller1._distance).toBe(300);
+      expect(roller2._distance).toBe(100);
+      expect(roller3._distance).toBe(300);
+      expect(roller4._distance).toBe(100);
     });
 
     it('should move when isDrawn is false', function() {
@@ -141,10 +133,10 @@ describe('Roller', function() {
     });
 
     it('should get a starting point by getStartSet', function() {
-      var startPoint = roller1._getStartSet(),
-        panels = roller1.panel,
-        set1 = panels[roller1._flow === 'prev' ? 'prev' : 'center'],
-        set2 = panels[roller1._flow === 'next' ? 'center' : 'next'];
+      var startPoint = roller1._getStartSet();
+      var panels = roller1.panel;
+      var set1 = panels[roller1._flow === 'prev' ? 'prev' : 'center'];
+      var set2 = panels[roller1._flow === 'next' ? 'center' : 'next'];
       set1 = parseInt(set1.style[roller1._range], 10);
       set2 = parseInt(set2.style[roller1._range], 10);
       expect(startPoint[0]).toBe(set1);
@@ -184,16 +176,14 @@ describe('Roller', function() {
     });
 
     it('should distinguish whether a flow is inside of the area or not', function() {
-      var prev = roller5._isLimitPoint('prev'),
-        next = roller5._isLimitPoint('next');
-      expect(prev).toBeTruthy();
-      expect(next).toBeFalsy();
+      expect(roller5._isLimitPoint('prev')).toBeTruthy();
+      expect(roller5._isLimitPoint('next')).toBeFalsy();
     });
 
     it('should get the distance between current index and selected page by _checkPagePosition and move a panel by moveTo', function() {
-      var before = roller4._basis,
-        dist1 = roller4._checkPagePosition(8),
-        dist2 = roller5._checkPagePosition(4);
+      var before = roller4._basis;
+      var dist1 = roller4._checkPagePosition(8);
+      var dist2 = roller5._checkPagePosition(4);
       roller4.moveTo(8);
 
       expect(dist1).toBe(8);
@@ -206,9 +196,9 @@ describe('Roller', function() {
     var roller1, roller2, roller4;
 
     beforeEach(function() {
-      var div1 = document.getElementById('roller1'),
-        div2 = document.getElementById('roller2'),
-        div4 = document.getElementById('roller4');
+      var div1 = document.getElementById('roller1');
+      var div2 = document.getElementById('roller2');
+      var div4 = document.getElementById('roller4');
 
       roller1 = new Roller(
         {
