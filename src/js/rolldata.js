@@ -5,7 +5,10 @@
 
 'use strict';
 
-var snippet = require('tui-code-snippet');
+var forEachArray = require('tui-code-snippet/collection/forEachArray');
+var defineClass = require('tui-code-snippet/defineClass/defineClass');
+var extend = require('tui-code-snippet/object/extend');
+var isBoolean = require('tui-code-snippet/type/isBoolean');
 
 /**
  * Node for each data panel
@@ -33,32 +36,28 @@ var staticDataMethods = {
    */
   _initData: function(datalist) {
     var before = null;
-    var first, nodelist;
+    var nodelist = [before];
+    var first;
 
-    nodelist = snippet.map(
-      datalist,
-      function(data, index) {
-        var node = new Node(data);
-        node.prev = before;
+    forEachArray(datalist, function(data, index) {
+      var node = new Node(data);
+      node.prev = before;
 
-        if (before) {
-          before.next = node;
-        } else {
-          first = node;
-        }
-        if (index === datalist.length - 1) {
-          node.next = first;
-          first.prev = node;
-        }
+      if (before) {
+        before.next = node;
+      } else {
+        first = node;
+      }
 
-        before = node;
+      if (index === datalist.length - 1) {
+        node.next = first;
+        first.prev = node;
+      }
 
-        return node;
-      },
-      this
-    );
+      before = node;
 
-    nodelist.unshift(null);
+      nodelist.push(node);
+    });
 
     this._datalist = nodelist;
   },
@@ -207,7 +206,7 @@ var remoteDataMethods = {
  * @constructor
  * @ignore
  */
-var Data = snippet.defineClass(
+var Data = defineClass(
   /** @lends Data.prototype */ {
     init: function(options, data) {
       /**
@@ -240,7 +239,7 @@ var Data = snippet.defineClass(
        * @type {Boolean}
        * @private
        */
-      this._isCircular = snippet.isBoolean(options.isCircular) ? options.isCircular : true;
+      this._isCircular = isBoolean(options.isCircular) ? options.isCircular : true;
 
       if (this.isVariable) {
         this.mixin(remoteDataMethods);
@@ -256,7 +255,7 @@ var Data = snippet.defineClass(
      * @param {Object} methods A method set [staticDataMethods|remoteDataMethods]
      */
     mixin: function(methods) {
-      snippet.extend(this, methods);
+      extend(this, methods);
     }
   }
 );

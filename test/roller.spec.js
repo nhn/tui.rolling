@@ -1,11 +1,11 @@
 'use strict';
 
-var snippet = require('tui-code-snippet');
+var bind = require('@/util').bind;
 
-var Roller = require('../src/js/roller');
-var motion = require('../src/js/motion');
+var Roller = require('@/roller');
+var motion = require('@/motion');
 
-describe('roller', function() {
+describe('Roller', function() {
   jasmine.getFixtures().fixturesPath = 'base/';
   jasmine.getStyleFixtures().fixturesPath = 'base/';
 
@@ -14,19 +14,17 @@ describe('roller', function() {
     loadStyleFixtures('test/fixtures/fixedhtml.css');
   });
 
-  describe('생성 및 확인', function() {
+  describe('instance', function() {
     var roller1, roller2, roller3, roller4, roller5;
-    var data = 'JsonCompare Nightmare',
-      type = 'next',
-      moveElement,
-      beforeCenter,
-      moveSet;
+    var data = 'JsonCompare Nightmare';
+    var type = 'next';
+    var moveElement, beforeCenter, moveSet;
 
     beforeEach(function() {
-      var div1 = document.getElementById('roller1'),
-        div2 = document.getElementById('roller2'),
-        div3 = document.getElementById('roller3'),
-        div4 = document.getElementById('roller4');
+      var div1 = document.getElementById('roller1');
+      var div2 = document.getElementById('roller2');
+      var div3 = document.getElementById('roller3');
+      var div4 = document.getElementById('roller4');
 
       roller1 = new Roller(
         {
@@ -92,32 +90,19 @@ describe('roller', function() {
       });
     });
 
-    it('defined roller', function() {
-      expect(roller1).toBeDefined();
-      expect(roller2).toBeDefined();
-      expect(roller3).toBeDefined();
-      expect(roller4).toBeDefined();
+    it('should calculate itemcount when options.isDrawn is true', function() {
+      expect(roller3._itemcount).toBe(3);
+      expect(roller4._itemcount).toBe(3);
     });
 
-    it('options.isDrawn : check itemcount', function() {
-      var itemcount3 = roller3._itemcount,
-        itemcount4 = roller4._itemcount;
-      expect(itemcount3).toBe(3);
-      expect(itemcount4).toBe(3);
+    it('should return the distance without an unit', function() {
+      expect(roller1._distance).toBe(300);
+      expect(roller2._distance).toBe(100);
+      expect(roller3._distance).toBe(300);
+      expect(roller4._distance).toBe(100);
     });
 
-    it('_setUnitDistance called?', function() {
-      var distance1 = roller1._distance,
-        distance2 = roller2._distance,
-        distance3 = roller3._distance,
-        distance4 = roller4._distance;
-      expect(distance1).toBe(300);
-      expect(distance2).toBe(100);
-      expect(distance3).toBe(300);
-      expect(distance4).toBe(100);
-    });
-
-    it('test move flow (not isDrawn)', function() {
+    it('should move when isDrawn is false', function() {
       var panel = roller1.panel;
 
       // roller1._getMoveSet
@@ -143,35 +128,35 @@ describe('roller', function() {
       expect(moveElement).toBe(panel[type]);
       expect(moveElement).toBe(beforeCenter);
 
-      // 상태 초기화 후 무브 수행;
+      // Move after initialize the status
       roller1.move(data, type);
     });
 
-    it('getStartSet 시작점을 구해온다.', function() {
-      var startPoint = roller1._getStartSet(),
-        panels = roller1.panel,
-        set1 = panels[roller1._flow === 'prev' ? 'prev' : 'center'],
-        set2 = panels[roller1._flow === 'next' ? 'center' : 'next'];
+    it('should get a starting point by getStartSet', function() {
+      var startPoint = roller1._getStartSet();
+      var panels = roller1.panel;
+      var set1 = panels[roller1._flow === 'prev' ? 'prev' : 'center'];
+      var set2 = panels[roller1._flow === 'next' ? 'center' : 'next'];
       set1 = parseInt(set1.style[roller1._range], 10);
       set2 = parseInt(set2.style[roller1._range], 10);
       expect(startPoint[0]).toBe(set1);
       expect(startPoint[1]).toBe(set2);
     });
 
-    it('_getMoveDistance 이동거리를 구한다.', function() {
+    it('should get the distance to travel by _getMoveDistance', function() {
       var distance = roller5._getMoveDistance('prev');
       expect(distance).toBe(0);
       distance = roller5._getMoveDistance('next');
       expect(distance).toBe(-(roller5._distance * roller5._unitCount));
     });
 
-    it('_moveWithoutMotion', function() {
+    it('should change the position after executing _moveWithoutMotion', function() {
       var before = roller5._container.style[roller5._range];
       roller5._moveWithoutMotion();
       expect(before).not.toBe(roller5._container.style[roller5._range]);
     });
 
-    it('test move flow (isDrawn)', function() {
+    it('should move when isDrawn is true', function() {
       var panels, moveset;
 
       // roller1._rotatePanel(type);
@@ -184,39 +169,36 @@ describe('roller', function() {
       expect(panels[0]).toBe(moveset[0]);
     });
 
-    it('changeMotion', function() {
+    it('should change the animation effect by changeMotion', function() {
       var roller = roller4._motion;
       roller4.changeMotion('easeIn');
       expect(roller).not.toBe(roller4._motion);
     });
 
-    it('_isLimitPoint', function() {
-      var prev = roller5._isLimitPoint('prev'),
-        next = roller5._isLimitPoint('next');
-      expect(prev).toBeTruthy();
-      expect(next).toBeFalsy();
+    it('should distinguish whether a flow is inside of the area or not', function() {
+      expect(roller5._isLimitPoint('prev')).toBeTruthy();
+      expect(roller5._isLimitPoint('next')).toBeFalsy();
     });
 
-    it('_checkPagePosition, moveTo', function() {
-      var before = roller4._basis,
-        dist1 = roller4._checkPagePosition(8),
-        dist2 = roller5._checkPagePosition(4);
+    it('should get the distance between current index and selected page by _checkPagePosition and move a panel by moveTo', function() {
+      var before = roller4._basis;
+      var dist1 = roller4._checkPagePosition(8);
+      var dist2 = roller5._checkPagePosition(4);
       roller4.moveTo(8);
-      roller5.moveTo(5);
 
       expect(dist1).toBe(8);
-      expect(before).not.toBe(roller1._basis);
+      expect(before).not.toBe(roller4._basis);
       expect(dist2).toBe(4);
     });
   });
 
-  describe('모션 테스트', function() {
+  describe('motion', function() {
     var roller1, roller2, roller4;
 
     beforeEach(function() {
-      var div1 = document.getElementById('roller1'),
-        div2 = document.getElementById('roller2'),
-        div4 = document.getElementById('roller4');
+      var div1 = document.getElementById('roller1');
+      var div2 = document.getElementById('roller2');
+      var div4 = document.getElementById('roller4');
 
       roller1 = new Roller(
         {
@@ -262,7 +244,7 @@ describe('roller', function() {
       );
     });
 
-    it('Roller.movePanelSet move', function() {
+    it('should move fixed panel by Roller.movePanelSet', function() {
       var beforePanel = roller2.panel[roller2._flow];
 
       spyOn(roller2._rolling, 'invoke').and.returnValue(true);
@@ -276,7 +258,7 @@ describe('roller', function() {
       expect(beforePanel).not.toBe(roller2.panel.center);
     });
 
-    it('Roller.moveContainerSet move', function(done) {
+    it('should move the container by Roller.moveContainerSet', function(done) {
       var last = roller4._panels[roller4._panels.length - 1].innerHTML;
       var callback = function() {
         expect(last).toBe(roller4._panels[0].innerHTML);
@@ -290,13 +272,13 @@ describe('roller', function() {
       setTimeout(callback, 500);
     });
 
-    it('Roller motion linear', function(done) {
+    it('should move with no acceleration or deceleration (=linear)', function(done) {
       var finalDelta;
       roller1._animate({
         delay: 10,
         duration: 500,
         delta: motion.linear,
-        step: snippet.bind(function(delta) {
+        step: bind(function(delta) {
           finalDelta = delta;
         }, roller1),
         complete: function() {
@@ -306,13 +288,13 @@ describe('roller', function() {
       });
     });
 
-    it('Roller motion quad', function(done) {
+    it('should move with a power of 1 (=quad)', function(done) {
       var finalDelta, finalDelta2, finalDelta3;
       roller1._animate({
         delay: 10,
         duration: 500,
         delta: motion.quadEaseIn,
-        step: snippet.bind(function(delta) {
+        step: bind(function(delta) {
           finalDelta = delta;
         }, roller1),
         complete: function() {}
@@ -327,7 +309,7 @@ describe('roller', function() {
         delay: 10,
         duration: 400,
         delta: motion.quadEaseOut,
-        step: snippet.bind(function(delta) {
+        step: bind(function(delta) {
           finalDelta2 = delta;
         }, roller1),
         complete: function() {}
@@ -337,7 +319,7 @@ describe('roller', function() {
         delay: 10,
         duration: 400,
         delta: motion.quadEaseInOut,
-        step: snippet.bind(function(delta) {
+        step: bind(function(delta) {
           finalDelta3 = delta;
         }, roller1),
         complete: function() {}
@@ -350,13 +332,13 @@ describe('roller', function() {
       }, 2000);
     });
 
-    it('Roller motion circ', function(done) {
+    it('should move with an abrupt change in velocity (=circ)', function(done) {
       var finalDelta, finalDelta2, finalDelta3;
       roller1._animate({
         delay: 10,
         duration: 100,
         delta: motion.circEaseIn,
-        step: snippet.bind(function(delta) {
+        step: bind(function(delta) {
           finalDelta = delta;
         }, roller1),
         complete: function() {}
@@ -366,7 +348,7 @@ describe('roller', function() {
         delay: 10,
         duration: 100,
         delta: motion.circEaseOut,
-        step: snippet.bind(function(delta) {
+        step: bind(function(delta) {
           finalDelta2 = delta;
         }, roller1),
         complete: function() {}
@@ -376,7 +358,7 @@ describe('roller', function() {
         delay: 10,
         duration: 100,
         delta: motion.circEaseInOut,
-        step: snippet.bind(function(delta) {
+        step: bind(function(delta) {
           finalDelta3 = delta;
         }, roller1),
         complete: function() {}
