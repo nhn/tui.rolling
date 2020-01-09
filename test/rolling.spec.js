@@ -1,23 +1,23 @@
 'use strict';
 
-var snippet = require('tui-code-snippet');
-var Rolling = require('../src/js/rolling');
+var Rolling = require('@/rolling');
+var util = require('@/util');
 
-describe('rolling 테스트', function() {
+describe('Rolling', function() {
   jasmine.getFixtures().fixturesPath = 'base';
 
   beforeEach(function() {
     loadFixtures('test/fixtures/rolling.html');
   });
 
-  describe('생성 및 동작 테스트', function() {
+  describe('instance', function() {
     var rolling1, rolling2, rolling3, rolling4;
 
     beforeEach(function() {
-      var div1 = document.getElementById('rolling1'),
-        div2 = document.getElementById('rolling2'),
-        div3 = document.getElementById('rolling3'),
-        div4 = document.getElementById('rolling4');
+      var div1 = document.getElementById('rolling1');
+      var div2 = document.getElementById('rolling2');
+      var div3 = document.getElementById('rolling3');
+      var div4 = document.getElementById('rolling4');
 
       rolling1 = new Rolling(
         {
@@ -60,14 +60,7 @@ describe('rolling 테스트', function() {
       });
     });
 
-    it('롤링 생성', function() {
-      expect(rolling1).toBeDefined();
-      expect(rolling2).toBeDefined();
-      expect(rolling3).toBeDefined();
-      expect(rolling4).toBeDefined();
-    });
-
-    it('isDrawn 에 따른 모델 존재', function() {
+    it('should have a model depending on isDrawn (if isDrawn is true, it has a model)', function() {
       // !isDrawn
       expect(rolling1._model).toBeDefined();
       expect(rolling2._model).toBeDefined();
@@ -76,14 +69,14 @@ describe('rolling 테스트', function() {
       expect(rolling4._model).toBe(null);
     });
 
-    it('is Defined roller', function() {
+    it('should have a roller', function() {
       expect(rolling1._roller).toBeDefined();
       expect(rolling2._roller).toBeDefined();
       expect(rolling3._roller).toBeDefined();
       expect(rolling4._roller).toBeDefined();
     });
 
-    it('roll , 롤링 작동확인 (!isDrwan)', function() {
+    it('should roll even if isDrawn is false', function() {
       var rollNum1 = rolling1._model.getCurrent();
       var rollNum2;
 
@@ -92,7 +85,7 @@ describe('rolling 테스트', function() {
       expect(rollNum1).not.toBe(rollNum2);
     });
 
-    it('moveTo test', function() {
+    it('should move to the specific page', function() {
       var error = false;
       rolling1.moveTo(3);
       expect(rolling1._model.getCurrent()).toBe(3);
@@ -113,12 +106,12 @@ describe('rolling 테스트', function() {
       expect(error).not.toBeFalsy();
     });
 
-    it('auto And Stop', function() {
+    it('should have a timer to stop and run if setting auto', function() {
       rolling1.auto();
       expect(rolling1._timer).toBeDefined();
     });
 
-    it('roll - not idle', function() {
+    it('should not set idle after calling roll', function() {
       var move = false;
       var error = false;
       var handler = function() {
@@ -141,12 +134,12 @@ describe('rolling 테스트', function() {
       rolling1.roll('data');
     });
 
-    it('Custom Event mixin', function() {
+    it('should be a Custom Event mixin', function() {
       expect(rolling1.on).toBeDefined();
       expect(rolling2.on).toBeDefined();
     });
 
-    it('Custom Event test', function() {
+    it('should bind custom events', function() {
       var beforeMoveHandler = jasmine.createSpy('before move event handler');
       var afterMoveHandler = jasmine.createSpy('after move event handler');
 
@@ -161,31 +154,27 @@ describe('rolling 테스트', function() {
   });
 
   describe('usageStatistics', function() {
-    it('without usageStatistics option, sendHostName should occur.', function() {
-      var rolling;
-      var div1 = document.getElementById('rolling1');
-      spyOn(snippet, 'sendHostname');
+    beforeEach(function() {
+      spyOn(util, 'sendHostName');
+    });
 
-      rolling = new Rolling(
+    it('should send a hostname by default', function() {
+      var rolling = new Rolling(
         {
-          element: div1,
+          element: document.getElementById('rolling1'),
           isAuto: true
         },
         ['a1', 'a2', 'a3']
       );
       rolling.roll('data');
 
-      expect(snippet.sendHostname).toHaveBeenCalled();
+      expect(util.sendHostName).toHaveBeenCalled();
     });
 
-    it('usageStatistics is false, then sendHostName should not occur.', function() {
-      var rolling;
-      var div1 = document.getElementById('rolling1');
-      spyOn(snippet, 'sendHostname');
-
-      rolling = new Rolling(
+    it('should not send a hostname when usageStatistics option is false', function() {
+      var rolling = new Rolling(
         {
-          element: div1,
+          element: document.getElementById('rolling1'),
           isAuto: true,
           usageStatistics: false
         },
@@ -193,7 +182,7 @@ describe('rolling 테스트', function() {
       );
       rolling.roll('data');
 
-      expect(snippet.sendHostname).not.toHaveBeenCalled();
+      expect(util.sendHostName).not.toHaveBeenCalled();
     });
   });
 });

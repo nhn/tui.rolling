@@ -32,16 +32,16 @@ It also serves as important index to determine the future course of projects.
  To disable GA, use the following `usageStatistics` option when creating the instance.
 
 ```js
-var options = {
-    element: document.getElementById('rolling'),
-    //...
-    usageStatistics: false
+const options = {
+  element: document.getElementById('rolling'),
+  //...
+  usageStatistics: false
 }
 
-var instance = new Rolling(options);
+const instance = new Rolling(options);
 ```
 
-Or, include [`tui-code-snippet`](https://github.com/nhn/tui.code-snippet)(**v1.5.0** or **later**) and then immediately write the options as follows:
+Or, include [`tui-code-snippet`](https://github.com/nhn/tui.code-snippet)(**v2.2.0** or **later**) and then immediately write the options as follows:
 
 ```js
 tui.usageStatistics = false;
@@ -137,12 +137,12 @@ To get the constructor function, you should import the module using one of the f
 
 #### Using namespace in browser environment
 ``` javascript
-var Rolling = tui.Rolling;
+const Rolling = tui.Rolling;
 ```
 
 #### Using module format in node environment
 ``` javascript
-var Rolling = require('tui-rolling'); /* CommonJS */
+const Rolling = require('tui-rolling'); /* CommonJS */
 ```
 
 ``` javascript
@@ -152,9 +152,9 @@ import Rolling from 'tui-rolling'; /* ES6 */
 You can create an instance with [options](https://nhn.github.io/tui.rolling/latest/Rolling) and call various APIs after creating an instance.
 
 ``` javascript
-var instance = new Rolling({
-    element: document.getElementById('rolling'),
-    ...
+const instance = new Rolling({
+  element: document.getElementById('rolling'),
+  ...
 });
 
 instance.roll( ... );
@@ -164,7 +164,7 @@ For more information about the API, please see [here](https://nhn.github.io/tui.
 
 
 ## 🔩 Dependency
-* [tui-code-snippet](https://github.com/nhn/tui.code-snippet) >=1.5.0
+* [tui-code-snippet](https://github.com/nhn/tui.code-snippet) >=2.2.0
 
 
 ## 🌏 Browser Support

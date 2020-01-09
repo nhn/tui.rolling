@@ -5,7 +5,15 @@
 
 'use strict';
 
-var snippet = require('tui-code-snippet');
+var forEachArray = require('tui-code-snippet/collection/forEachArray');
+var forEachOwnProperties = require('tui-code-snippet/collection/forEachOwnProperties');
+var defineClass = require('tui-code-snippet/defineClass/defineClass');
+var extend = require('tui-code-snippet/object/extend');
+var isExisty = require('tui-code-snippet/type/isExisty');
+var isHTMLTag = require('tui-code-snippet/type/isHTMLTag');
+var isNotEmpty = require('tui-code-snippet/type/isNotEmpty');
+var isString = require('tui-code-snippet/type/isString');
+var util = require('./util');
 
 var motion = require('./motion');
 
@@ -38,11 +46,11 @@ var movePanelSet = {
       this._element.innerHTML = '';
       this._element.appendChild(wrap);
     } else {
-      if (snippet.isHTMLTag(firstChild)) {
+      if (isHTMLTag(firstChild)) {
         wrap = firstChild;
       }
       next = firstChild && firstChild.nextSibling;
-      if (snippet.isHTMLTag(next)) {
+      if (isHTMLTag(next)) {
         wrap = next;
       } else {
         wrap = document.createElement('ul');
@@ -63,7 +71,7 @@ var movePanelSet = {
 
     this._container.innerHTML = '';
 
-    snippet.forEach(
+    forEachOwnProperties(
       panelSet,
       function(value, key) {
         panelSet[key] = this._makeElement(info.tag, info.className, key);
@@ -86,14 +94,14 @@ var movePanelSet = {
     var options = this._options;
     var tag, className;
 
-    if (snippet.isString(options.panelTag)) {
+    if (isString(options.panelTag)) {
       tag = options.panelTag.split('.')[0];
       className = options.panelTag.split('.')[1] || '';
     } else {
-      if (!snippet.isHTMLTag(panel)) {
+      if (!isHTMLTag(panel)) {
         panel = panel && panel.nextSibling;
       }
-      tag = snippet.isHTMLTag(panel) ? panel.tagName : 'li';
+      tag = isHTMLTag(panel) ? panel.tagName : 'li';
       className = (panel && panel.className) || '';
     }
 
@@ -137,10 +145,10 @@ var movePanelSet = {
    * @private
    */
   _appendMoveData: function() {
-    var flow = this._flow,
-      movePanel = this.panel[flow],
-      style = movePanel.style,
-      dest = (flow === 'prev' ? -this._distance : this._distance) + 'px';
+    var flow = this._flow;
+    var movePanel = this.panel[flow];
+    var style = movePanel.style;
+    var dest = (flow === 'prev' ? -this._distance : this._distance) + 'px';
 
     style[this._range] = dest;
 
@@ -255,7 +263,7 @@ var movePanelSet = {
     var pos = this._getMoveSet();
     var range = this._range;
 
-    snippet.forEach(this._targets, function(element, index) {
+    forEachArray(this._targets, function(element, index) {
       element.style[range] = pos[index] + 'px';
     });
 
@@ -279,13 +287,13 @@ var movePanelSet = {
       delay: 10,
       duration: duration || 1000,
       delta: this._motion,
-      step: snippet.bind(function(delta) {
-        snippet.forEach(this._targets, function(element, index) {
+      step: util.bind(function(delta) {
+        forEachArray(this._targets, function(element, index) {
           var dest = flow === 'prev' ? distance * delta : -(distance * delta);
           element.style[range] = start[index] + dest + 'px';
         });
       }, this),
-      complete: snippet.bind(this.complete, this)
+      complete: util.bind(this.complete, this)
     });
   },
 
@@ -305,7 +313,7 @@ var movePanelSet = {
     this._container.removeChild(tempPanel);
     this.status = 'idle';
 
-    if (snippet.isNotEmpty(this._queue)) {
+    if (isNotEmpty(this._queue)) {
       first = this._queue.shift();
       this.move(first.data, first.duration, first.flow);
     } else {
@@ -333,11 +341,11 @@ var moveContainerSet = {
    * @private
    */
   _setContainer: function() {
-    var element = this._element,
-      firstChild = element.firstChild,
-      wrap;
+    var element = this._element;
+    var firstChild = element.firstChild;
+    var wrap;
     if (this._isDrawn) {
-      wrap = snippet.isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
+      wrap = isHTMLTag(firstChild) ? firstChild : firstChild.nextSibling;
       this._container = wrap;
       this._container.style[this._range] = 0;
     }
@@ -454,7 +462,7 @@ var moveContainerSet = {
   },
 
   /**
-   * Set postion
+   * Set position
    * @private
    */
   _moveWithoutMotion: function() {
@@ -485,11 +493,11 @@ var moveContainerSet = {
       delay: 10,
       duration: duration || 1000,
       delta: this._motion,
-      step: snippet.bind(function(delta) {
+      step: util.bind(function(delta) {
         var dest = distance * delta;
         container.style[range] = start + dest + 'px';
       }, this),
-      complete: snippet.bind(this.complete, this)
+      complete: util.bind(this.complete, this)
     });
   },
 
@@ -520,7 +528,7 @@ var moveContainerSet = {
 
     if (isPrev) {
       standard = this._panels[0];
-      snippet.forEach(
+      forEachArray(
         moveset,
         function(element) {
           this._container.insertBefore(element, standard);
@@ -528,7 +536,7 @@ var moveContainerSet = {
         this
       );
     } else {
-      snippet.forEach(
+      forEachArray(
         moveset,
         function(element) {
           this._container.appendChild(element);
@@ -603,16 +611,17 @@ var moveContainerSet = {
    * @private
    */
   _initPanel: function() {
-    var container = this._container;
-    var panels = container.childNodes;
+    var panels = this._container.childNodes;
+    var index = 0;
 
-    panels = snippet.toArray(panels);
+    this._panels = util.filter(panels, function(panel) {
+      var isValid = isHTMLTag(panel);
+      if (isValid) {
+        panel.className += ' __index' + index + '__';
+        index += 1;
+      }
 
-    this._panels = snippet.filter(panels, function(element) {
-      return snippet.isHTMLTag(element);
-    });
-    snippet.forEach(this._panels, function(panel, index) {
-      panel.className += ' __index' + index + '__';
+      return isValid;
     });
   },
 
@@ -621,13 +630,10 @@ var moveContainerSet = {
    * @private
    */
   _setPanel: function() {
-    var container = this._container;
-    var panels = container.childNodes;
+    var panels = this._container.childNodes;
 
-    panels = snippet.toArray(panels);
-
-    this._panels = snippet.filter(panels, function(element) {
-      return snippet.isHTMLTag(element);
+    this._panels = util.filter(panels, function(element) {
+      return isHTMLTag(element);
     });
     this._basis = this._basis || 0;
     this._setBoundary();
@@ -659,9 +665,9 @@ var moveContainerSet = {
     var dist = null;
     var panels = this._panels;
 
-    snippet.forEach(panels, function(panel, index) {
+    forEachArray(panels, function(panel, index) {
       if (panel.className.indexOf('__index' + page) !== -1) {
-        if (!snippet.isExisty(dist)) {
+        if (!isExisty(dist)) {
           dist = index;
         }
       }
@@ -707,7 +713,7 @@ var moveContainerSet = {
  * @constructor
  * @ignore
  */
-var Roller = snippet.defineClass(
+var Roller = defineClass(
   /** @lends Roller.prototype */ {
     /* eslint-disable complexity */
     init: function(options, initData, rolling) {
@@ -723,7 +729,7 @@ var Roller = snippet.defineClass(
        * @type {(HTMLElement|String)}
        * @private
        */
-      this._element = snippet.isString(options.element)
+      this._element = isString(options.element)
         ? document.getElementById(options.element)
         : options.element;
 
@@ -787,7 +793,7 @@ var Roller = snippet.defineClass(
        * @type {Boolean}
        * @private
        */
-      this._isCircular = snippet.isExisty(options.isCircular) ? options.isCircular : true;
+      this._isCircular = isExisty(options.isCircular) ? options.isCircular : true;
 
       /**
        * A roller state
@@ -881,7 +887,7 @@ var Roller = snippet.defineClass(
      * @param {Object} methods A method set [staticDataMethods|remoteDataMethods]
      */
     mixin: function(methods) {
-      snippet.extend(this, methods);
+      extend(this, methods);
     },
 
     /**
@@ -955,23 +961,24 @@ var Roller = snippet.defineClass(
      * @param {Object} options A options for animating
      */
     _animate: function(options) {
-      var start = new Date(),
-        id = window.setInterval(function() {
-          var timePassed = new Date() - start,
-            progress = timePassed / options.duration,
-            delta;
-          if (progress > 1) {
-            progress = 1;
-          }
-          delta = options.delta(progress);
+      var start = new Date();
+      var id = window.setInterval(function() {
+        var timePassed = new Date() - start;
+        var progress = timePassed / options.duration;
+        var delta;
 
-          options.step(delta);
+        if (progress > 1) {
+          progress = 1;
+        }
+        delta = options.delta(progress);
 
-          if (progress === 1) {
-            window.clearInterval(id);
-            options.complete();
-          }
-        }, options.delay || 10);
+        options.step(delta);
+
+        if (progress === 1) {
+          window.clearInterval(id);
+          options.complete();
+        }
+      }, options.delay || 10);
     }
   }
 );
