@@ -1,8 +1,8 @@
-.idea
-.gitignore
-node_modules
-sample
-doc
-bower_components
-report
-dist
+# ignore all
+/*
+
+# except
+!.gitignore
+![0-9]*.[0-9]*.[0-9]*
+!latest
+!index.html
