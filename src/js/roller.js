@@ -229,7 +229,7 @@ var movePanelSet = {
      * @type {object} ev - Custom event object
      * @property {String} data - Inner HTML
      * @example
-     * instance.on('beforeMove', function(ev) {
+     * instance.on('beforeMove', (ev) => {
      *     console.log(ev.data)
      * });
      */
@@ -320,7 +320,7 @@ var movePanelSet = {
       /**
        * @event Rolling#afterMove
        * @example
-       * instance.on('afterMove', function() {
+       * instance.on('afterMove', () => {
        *     // code
        * });
        */
