@@ -32,9 +32,14 @@ var Data = require('./rolldata');
  *      @param {String} [options.panelTag='li.className'] A tag name for panel, connect tag name with class by dots [default value is li]
  * @param {Array|String} data A data of rolling panels
  * @example
- * import Rolling from 'tui-rolling'; // ES6
- * // const Rolling = require('tui-rolling'); // CommonJS
- * // const Rolling = tui.Rolling;
+ * // ES6
+ * import Rolling from 'tui-rolling';
+ *
+ * // CommonJS
+ * const Rolling = require('tui-rolling');
+ *
+ * // Browser
+ * const Rolling = tui.Rolling;
  *
  * const instance = new tui.Rolling({
  *      element: document.getElementById('rolling'),
