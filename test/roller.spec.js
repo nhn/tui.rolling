@@ -6,12 +6,9 @@ var Roller = require('@/roller');
 var motion = require('@/motion');
 
 describe('Roller', function() {
-  jasmine.getFixtures().fixturesPath = 'base/';
-  jasmine.getStyleFixtures().fixturesPath = 'base/';
-
   beforeEach(function() {
-    loadFixtures('test/fixtures/roller.html');
-    loadStyleFixtures('test/fixtures/fixedhtml.css');
+    loadFixtures('roller.html');
+    loadStyleFixtures('fixedhtml.css');
   });
 
   describe('instance', function() {
@@ -145,7 +142,8 @@ describe('Roller', function() {
 
     it('should get the distance to travel by _getMoveDistance', function() {
       var distance = roller5._getMoveDistance('prev');
-      expect(distance).toBe(0);
+
+      expect(distance === 0).toBe(true);
       distance = roller5._getMoveDistance('next');
       expect(distance).toBe(-(roller5._distance * roller5._unitCount));
     });
@@ -247,7 +245,7 @@ describe('Roller', function() {
     it('should move fixed panel by Roller.movePanelSet', function() {
       var beforePanel = roller2.panel[roller2._flow];
 
-      spyOn(roller2._rolling, 'invoke').and.returnValue(true);
+      roller2._rolling.invoke = jest.fn().mockReturnValue(true);
 
       beforePanel = roller2.panel.center;
       roller2.move('eee');
@@ -265,7 +263,7 @@ describe('Roller', function() {
         done();
       };
 
-      spyOn(roller4._rolling, 'invoke').and.returnValue(true);
+      roller4._rolling.invoke = jest.fn().mockReturnValue(true);
 
       roller4.move();
 
