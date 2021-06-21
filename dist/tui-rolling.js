@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Rolling
- * @version 2.2.4
+ * @version 2.2.5
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -605,8 +605,16 @@ var Data = __webpack_require__(25);
  *      @param {String} [options.panelTag='li.className'] A tag name for panel, connect tag name with class by dots [default value is li]
  * @param {Array|String} data A data of rolling panels
  * @example
- * var Rolling = tui.Rolling; // or require('tui-rolling')
- * var instance = new tui.Rolling({
+ * // ES6
+ * import Rolling from 'tui-rolling';
+ *
+ * // CommonJS
+ * const Rolling = require('tui-rolling');
+ *
+ * // Browser
+ * const Rolling = tui.Rolling;
+ *
+ * const instance = new tui.Rolling({
  *      element: document.getElementById('rolling'),
  *      initNum: 0,
  *      direction: 'horizontal',
@@ -1943,7 +1951,7 @@ var movePanelSet = {
      * @type {object} ev - Custom event object
      * @property {String} data - Inner HTML
      * @example
-     * instance.on('beforeMove', function(ev) {
+     * instance.on('beforeMove', (ev) => {
      *     console.log(ev.data)
      * });
      */
@@ -2034,7 +2042,7 @@ var movePanelSet = {
       /**
        * @event Rolling#afterMove
        * @example
-       * instance.on('afterMove', function() {
+       * instance.on('afterMove', () => {
        *     // code
        * });
        */
