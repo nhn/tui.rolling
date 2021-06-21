@@ -143,7 +143,7 @@ describe('Roller', function() {
     it('should get the distance to travel by _getMoveDistance', function() {
       var distance = roller5._getMoveDistance('prev');
 
-      expect(distance === 0).toBe(true);
+      expect(!distance).toBe(true);
       distance = roller5._getMoveDistance('next');
       expect(distance).toBe(-(roller5._distance * roller5._unitCount));
     });

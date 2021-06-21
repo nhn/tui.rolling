@@ -2,7 +2,7 @@
 var path = require('path');
 var fs = require('fs');
 var fixturesPath = './fixtures';
-var Inliner = require('css-inline');
+var inliner = require('css-inline');
 
 global.loadFixtures = function(fileName) {
   var data;
@@ -24,7 +24,7 @@ global.loadStyleFixtures = function(fileName) {
   try {
     // eslint-disable-next-line no-sync
     data = fs.readFileSync(dir, 'utf8');
-    document.body.innerHTML = Inliner.inline(
+    document.body.innerHTML = inliner.inline(
       '<style>' + data + '</style>' + document.body.innerHTML,
       { remove_style_tags: true }
     );
