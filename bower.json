@@ -14,7 +14,7 @@
         "examples",
         "src",
         "test",
-        "karma.conf.js",
+        "jest.config.js",
         "package-lock.json",
         "package.json",
         "tui-note.config.js",
