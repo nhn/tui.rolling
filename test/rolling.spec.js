@@ -4,10 +4,8 @@ var Rolling = require('@/rolling');
 var util = require('@/util');
 
 describe('Rolling', function() {
-  jasmine.getFixtures().fixturesPath = 'base';
-
   beforeEach(function() {
-    loadFixtures('test/fixtures/rolling.html');
+    loadFixtures('rolling.html');
   });
 
   describe('instance', function() {
@@ -140,8 +138,8 @@ describe('Rolling', function() {
     });
 
     it('should bind custom events', function() {
-      var beforeMoveHandler = jasmine.createSpy('before move event handler');
-      var afterMoveHandler = jasmine.createSpy('after move event handler');
+      var beforeMoveHandler = jest.fn();
+      var afterMoveHandler = jest.fn();
 
       rolling1.on('beforeMove', beforeMoveHandler);
       rolling1.on('afterMove', afterMoveHandler);
@@ -155,7 +153,7 @@ describe('Rolling', function() {
 
   describe('usageStatistics', function() {
     beforeEach(function() {
-      spyOn(util, 'sendHostName');
+      util.sendHostName = jest.fn();
     });
 
     it('should send a hostname by default', function() {
