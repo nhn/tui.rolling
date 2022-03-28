@@ -1,6 +1,5 @@
 /**
  * @fileoverview A data for move
- * @author NHN. FE dev Lab.<dl_javascript@nhn.com>
  */
 
 'use strict';
