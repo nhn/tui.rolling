@@ -1,7 +1,7 @@
 /*!
  * TOAST UI Rolling
  * @version 2.2.5
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ * @author NHN Cloud FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -505,7 +505,6 @@ module.exports = isFunction;
 "use strict";
 /**
  * @fileoverview Utils for Rolling component
- * @author NHN. FE dev Lab. <dl_javascript@nhn.com>
  */
 
 
@@ -573,7 +572,6 @@ module.exports = utils;
 "use strict";
 /**
  * @fileoverview Rolling component core.
- * @author NHN. FE dev Lab.<dl_javascript@nhn.com>
  */
 
 
@@ -1722,7 +1720,6 @@ module.exports = imagePing;
 "use strict";
 /**
  * @fileoverview Roller
- * @author NHN. FE dev Lab.<dl_javascript@nhn.com>
  */
 
 
@@ -2882,7 +2879,6 @@ module.exports = isArguments;
 "use strict";
 /**
  * @fileoverview Module of motions
- * @author NHN. FE dev Lab.<dl_javascript@nhn.com>
  */
 
 
@@ -3044,7 +3040,6 @@ module.exports = motion;
 "use strict";
 /**
  * @fileoverview A data for move
- * @author NHN. FE dev Lab.<dl_javascript@nhn.com>
  */
 
 
